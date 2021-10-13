@@ -2,8 +2,24 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <StartupObject>UbStudyHelp.App</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="TUB_Files\**" />
+    <EmbeddedResource Remove="TUB_Files\**" />
+    <None Remove="TUB_Files\**" />
+    <Page Remove="TUB_Files\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommonMark.NET" Version="0.15.1" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00014" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00014" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00014" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
 
 </Project>

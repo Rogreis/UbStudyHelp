@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UbStudyHelp"
         mc:Ignorable="d"
+        Loaded="formText_Loaded"
         Title="The Urantia Book Study Help" Height="450" Width="800" WindowState="Maximized">
     <Grid Name="gridMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
@@ -30,7 +31,7 @@
 
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Background="#FF35A829">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="160">
+                <ColumnDefinition Width="400">
 
                 </ColumnDefinition>
                 <ColumnDefinition Width="5"></ColumnDefinition>
@@ -38,11 +39,23 @@
 
                 </ColumnDefinition>
             </Grid.ColumnDefinitions>
+            
+            <TabControl>
+                <TabItem Header="Table of Contents">
+                    <TabControl>
+                        <TabItem Header="English">
+                            <TreeView Name="TOC_Left" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </TabItem>
+                        <TabItem Header="Português">
+                            <TreeView Name="TOC_Right" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </TabItem>
+                    </TabControl>
 
-            <TreeView Grid.Column="0" Margin="0,4,0,0" Name="TreeViewTOC" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Aqua">
-                <TreeViewItem Header="Teste 1"></TreeViewItem>
-                <TreeViewItem Header="Teste 2"></TreeViewItem>
-            </TreeView>
+                </TabItem>
+                <TabItem Header="Index"></TabItem>
+                <TabItem Header="Search"></TabItem>
+            </TabControl>
+
 
 
             <GridSplitter Background="DarkGray"  ResizeDirection="Columns"  Grid.Column="1" Grid.RowSpan="2"
