@@ -91,7 +91,7 @@ namespace UrantiaBook.Classes
                 for (short paperNo = 0; paperNo <= 196; paperNo++)
                 {
                     Paper paper = translation.Paper(paperNo);
-                    foreach (Paragraph paragraph in paper.listParagraphs)
+                    foreach (Paragraph paragraph in paper.Paragraphs)
                     {
                         Document doc = new Document();
                         doc.Add(new StringField(SearchResults.FieldPaper, paragraph.Paper.ToString(), Field.Store.YES));

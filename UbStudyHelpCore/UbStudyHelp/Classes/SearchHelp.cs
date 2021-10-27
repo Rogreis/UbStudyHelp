@@ -17,7 +17,7 @@ namespace UrantiaBook.Classes
 
         private string CalculateFontSize(int AddToSize)
         {
-            return (Convert.ToInt16(App.objParameters.FontSize) + 4 + AddToSize).ToString() + "px";
+            return (Convert.ToInt16(App.ParametersData.Appearance.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
         }
 
 

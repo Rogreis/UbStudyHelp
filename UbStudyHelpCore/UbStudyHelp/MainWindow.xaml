@@ -1,35 +1,95 @@
-﻿<Window x:Name="formText" x:Class="UbStudyHelp.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UbStudyHelp"
-        mc:Ignorable="d"
-        Loaded="formText_Loaded"
-        Title="The Urantia Book Study Help" Height="450" Width="800" WindowState="Maximized">
+﻿<mah:MetroWindow xmlns:Controls="clr-namespace:UbStudyHelp.Controls"  x:Class="UbStudyHelp.MainWindow"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                WindowStartupLocation="CenterScreen"
+                mc:Ignorable="d"
+                Loaded="formText_Loaded"
+                Title="The Urantia Book Study Help" Height="800" Width="1800" WindowState="Maximized">
+
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Button Click="LaunchUFSite" ToolTip="Open up the Urantia Foundation Web Site">
+                <iconPacks:PackIconFontAwesome Kind="RocketSolid" Width="22" Height="22" />
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
+
+    <!--<mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button x:Name="btTheme"  Click="ReverseTheme" Content="Use Dark" ToolTip="Change to dark theme">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconFontAwesome Kind="ThemeisleBrands"  Width="22" Height="22" />
+                            <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>-->
+
+
     <Grid Name="gridMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
-            <RowDefinition Height="26" />
+            <RowDefinition Height="60" />
             <RowDefinition />
             <RowDefinition Height="26" />
         </Grid.RowDefinitions>
 
+        <ToolBar Height="60" Grid.ColumnSpan="3" Margin="0,0,0,0" BorderBrush="#FFF3F4DD">
 
-        <ToolBar Height="26" Grid.ColumnSpan="3" Margin="0,0,0,0">
+            <Button x:Name="BtIncreaseFontSize" Click="BtIncreaseFontSize_Click" Style="{DynamicResource MetroCircleButtonStyle}">
+                <iconPacks:PackIconBootstrapIcons Kind="Fonts" Width="24" Height="24"  />
+            </Button>
 
-            <Button>
+            <Button x:Name="BtDecreseFontSize" Click="BtDecreseFontSize_Click" Style="{DynamicResource MetroCircleButtonStyle}">
+                <iconPacks:PackIconBootstrapIcons Kind="Fonts" Width="16" Height="16"  />
             </Button>
-            <Button>
-                <!--<Image Source="/WpfTutorialSamples;component/Images/arrow_right.png" Width="16" Height="16" />-->
-            </Button>
+            
             <Separator />
-            <TextBox Name="txtUrl" Width="300" />
-            <Button Command="NavigationCommands.GoToPage">
-                <!--<Image Source="/WpfTutorialSamples;component/Images/world_go.png" Width="16" Height="16" />-->
-            </Button>
+            <Label x:Name="LabelTranslations" Content="2nd Translation:" Margin="0,10,0,0" VerticalAlignment="Center" />
+            <ComboBox x:Name="ComboTranslations" Width="250" BorderBrush="#FFF3F4DD" />
+            
+            <Separator Margin="10,2,2,2" />
+            <Label x:Name="LabelTrack" Content="Track:" Margin="0,10,0,0" VerticalAlignment="Center" />
+            <ComboBox x:Name="ComboTrack" Width="400" />
+
+            <Separator Margin="10,2,2,2" />
+            <Label x:Name="LabelThemes" Content="Theme:" Margin="0,10,0,0" VerticalAlignment="Center" />
+            <ComboBox x:Name="ComboTheme"  SelectionChanged="ComboTheme_SelectionChanged" Width="400">
+                <ComboBoxItem>Red</ComboBoxItem>
+                <ComboBoxItem>Green</ComboBoxItem>
+                <ComboBoxItem>Blue</ComboBoxItem>
+                <ComboBoxItem>Purple</ComboBoxItem>
+                <ComboBoxItem>Orange</ComboBoxItem>
+                <ComboBoxItem>Lime</ComboBoxItem>
+                <ComboBoxItem>Emerald</ComboBoxItem>
+                <ComboBoxItem>Teal</ComboBoxItem>
+                <ComboBoxItem>Cyan</ComboBoxItem>
+                <ComboBoxItem>Cobalt</ComboBoxItem>
+                <ComboBoxItem>Indigo</ComboBoxItem>
+                <ComboBoxItem>Violet</ComboBoxItem>
+                <ComboBoxItem>Pink</ComboBoxItem>
+                <ComboBoxItem>Magenta</ComboBoxItem>
+                <ComboBoxItem>Crimson</ComboBoxItem>
+                <ComboBoxItem>Amber</ComboBoxItem>
+                <ComboBoxItem>Yellow</ComboBoxItem>
+                <ComboBoxItem>Brown</ComboBoxItem>
+                <ComboBoxItem>Olive</ComboBoxItem>
+                <ComboBoxItem>Steel</ComboBoxItem>
+                <ComboBoxItem>Mauve</ComboBoxItem>
+                <ComboBoxItem>Taupe</ComboBoxItem>
+                <ComboBoxItem>Sienna</ComboBoxItem>
+            </ComboBox>
+
         </ToolBar>
 
-        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Background="#FF35A829">
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400">
 
@@ -40,8 +100,8 @@
                 </ColumnDefinition>
             </Grid.ColumnDefinitions>
             
-            <TabControl>
-                <TabItem Header="Table of Contents">
+            <TabControl x:Name="TabLeft">
+                <TabItem x:Name="TabItremTOC" Header="Table of Contents">
                     <TabControl>
                         <TabItem Header="English">
                             <TreeView Name="TOC_Left" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
@@ -52,8 +112,13 @@
                     </TabControl>
 
                 </TabItem>
-                <TabItem Header="Index"></TabItem>
-                <TabItem Header="Search"></TabItem>
+                <TabItem x:Name="TabItremIndex" Header="Index">
+                    <Controls:IndexBrowser x:Name="IndexBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                </TabItem>
+                
+                <TabItem x:Name="TabItemSearch" Header="Search">
+                    <Controls:SearchBrowser x:Name="SearchBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                </TabItem>
             </TabControl>
 
 
@@ -61,31 +126,10 @@
             <GridSplitter Background="DarkGray"  ResizeDirection="Columns"  Grid.Column="1" Grid.RowSpan="2"
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                       ResizeBehavior="PreviousAndNext" Margin="0,4,0,0" />
-            
-            <WebBrowser Name="BrowserText" Grid.Column="2" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 
+            <Controls:PageBrowser x:Name="BrowserText" Grid.Column="2" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
         </Grid>
-        
-            <!--<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2" Background="#FF35A829">
-        
-        
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160">
-
-            </ColumnDefinition>
-            <ColumnDefinition Width="1"></ColumnDefinition>
-            <ColumnDefinition>
-
-            </ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        
-        
-        
-
--->
-
 
     </Grid>
-</Window>
+</mah:MetroWindow>

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using ControlzEx.Theming;
+using MahApps.Metro.IconPacks;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +22,9 @@ namespace UbStudyHelp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// For styling documentation <see href="https://mahapps.com/docs/guides/quick-start"/>
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
@@ -42,13 +46,11 @@ namespace UbStudyHelp
             GetDataFiles dataFiles = new GetDataFiles();
             try
             {
-                string exePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-                exePath = System.IO.Path.Combine(exePath, "TUB_Files");
-                if (!dataFiles.CheckFiles(exePath))
+                if (!dataFiles.CheckFiles(App.BaseTubFilesPath))
                 {
                     return false;
                 }
-                return Book.Inicialize(exePath);
+                return Book.Inicialize(App.BaseTubFilesPath);
             }
             catch (Exception ex)
             {
@@ -77,6 +79,27 @@ namespace UbStudyHelp
                     nodePaper.Items.Add(nodeSection);
                 }
             }
+
+        }
+
+
+        private void SetFontSize()
+        {
+            App.ParametersData.Appearance.SetFontSize(LabelTranslations);
+            App.ParametersData.Appearance.SetFontSize(LabelTrack);
+            App.ParametersData.Appearance.SetFontSize(ComboTrack);
+            App.ParametersData.Appearance.SetFontSize(LabelThemes);
+            App.ParametersData.Appearance.SetFontSize(ComboTheme);
+            App.ParametersData.Appearance.SetFontSize(TOC_Left);
+            App.ParametersData.Appearance.SetFontSize(TOC_Right);
+            EventsControl.FireFontChanged(App.ParametersData.Appearance);
+        }
+
+        private void SetControlsStyles()
+        {
+            App.ParametersData.Appearance.SetAll(TOC_Left);
+            App.ParametersData.Appearance.SetAll(TOC_Right);
+            SetFontSize();
         }
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
@@ -86,7 +109,74 @@ namespace UbStudyHelp
             {
                 FillTreeView(TOC_Left, true);
                 FillTreeView(TOC_Right, false);
+                TOC_Left.SelectedItemChanged += TableOfContents_SelectedItemChanged;
+                TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
+                ComboTheme.Text= App.ParametersData.ThemeColor;
             }
+            SetTheme();
+            SetFontSize();
+        }
+
+
+
+        #region Tree Events
+        private void TableOfContents_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            TreeView tree = sender as TreeView;
+            TreeViewItemUB item = tree.SelectedItem as TreeViewItemUB;
+            EventsControl.FireTOCClicked(item.Entry);
+        }
+
+        #endregion
+
+        private void LaunchUFSite(object sender, RoutedEventArgs e)
+        {
+            //Process.Start("http://www.urantia.org");
+        }
+
+        private void SetTheme()
+        {
+            string theme = App.ParametersData.ThemeName + "." + App.ParametersData.ThemeColor;
+            ThemeManager.Current.ChangeTheme(Application.Current, theme);
+        }
+
+        private void ReverseTheme(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void ComboTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem item = ComboTheme.SelectedItem as ComboBoxItem;
+            App.ParametersData.ThemeColor = (string)item.Content; 
+            SetTheme();
+        }
+
+        private void BtIncreaseFontSize_Click(object sender, RoutedEventArgs e)
+        {
+            App.ParametersData.Appearance.FontSizeInfo++;
+            SetFontSize();
+        }
+
+        private void BtDecreseFontSize_Click(object sender, RoutedEventArgs e)
+        {
+            App.ParametersData.Appearance.FontSizeInfo--;
+            SetFontSize();
+        }
+
+        private void BtToggleTheme_Toggled(object sender, RoutedEventArgs e)
+        {
+            // Set the application theme to Dark.Green
+            Theme theme = ThemeManager.Current.DetectTheme();
+            if (theme.Name.StartsWith("Dark"))
+            {
+                App.ParametersData.ThemeName = "Light";
+            }
+            else
+            {
+                App.ParametersData.ThemeName = "Dark";
+            }
+            SetTheme();
+            SetFontSize();
         }
     }
 }

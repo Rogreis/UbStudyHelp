@@ -45,7 +45,7 @@ namespace UrantiaBook.Classes
     /// </summary>
     public static class BrowserTrack
     {
-        private static TrackStack<BrowserPosition> browserHistory = new TrackStack<BrowserPosition>(App.objParameters.MaxTrackItems);
+        private static TrackStack<BrowserPosition> browserHistory = new TrackStack<BrowserPosition>(App.ParametersData.MaxTrackItems);
 
         private static Stack<BrowserPosition> stack = new Stack<BrowserPosition>();
 

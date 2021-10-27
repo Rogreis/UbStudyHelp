@@ -14,13 +14,13 @@ namespace UrantiaBook.Classes
     /// </summary>
     public class SearchResult
     {
-        public Location Location { get; set; }
+        public TOC_Entry Entry { get; set; }
 
         public string Text { get; set; }
 
         public SearchResult(Document doc)
         {
-            Location = new Location(Convert.ToInt16(doc.GetField("Paper").GetSingleValue()), 0, Convert.ToInt16(doc.GetField("Section").GetSingleValue()), Convert.ToInt16(doc.GetField("ParagraphNo").GetSingleValue()));
+            Entry = new TOC_Entry(Convert.ToInt16(doc.GetField("Paper").GetSingleValue()), Convert.ToInt16(doc.GetField("Section").GetSingleValue()), Convert.ToInt16(doc.GetField("ParagraphNo").GetSingleValue()));
             Text = doc.GetField("Text").GetStringValue();
         }
 
@@ -36,7 +36,7 @@ namespace UrantiaBook.Classes
                     size = maxCharCount;
                 }
                 string textToShow= Text.Length < maxCharCount ? Text : Text.Substring(0, size);
-                return "<p><a id=\"" + Location.Href + "\" target=\"_blank\" href=\"about:blank\">" + Location.ToString() + "  " + textToShow + "</a></p>";
+                return "<p><a id=\"" + Entry.Href + "\" target=\"_blank\" href=\"about:blank\">" + Entry.ToString() + "  " + textToShow + "</a></p>";
             }
         }
     }
@@ -75,7 +75,7 @@ namespace UrantiaBook.Classes
 
         public static bool WasFound(TOC_Entry entry)
         {
-            return Findings.Find(f => f.Location.Paper == entry.Paper && f.Location.Section == entry.Section && f.Location.Paragraph == entry.ParagraphNo) != null;
+            return Findings.Find(f => f.Entry.Paper == entry.Paper && f.Entry.Section == entry.Section && f.Entry.ParagraphNo == entry.ParagraphNo) != null;
         }
 
 
@@ -124,7 +124,7 @@ namespace UrantiaBook.Classes
                 return newText;
             }
 
-            SearchResult result = Findings.Find(l => l.Location.Paper == par.Paper && l.Location.Section == par.Section && l.Location.Paragraph == par.ParagraphNo);
+            SearchResult result = Findings.Find(l => l.Entry.Paper == par.Paper && l.Entry.Section == par.Section && l.Entry.ParagraphNo == par.ParagraphNo);
             if (result == null)
             {
                 return newText;

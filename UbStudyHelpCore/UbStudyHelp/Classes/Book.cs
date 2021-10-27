@@ -16,6 +16,7 @@ namespace UrantiaBook.Classes
     public static class Book
     {
 
+        public static string FilesPath { get; set; }
 
         public static Translation LeftTranslation { get; private set; }
 
@@ -23,12 +24,11 @@ namespace UrantiaBook.Classes
 
         public static List<Translation> Translations { get; private set; }
 
-
-
         public static bool Inicialize(string baseDataPath)
         {
             try
             {
+                FilesPath = baseDataPath;
                 if (Translations == null)
                 {
                     string pathlistTranslations = Path.Combine(baseDataPath, "Languages.xml");
@@ -43,24 +43,24 @@ namespace UrantiaBook.Classes
                     throw new Exception("There is no translation list. May be you do not have the correct data to use this tool.");
                 }
 
-                LeftTranslation = Translations.Find(o => o.LanguageID == App.objParameters.LanguageIDLeftTranslation);
+                LeftTranslation = Translations.Find(o => o.LanguageID == App.ParametersData.LanguageIDLeftTranslation);
                 if (LeftTranslation == null)
                 {
-                    throw new Exception($"Missing translation number {App.objParameters.LanguageIDLeftTranslation}. May be you do not have the correct data to use this tool.");
+                    throw new Exception($"Missing translation number {App.ParametersData.LanguageIDLeftTranslation}. May be you do not have the correct data to use this tool.");
                 }
                 if (!LeftTranslation.Inicialize(baseDataPath))
                 {
-                    throw new Exception($"Translation {App.objParameters.LanguageIDLeftTranslation} not initialized. May be you do not have the correct data to use this tool.");
+                    throw new Exception($"Translation {App.ParametersData.LanguageIDLeftTranslation} not initialized. May be you do not have the correct data to use this tool.");
                 }
 
-                RightTranslation = Translations.Find(o => o.LanguageID == App.objParameters.LanguageIDRightTranslation);
+                RightTranslation = Translations.Find(o => o.LanguageID == App.ParametersData.LanguageIDRightTranslation);
                 if (RightTranslation == null)
                 {
-                    throw new Exception($"Missing translation number {App.objParameters.LanguageIDRightTranslation}. May be you do not have the correct data to use this tool.");
+                    throw new Exception($"Missing translation number {App.ParametersData.LanguageIDRightTranslation}. May be you do not have the correct data to use this tool.");
                 }
                 if (!RightTranslation.Inicialize(baseDataPath))
                 {
-                    throw new Exception($"Translation {App.objParameters.LanguageIDRightTranslation} not initialized. May be you do not have the correct data to use this tool.");
+                    throw new Exception($"Translation {App.ParametersData.LanguageIDRightTranslation} not initialized. May be you do not have the correct data to use this tool.");
                 }
                 return true;
 
@@ -70,6 +70,7 @@ namespace UrantiaBook.Classes
                 throw new Exception($"General error getting translations: {ex.Message}. May be you do not have the correct data to use this tool.");
             }
         }
+
 
 
     }

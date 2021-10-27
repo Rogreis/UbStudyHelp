@@ -56,9 +56,8 @@ namespace UrantiaBook.Classes
         {
             get
             {
-                if (LanguageID == 0) return "";
                 string year = (StartingYear == EndingYear) ? EndingYear.ToString() : StartingYear.ToString() + "," + EndingYear.ToString();
-                return "<br /><br /><span class=\"copyright\">Copyright ©  " + year + " Urantia Foundation. All rights reserved.</span>";
+                return "Copyright ©  " + year + " Urantia Foundation. All rights reserved.";
             }
         }
 

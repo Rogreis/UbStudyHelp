@@ -6,6 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 using UbStudyHelp;
 
 namespace UrantiaBook.Classes
@@ -23,27 +27,11 @@ namespace UrantiaBook.Classes
 
             public List<string> References { get; set; } = new List<string>();
 
-            private string linkForReference(string reference)
+            public override string ToString()
             {
-                if (reference != null)
-                {
-                    string newReference = reference;
-                    newReference = newReference.Replace(':', ';');
-                    newReference = newReference.Replace('.', ';');
-                    reference = $"<a id=\"{newReference}\" target=\"_blank\" href=\"about:blank\">{reference}</a>";
-                }
-                return reference;
+                return Text;
             }
 
-            public string Html()
-            {
-                StringBuilder sb = new StringBuilder(Details);
-                foreach(string reference in References)
-                {
-                    sb.Replace(reference, linkForReference(reference));
-                }
-                return sb.ToString();
-            }
         }
 
         private class IndexTexts
@@ -57,7 +45,6 @@ namespace UrantiaBook.Classes
             }
 
         }
-
 
         private IndexTexts Indexes = new IndexTexts();
 
@@ -93,45 +80,19 @@ namespace UrantiaBook.Classes
         }
 
 
-        private string CalculateFontSize(int AddToSize)
-        {
-            return (Convert.ToInt16(App.objParameters.FontSize) + 4 + AddToSize).ToString() + "px";
-        }
+        //private string CalculateFontSize(int AddToSize)
+        //{
+        //    return (Convert.ToInt16(App.ParametersData.Appearance.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
+        //}
 
 
-        private string FontColorForWeb
-        {
-            get
-            {
-                return System.Drawing.ColorTranslator.ToHtml(Color.Black);
-                //"#" + String.Format("{0,2:X}{1,2:X}{2,2:X}", FontColor.R, FontColor.G, FontColor.B);
-            }
-        }
-
-
-
-        private void Styles(StringBuilder sb)
-        {
-            sb.AppendLine("<style type=\"text/css\">");
-            sb.AppendLine("body {font-family: " + App.objParameters.FontFamily + "; font-size: " + CalculateFontSize(4) + "; color: " + FontColorForWeb + ";}");
-            sb.AppendLine("p   {font-family: " + App.objParameters.FontFamily + "; font-size: " + CalculateFontSize(0) + "; color: " + FontColorForWeb + "; margin-top: 10px;}");
-            sb.AppendLine(".tit   {font-family: Verdana;	font-size: " + CalculateFontSize(-2) + ";	color: #808080;	margin-top: 10px;	font-style: italic;}");
-            sb.AppendLine("h1.title {");
-            sb.AppendLine("padding: 6px;");
-            sb.AppendLine("font-size: " + CalculateFontSize(20) + ";");
-            sb.AppendLine("background: ");
-            sb.AppendLine("#009DDC;");
-            sb.AppendLine("color: ");
-            sb.AppendLine("white;");
-            sb.AppendLine("}");
-            sb.AppendLine("sup   {font-family: " + App.objParameters.FontFamily + "; font-size: 9px;  color: #808080; vertical-align:top;}");
-
-            sb.AppendLine("a          {font-family: " + App.objParameters.FontFamily + "; font-size:" + CalculateFontSize(0) + "; color: " + FontColorForWeb + "; text-decoration: none;}");
-            sb.AppendLine("a:visited  {font-family: " + App.objParameters.FontFamily + "; font-size:" + CalculateFontSize(0) + "; color: " + FontColorForWeb + "; text-decoration: none;}");
-            sb.AppendLine("a:hover    {font-family: " + App.objParameters.FontFamily + "; font-size:" + CalculateFontSize(0) + "; color: " + FontColorForWeb + "; text-decoration: underline;}");
-
-            sb.AppendLine("</style>");
-        }
+        //private string FonteFamilyInfo
+        //{
+        //    get
+        //    {
+        //        return App.ParametersData.Appearance.FontFamilyInfo;
+        //    }
+        //}
 
         public bool Load()
         {
@@ -164,46 +125,118 @@ namespace UrantiaBook.Classes
             //return details.SelectMany<IndexDetails, string>(d => d.Text);
         }
 
-        public string SearchIndex(string indexEntry)
+
+        private void linkForReference(InlineCollection Inlines, string line)
         {
-            IndexDetails detail = Indexes.Details.Find(d => string.Compare(d.Text, indexEntry) == 0);
-
-            Encoding enc = Encoding.UTF8;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
-            sb.AppendLine("<html>");
-            sb.AppendLine("<head>");
-            sb.AppendLine("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" + enc.WebName + "\" />");
-            sb.AppendLine("<title></title>");
-            Styles(sb);
-            sb.AppendLine("</head>");
-            sb.AppendLine("<body>");
-
-            if (detail == null)
+            if (string.IsNullOrEmpty(line))
             {
-                sb.AppendLine($"Index entry not found: {indexEntry}<br />");
+                return;
             }
-            else
+
+            int ind = line.IndexOf("###");
+            line= line.Remove(ind, 3);
+            string reference = line.Replace(':', ';');
+            reference = reference.Replace('.', ';');
+
+            Run run = new Run(line)
             {
-                char[] separators = { '\r', '\n' };
-                string[] lines = detail.Html().Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                foreach(string line in lines)
-                {
-                    sb.AppendLine($"<p>{line}</p>");
-                }
-            }
-            sb.AppendLine("<p>&nbsp;</p>");
-            sb.AppendLine("<p>&nbsp;</p>");
-            sb.AppendLine("<p>&nbsp;</p>");
-            sb.AppendLine("");
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.Blue
+            };
 
-            sb.AppendLine("</body>");
-            sb.AppendLine("</html>");
+            Hyperlink hyperlink = new Hyperlink(run)
+            {
+                NavigateUri = new Uri("about:blank"),
+                TextDecorations = TextDecorations.Underline
+            };
+            hyperlink.Tag = reference;
 
-            return sb.ToString();
+            hyperlink.Click += Hyperlink_Click;
+            //hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
+
+            Inlines.Add(hyperlink);
+
 
         }
 
+        private void PrepareInLine(IndexDetails detail, TextBlock tb)
+        {
+            // First all references are changed to a know mark
+            string details = detail.Details;
 
+            foreach (string reference in detail.References.Distinct().ToList())
+            {
+                details= details.Replace(reference, $"»»»###{reference}»»»");
+            }
+
+
+            char[] separators = { '\r', '\n' };
+            string[] lines = details.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in lines)
+            {
+                string[] separatorsForLine = { "»»»" };
+                string[] lineParts = line.Split(separatorsForLine, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string linePart in lineParts)
+                {
+                    if (linePart.IndexOf("###") >= 0)
+                    {
+                        linkForReference(tb.Inlines, linePart);
+                    }
+                    else
+                    {
+                        Run run = new Run(linePart)
+                        {
+                            FontWeight = FontWeights.Bold
+                        };
+                        tb.Inlines.Add(run);
+                    }
+                }
+                tb.Inlines.Add(new LineBreak());
+            }
+        }
+
+
+
+        public void ShowResults(string indexEntry, TextBlock tb)
+        {
+            IndexDetails detail = Indexes.Details.Find(d => string.Compare(d.Text, indexEntry) == 0);
+
+            tb.Inlines.Clear();
+            if (detail == null)
+            {
+                tb.Inlines.Add($"Index entry not found: {indexEntry}");
+            }
+            else
+            {
+                PrepareInLine(detail, tb);
+                tb.Inlines.Add(new LineBreak());
+                tb.Inlines.Add(new LineBreak());
+            }
+        }
+
+
+
+        //private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        //{
+        //}
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            string reference = (string)hyperlink.Tag;
+            char[] separators = { ';' };
+            string[] parts = reference.Split(separators);
+            short Paper = -1;
+            short.TryParse(parts[0], out Paper);
+            short Section = -1;
+            short.TryParse(parts[1], out Section);
+            short Paragraph = -1;
+            short.TryParse(parts[2], out Paragraph);
+
+            TOC_Entry entry = new TOC_Entry(Paper, Section, Paragraph);
+            EventsControl.FireIndexClicked(entry);
+            hyperlink.Foreground = Brushes.Red; 
+        }
     }
 }

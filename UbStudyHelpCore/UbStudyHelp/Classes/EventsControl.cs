@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UbStudyHelp.Classes;
 
 namespace UrantiaBook.Classes
 {
@@ -9,19 +10,19 @@ namespace UrantiaBook.Classes
     /// Used to fire a click on a new Table Of Contents item
     /// </summary>
     /// <param name="oTOC_Entry"></param>
-    public delegate void dlTOCClicked(TOC_Entry oTOC_Entry);
+    public delegate void dlTOCClicked(TOC_Entry entry);
 
     /// <summary>
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlSeachClicked(Location loc);
-    
+    public delegate void dlSeachClicked(TOC_Entry entry);
+
     /// <summary>
     /// Used to fire a click on index
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlIndexClicked(Location loc);
+    public delegate void dlIndexClicked(TOC_Entry entry);
 
     /// <summary>
     /// Used to send a message to be shown in the main form
@@ -39,12 +40,11 @@ namespace UrantiaBook.Classes
 
     public delegate void dlBilingualChanged(bool ShowBilingual);
 
+    public delegate void dlFontChanged(ControlsAppearance appearance);
 
 
     public static class EventsControl
     {
-        private static bool AvoidNewLocationEvents = false;
-
         public static event dlSeachClicked SeachClicked = null;
 
         public static event dlIndexClicked IndexClicked = null;
@@ -63,50 +63,32 @@ namespace UrantiaBook.Classes
 
         public static event dlBilingualChanged BilingualChanged = null;
 
+        public static event dlFontChanged FontChanged = null;
 
-        public static void FireSeachClicked(Location loc)
+
+        public static void FireSeachClicked(TOC_Entry entry)
         {
-            if (AvoidNewLocationEvents)
-                return;
-            //AvoidNewLocationEvents = true;
-            SeachClicked?.Invoke(loc);
-            AvoidNewLocationEvents = false;
+            SeachClicked?.Invoke(entry);
         }
 
-        public static void FireIndexClicked(Location loc)
+        public static void FireIndexClicked(TOC_Entry entry)
         {
-            if (AvoidNewLocationEvents)
-                return;
-            //AvoidNewLocationEvents = true;
-            IndexClicked?.Invoke(loc);
-            AvoidNewLocationEvents = false;
+            IndexClicked?.Invoke(entry);
         }
 
         public static void FireTOCClicked(TOC_Entry entry)
         {
-            if (AvoidNewLocationEvents)
-                return;
-            //AvoidNewLocationEvents = true;
             TOCClicked?.Invoke(entry);
-            AvoidNewLocationEvents = false;
         }
 
         public static void FireCurrentBrowserTrack(BrowserPosition track)
         {
-            if (AvoidNewLocationEvents)
-                return;
-            //AvoidNewLocationEvents = true;
             CurrentBrowserTrack?.Invoke(track);
-            AvoidNewLocationEvents = false;
         }
 
         public static void FireBrowserTrackAdded(BrowserPosition track)
         {
-            if (AvoidNewLocationEvents)
-                return;
-            //AvoidNewLocationEvents = true;
             BrowserTrackAdded?.Invoke(track);
-            AvoidNewLocationEvents = false;
         }
 
 
@@ -142,6 +124,11 @@ namespace UrantiaBook.Classes
         public static void FireBilingualChanged(bool ShowBilingual)
         {
             BilingualChanged?.Invoke(ShowBilingual);
+        }
+        
+        public static void FireFontChanged(ControlsAppearance appearance)
+        {
+            FontChanged?.Invoke(appearance);
         }
 
 
