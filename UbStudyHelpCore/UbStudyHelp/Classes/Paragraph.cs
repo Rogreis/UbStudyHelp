@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Globalization;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public class Paragraph : BaseClass
     {

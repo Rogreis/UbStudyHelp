@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using YamlDotNet.Serialization;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public class TOC_Entry : BaseClass
     {

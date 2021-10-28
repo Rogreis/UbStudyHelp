@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using UrantiaBook.Classes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
 {
@@ -21,7 +21,7 @@ namespace UbStudyHelp.Controls
     {
 
         // Object to manipulate the index
-        private UrantiaBook.Classes.Index Index = new UrantiaBook.Classes.Index(App.BaseTubFilesPath);
+        private UbStudyHelp.Classes.Index Index = new UbStudyHelp.Classes.Index(App.BaseTubFilesPath);
 
 
         public IndexBrowser()
@@ -104,7 +104,7 @@ namespace UbStudyHelp.Controls
         {
             if (!Index.Load())
                 return;
-            List<string> list = Index.GetAllIndexEntryStartingWith(indexEntry);
+            List<string> list = Index.Search(indexEntry);
             if (list == null || list.Count == 0)
             {
                 ComboBoxIndexSearch.IsEnabled = false;

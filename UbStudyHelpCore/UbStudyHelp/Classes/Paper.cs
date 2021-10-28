@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using UbStudyHelp;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public enum enHtmlType
     {

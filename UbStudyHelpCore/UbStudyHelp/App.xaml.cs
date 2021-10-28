@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using UrantiaBook.Classes;
+using UbStudyHelp.Classes;
 using YamlDotNet.Serialization;
 
 namespace UbStudyHelp

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public class TreeSyncronizer
     {

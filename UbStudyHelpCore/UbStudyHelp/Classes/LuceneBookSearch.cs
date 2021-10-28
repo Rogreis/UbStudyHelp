@@ -12,7 +12,7 @@ using Lucene.Net.Util;
 using System;
 using System.Diagnostics;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
 
 
@@ -49,7 +49,7 @@ namespace UrantiaBook.Classes
     /// https://lucenenet.apache.org/docs/4.8.0-beta00014/api/demo/Lucene.Net.Demo.html
     /// 
     /// </summary>
-    public class LuceneService
+    public class LuceneBookSearch
     {
         // Note there are many different types of Analyzer that may be used with Lucene, the exact one you use
         // will depend on your requirements
@@ -58,7 +58,7 @@ namespace UrantiaBook.Classes
         private bool indexAlreadyExist = false;
         public string ErrorMessage { get; private set; } = "";
 
-        public LuceneService(Translation translation)
+        public LuceneBookSearch(Translation translation)
         {
             string exePath= System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             string pathFile = System.IO.Path.Combine(exePath, "L" + translation.LanguageID.ToString("000"));
@@ -117,9 +117,6 @@ namespace UrantiaBook.Classes
         {
             try
             {
-
-                //string directoryPath = AppDomain.CurrentDomain.BaseDirectory + @"\App_Data\LuceneIndexes";
-                //var directory = FSDirectory.Open(directoryPath);
                 Analyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
 
                 // How to query
@@ -130,40 +127,8 @@ namespace UrantiaBook.Classes
                 var parser = new QueryParser(LuceneVersion.LUCENE_48, "Text", analyzer);
                 Query searchQuery = parser.Parse(query);
 
-                Debug.WriteLine("    " + searchQuery.GetType().ToString());
-
-
                 SearchResults.SetSearchString(searchQuery.ToString());
-                Debug.WriteLine("    " + searchQuery.ToString());
 
-                if (searchQuery is Lucene.Net.Search.BooleanQuery)
-                {
-                    foreach (Lucene.Net.Search.BooleanClause clause in ((Lucene.Net.Search.BooleanQuery)searchQuery).Clauses)
-                    {
-                        Debug.WriteLine($"    BooleanClause: {clause.ToString()}");
-                    }
-                }
-
-                if (searchQuery is Lucene.Net.Search.FuzzyQuery)
-                {
-                    Lucene.Net.Search.FuzzyQuery f = ((Lucene.Net.Search.FuzzyQuery)searchQuery);
-                }
-
-                /*
-                    //     • Lucene.Net.Search.TermQuery
-                    //     • Lucene.Net.Search.MultiTermQuery
-                    //     • Lucene.Net.Search.BooleanQuery
-                    //     • Lucene.Net.Search.WildcardQuery
-                    //     • Lucene.Net.Search.PhraseQuery
-                    //     • Lucene.Net.Search.PrefixQuery
-                    //     • Lucene.Net.Search.MultiPhraseQuery
-                    //     • Lucene.Net.Search.FuzzyQuery
-                    //     • Lucene.Net.Search.TermRangeQuery
-                    //     • Lucene.Net.Search.NumericRangeQuery`1
-                    //     • Lucene.Net.Search.Spans.SpanQuery
-                 * */
-
-                //var indexFolder = Path.Combine(searchConfig.IndexRootFolder, $"lucene_index_{organization.Id}");
                 var reader = DirectoryReader.Open(FSDirectory.Open(indexPath));
                 IndexSearcher searcher = new IndexSearcher(reader);
                 TopDocs hits = searcher.Search(searchQuery, 200);
@@ -182,7 +147,6 @@ namespace UrantiaBook.Classes
                 ErrorMessage = ex.Message;
                 return false;
             }
-
         }
 
 

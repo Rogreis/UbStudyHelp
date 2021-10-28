@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using UrantiaBook.Classes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
 {

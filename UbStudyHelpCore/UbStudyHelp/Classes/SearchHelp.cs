@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UbStudyHelp;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     /// <summary>
     /// Read the a md file and convert it to html

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     /// <summary>
     /// cFlatPosition links a position in the flat search string with a word object to get the locations list

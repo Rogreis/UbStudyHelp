@@ -12,119 +12,12 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using UbStudyHelp;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public class Index
     {
         private string basePath;
-        private List<string> FileSufixes = new List<string>();
-
-        private class IndexDetails
-        {
-            public string Text { get; set; }
-
-            public string Details { get; set; }
-
-            public List<string> References { get; set; } = new List<string>();
-
-            public override string ToString()
-            {
-                return Text;
-            }
-
-        }
-
-        private class IndexTexts
-        {
-            public List<IndexDetails> Details { get; set; } = new List<IndexDetails>();
-
-            public static IndexTexts operator +(IndexTexts index1, IndexTexts index2)
-            {
-                index1.Details.AddRange(index2.Details);
-                return index1;
-            }
-
-        }
-
-        private IndexTexts Indexes = new IndexTexts();
-
-        public Index(string basePathForFiles)
-        {
-            basePath = basePathForFiles;
-            FileSufixes.Add("aa-az");
-            FileSufixes.Add("ba-bz");
-            FileSufixes.Add("ca-cz");
-            FileSufixes.Add("da-dz");
-            FileSufixes.Add("ea-ez");
-            FileSufixes.Add("fa-fz");
-            FileSufixes.Add("ga-gz");
-            FileSufixes.Add("ha-hz");
-            FileSufixes.Add("ia-iz");
-            FileSufixes.Add("ja-jz");
-            FileSufixes.Add("ka-kz");
-            FileSufixes.Add("la-lz");
-            FileSufixes.Add("ma-mz");
-            FileSufixes.Add("na-nz");
-            FileSufixes.Add("oa-oz");
-            FileSufixes.Add("pa-pz");
-            FileSufixes.Add("qa-qz");
-            FileSufixes.Add("ra-rz");
-            FileSufixes.Add("sa-sz");
-            FileSufixes.Add("ta-tz");
-            FileSufixes.Add("ua-uz");
-            FileSufixes.Add("va-vz");
-            FileSufixes.Add("wa-wz");
-            FileSufixes.Add("xa-xz");
-            FileSufixes.Add("ya-yz");
-            FileSufixes.Add("za-zz");
-        }
-
-
-        //private string CalculateFontSize(int AddToSize)
-        //{
-        //    return (Convert.ToInt16(App.ParametersData.Appearance.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
-        //}
-
-
-        //private string FonteFamilyInfo
-        //{
-        //    get
-        //    {
-        //        return App.ParametersData.Appearance.FontFamilyInfo;
-        //    }
-        //}
-
-        public bool Load()
-        {
-            try
-            {
-                if (Indexes.Details.Count == 0)
-                {
-                    foreach(string sufix in FileSufixes)
-                    {
-                        string pathFile = Path.Combine(basePath, sufix + ".json");
-                        string json = File.ReadAllText(pathFile);
-                        IndexTexts index = JsonConvert.DeserializeObject<IndexTexts>(json);
-                        Indexes += index;
-                    }
-                }
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public List<string> GetAllIndexEntryStartingWith(string startString)
-        {
-            List<IndexDetails> details = Indexes.Details.FindAll(d => d.Text.StartsWith(startString, StringComparison.CurrentCultureIgnoreCase));
-            if (details == null)
-                return null;
-            return details.Select(d => d.Text).ToList();
-            //return details.SelectMany<IndexDetails, string>(d => d.Text);
-        }
-
+        private LuceneIndexSearch lucene = null;
 
         private void linkForReference(InlineCollection Inlines, string line)
         {
@@ -134,7 +27,7 @@ namespace UrantiaBook.Classes
             }
 
             int ind = line.IndexOf("###");
-            line= line.Remove(ind, 3);
+            line = line.Remove(ind, 3);
             string reference = line.Replace(':', ';');
             reference = reference.Replace('.', ';');
 
@@ -147,17 +40,15 @@ namespace UrantiaBook.Classes
             Hyperlink hyperlink = new Hyperlink(run)
             {
                 NavigateUri = new Uri("about:blank"),
-                TextDecorations = TextDecorations.Underline
+                TextDecorations = null
             };
             hyperlink.Tag = reference;
-
             hyperlink.Click += Hyperlink_Click;
-            //hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
-
+            hyperlink.MouseEnter += Hyperlink_MouseEnter;
+            hyperlink.MouseLeave += Hyperlink_MouseLeave;       
             Inlines.Add(hyperlink);
-
-
         }
+
 
         private void PrepareInLine(IndexDetails detail, TextBlock tb)
         {
@@ -166,7 +57,7 @@ namespace UrantiaBook.Classes
 
             foreach (string reference in detail.References.Distinct().ToList())
             {
-                details= details.Replace(reference, $"»»»###{reference}»»»");
+                details = details.Replace(reference, $"»»»###{reference}»»»");
             }
 
 
@@ -196,7 +87,82 @@ namespace UrantiaBook.Classes
             }
         }
 
+        public List<string> FileSufixes { get; private set; } = new List<string>();
 
+        public IndexTexts Indexes { get; private set; } = new IndexTexts();
+
+        public Index(string basePathForFiles)
+        {
+            basePath = basePathForFiles;
+            lucene = new LuceneIndexSearch(basePath, 0); // Only English for now
+            FileSufixes.Add("aa-az");
+            FileSufixes.Add("ba-bz");
+            FileSufixes.Add("ca-cz");
+            FileSufixes.Add("da-dz");
+            FileSufixes.Add("ea-ez");
+            FileSufixes.Add("fa-fz");
+            FileSufixes.Add("ga-gz");
+            FileSufixes.Add("ha-hz");
+            FileSufixes.Add("ia-iz");
+            FileSufixes.Add("ja-jz");
+            FileSufixes.Add("ka-kz");
+            FileSufixes.Add("la-lz");
+            FileSufixes.Add("ma-mz");
+            FileSufixes.Add("na-nz");
+            FileSufixes.Add("oa-oz");
+            FileSufixes.Add("pa-pz");
+            FileSufixes.Add("qa-qz");
+            FileSufixes.Add("ra-rz");
+            FileSufixes.Add("sa-sz");
+            FileSufixes.Add("ta-tz");
+            FileSufixes.Add("ua-uz");
+            FileSufixes.Add("va-vz");
+            FileSufixes.Add("wa-wz");
+            FileSufixes.Add("xa-xz");
+            FileSufixes.Add("ya-yz");
+            FileSufixes.Add("za-zz");
+        }
+
+        public bool Load()
+        {
+            try
+            {
+                if (Indexes.Details.Count == 0)
+                {
+                    foreach(string sufix in FileSufixes)
+                    {
+                        string pathFile = Path.Combine(basePath, sufix + ".json");
+                        string json = File.ReadAllText(pathFile);
+                        IndexTexts index = JsonConvert.DeserializeObject<IndexTexts>(json);
+                        Indexes += index;
+                    }
+                }
+                lucene.CreateLuceneIndexForUBIndex(Indexes);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<string> Search(string startString)
+        {
+            List<string> wordsFound = lucene.Execute(startString);
+            List<IndexDetails> details = new List<IndexDetails>();
+            foreach (string word in wordsFound)
+            {
+                List<IndexDetails> detailsForWord = Indexes.Details.FindAll(d => d.Text.StartsWith(word, StringComparison.CurrentCultureIgnoreCase));
+                if (detailsForWord != null)
+                {
+                    details.AddRange(detailsForWord);
+                }
+            }
+            if (details.Count == 0)
+                return null;
+            details.Sort((d1, d2) => string.Compare(d1.Text, d2.Text, true));
+            return details.Select(d => d.Text).Distinct().ToList();
+        }
 
         public void ShowResults(string indexEntry, TextBlock tb)
         {
@@ -215,12 +181,6 @@ namespace UrantiaBook.Classes
             }
         }
 
-
-
-        //private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        //{
-        //}
-
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             Hyperlink hyperlink = sender as Hyperlink;
@@ -236,7 +196,27 @@ namespace UrantiaBook.Classes
 
             TOC_Entry entry = new TOC_Entry(Paper, Section, Paragraph);
             EventsControl.FireIndexClicked(entry);
-            hyperlink.Foreground = Brushes.Red; 
+
+            var run = hyperlink.Inlines.FirstOrDefault() as Run;
+            if (run != null)
+            {
+                run.Foreground= Brushes.Red;
+            }
+            hyperlink.Foreground = Brushes.Red;
         }
+
+        private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = null;
+        }
+
+        private void Hyperlink_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = TextDecorations.Underline;
+        }
+
+
     }
 }

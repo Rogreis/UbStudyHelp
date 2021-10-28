@@ -8,7 +8,7 @@ using System.IO;
 using System.Xml.Linq;
 using UbStudyHelp;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public delegate void dlNewBook();
 

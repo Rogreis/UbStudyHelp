@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public class TrackStack<T>
     {

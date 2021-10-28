@@ -6,7 +6,7 @@ using System.IO.Compression;
 using System.IO;
 using System.Net;
 using System.Xml.Linq;
-using UrantiaBook.Classes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Classes
 {

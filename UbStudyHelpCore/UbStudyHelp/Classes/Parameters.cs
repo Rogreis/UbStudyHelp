@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 using UbStudyHelp;
 using UbStudyHelp.Classes;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     public class Parameters
     {

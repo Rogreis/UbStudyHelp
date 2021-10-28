@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     /// <summary>
     /// Stores a search result

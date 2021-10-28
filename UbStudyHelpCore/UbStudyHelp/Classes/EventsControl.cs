@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UbStudyHelp.Classes;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     /// <summary>
     /// Used to fire a click on a new Table Of Contents item

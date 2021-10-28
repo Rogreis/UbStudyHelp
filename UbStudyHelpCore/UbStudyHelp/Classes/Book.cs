@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using UbStudyHelp;
 
-namespace UrantiaBook.Classes
+namespace UbStudyHelp.Classes
 {
     /// <summary>
     /// Bilingual book main organization
