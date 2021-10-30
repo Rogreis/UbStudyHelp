@@ -10,8 +10,7 @@ For the version 1.0 we have:
 
 - Index (type at least 3 letters and a you will see the index entries starting with those letters)
 
-- Search Engine (the use of  [Lucene.net](https://lucenenet.apache.org/)  tool give us several search options, as you can see  [here](UbStudyHelpCore/UbStudyHelp/Pages/help.md))
-
+- Search Engine (the use of  [Lucene.net](https://lucenenet.apache.org/)  tool give us several search options, as you can see  [here](UbStudyHelpCore/UbStudyHelp/Resources/SearchHelp.md))
 
 
   
