@@ -4,6 +4,20 @@ This is a tool to help readers to learn and teach about The Urantia Book. The or
 
 For now it is a Work In Progress.
 
+For the version 1.0 we have:
+
+- Table of contents (click on any paper or section jumps to the equivalent text)
+
+- Index (type at least 3 letters and a you will see the index entries starting with those letters)
+
+- Search Engine (the use of  [Lucene.net](https://lucenenet.apache.org/)  tool give us several search options, as you can see  [here](UbStudyHelpCore/UbStudyHelp/Pages/help.md))
+
+
+
+  
+
+
+
 ![image](https://user-images.githubusercontent.com/4200810/136822887-56e9738b-c311-41b6-9f98-4c93bf4f36cb.png)
 
 Also has an Index:
@@ -14,5 +28,4 @@ Also has an Index:
 And a Search Engine:
 
 ![image](https://user-images.githubusercontent.com/4200810/136823377-bef41ecf-8d1f-45d5-9eda-ebad6d5a2652.png)
-
 
