@@ -37,6 +37,11 @@ namespace UbStudyHelp
             string exePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             BaseTubFilesPath = System.IO.Path.Combine(exePath, "TUB_Files");
 
+            ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
+            ControlzEx.Theming.ThemeManager.Current.SyncTheme();
+
+
+
             // When parameters files does not exist, we use the default already created.
             if (File.Exists(pathParameters))
             {

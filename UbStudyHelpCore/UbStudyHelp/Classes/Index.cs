@@ -31,10 +31,12 @@ namespace UbStudyHelp.Classes
             string reference = line.Replace(':', ';');
             reference = reference.Replace('.', ';');
 
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetAccentColor());
+
             Run run = new Run(line)
             {
                 FontWeight = FontWeights.Bold,
-                Foreground = System.Windows.Media.Brushes.Blue
+                Foreground = accentBrush
             };
 
             Hyperlink hyperlink = new Hyperlink(run)
@@ -197,12 +199,15 @@ namespace UbStudyHelp.Classes
             TOC_Entry entry = new TOC_Entry(Paper, Section, Paragraph);
             EventsControl.FireIndexClicked(entry);
 
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetAccent2Color());
             var run = hyperlink.Inlines.FirstOrDefault() as Run;
             if (run != null)
             {
-                run.Foreground= System.Windows.Media.Brushes.Red;
+                //run.Foreground= System.Windows.Media.Brushes.Red;
+                run.Foreground = accentBrush;
+                
             }
-            hyperlink.Foreground = System.Windows.Media.Brushes.Red;
+            hyperlink.Foreground = accentBrush;
         }
 
         private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)

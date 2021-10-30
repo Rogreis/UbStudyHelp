@@ -6,10 +6,14 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                 WindowStartupLocation="CenterScreen"
+                GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                SaveWindowPosition="True" 
                 mc:Ignorable="d"
                 Loaded="formText_Loaded"
                 Title="The Urantia Book Study Help" Height="800" Width="1800" WindowState="Maximized">
 
+    <!--Setting a custom Icon see https://mahapps.com/docs/controls/metrowindow  -->
+    
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <Button Click="LaunchUFSite" ToolTip="Open up the Urantia Foundation Web Site">

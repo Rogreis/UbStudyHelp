@@ -88,23 +88,24 @@ namespace UbStudyHelp.Classes
                 // http://lucenenet.apache.org/
                 // https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
 
+                var reader = DirectoryReader.Open(FSDirectory.Open(IndexPath));
                 var parser = new QueryParser(LuceneVersion.LUCENE_48, IndexFieldData, analyzer);
                 Query searchQuery = parser.Parse(query);
 
                 List<string> resultsList = new List<string>();
 
-                var reader = DirectoryReader.Open(FSDirectory.Open(IndexPath));
-
-                //// Search with a phrase
-                //var phrase = new MultiPhraseQuery
-                //{
-                //    new Term(IndexFieldData, query),
-                //};
-
 
                 IndexSearcher searcher = new IndexSearcher(reader);
-
                 TopDocs hits = searcher.Search(searchQuery, 20);
+
+                // Nothing found? Try to expand (emulate starting with)
+                if (hits.ScoreDocs.Length == 0)
+                {
+                    query = query.Trim() + "*";
+                    searchQuery = parser.Parse(query);
+                    hits = searcher.Search(searchQuery, 20);
+                }
+
                 int results = hits.ScoreDocs.Length;
                 for (int i = 0; i < results; i++)
                 {

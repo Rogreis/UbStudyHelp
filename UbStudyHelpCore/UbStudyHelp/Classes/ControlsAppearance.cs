@@ -1,10 +1,13 @@
-﻿using System;
+﻿using ControlzEx.Theming;
+using System;
 using System.Collections.Generic;
+using System.Resources;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using UbStudyHelp.Properties;
 
 namespace UbStudyHelp.Classes
 {
@@ -27,6 +30,21 @@ namespace UbStudyHelp.Classes
         public ControlsAppearance()
         {
 
+        }
+
+
+        public string GetAccentColor()
+        {
+            // https://mahapps.com/docs/themes/thememanager
+            //Get a resource from the ResourceDictionary in code
+            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.AccentBase"));
+        }
+
+        public string GetAccent2Color()
+        {
+            // https://mahapps.com/docs/themes/thememanager
+            //Get a resource from the ResourceDictionary in code
+            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.Accent2"));
         }
 
 
