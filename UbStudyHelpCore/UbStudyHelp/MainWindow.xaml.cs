@@ -15,7 +15,10 @@ namespace UbStudyHelp
         public MainWindow()
         {
             InitializeComponent();
+            ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
+
         }
+
 
         private void ShowMessage(string message, bool fatalError= false)
         {
@@ -71,20 +74,20 @@ namespace UbStudyHelp
 
         private void SetFontSize()
         {
-            App.ParametersData.Appearance.SetFontSize(LabelTranslations);
-            App.ParametersData.Appearance.SetFontSize(LabelTrack);
-            App.ParametersData.Appearance.SetFontSize(ComboTrack);
-            App.ParametersData.Appearance.SetFontSize(LabelThemes);
-            App.ParametersData.Appearance.SetFontSize(ComboTheme);
-            App.ParametersData.Appearance.SetFontSize(TOC_Left);
-            App.ParametersData.Appearance.SetFontSize(TOC_Right);
-            EventsControl.FireFontChanged(App.ParametersData.Appearance);
+            App.Appearance.SetFontSize(LabelTranslations);
+            App.Appearance.SetFontSize(LabelTrack);
+            App.Appearance.SetFontSize(ComboTrack);
+            App.Appearance.SetFontSize(LabelThemes);
+            App.Appearance.SetFontSize(ComboTheme);
+            App.Appearance.SetFontSize(TOC_Left);
+            App.Appearance.SetFontSize(TOC_Right);
+            EventsControl.FireFontChanged(App.Appearance);
         }
 
         private void SetControlsStyles()
         {
-            App.ParametersData.Appearance.SetAll(TOC_Left);
-            App.ParametersData.Appearance.SetAll(TOC_Right);
+            App.Appearance.SetAll(TOC_Left);
+            App.Appearance.SetAll(TOC_Right);
             SetFontSize();
         }
 
@@ -139,17 +142,18 @@ namespace UbStudyHelp
 
         private void BtIncreaseFontSize_Click(object sender, RoutedEventArgs e)
         {
-            App.ParametersData.Appearance.FontSizeInfo++;
+            App.Appearance.FontSizeInfo++;
             SetFontSize();
         }
 
         private void BtDecreseFontSize_Click(object sender, RoutedEventArgs e)
         {
-            App.ParametersData.Appearance.FontSizeInfo--;
+            App.Appearance.FontSizeInfo--;
             SetFontSize();
         }
 
-        private void BtToggleTheme_Toggled(object sender, RoutedEventArgs e)
+
+        private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)
         {
             // Set the application theme to Dark.Green
             Theme theme = ThemeManager.Current.DetectTheme();

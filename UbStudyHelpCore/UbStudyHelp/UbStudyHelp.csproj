@@ -15,14 +15,51 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\SearchHelp.md" />
+    <None Remove="SearchHelp.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SearchHelp.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommonMark.NET" Version="0.15.1" />
     <PackageReference Include="Lucene.Net" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00014" />
-    <PackageReference Include="MahApps.Metro" Version="2.4.8" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.10.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls.Core">
+      <HintPath>..\..\..\..\..\..\Users\CTW01001\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls.core\7.0.0\lib\netstandard2.0\Microsoft.Toolkit.Uwp.UI.Controls.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls.Primitives">
+      <HintPath>..\..\..\..\..\..\Users\CTW01001\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls.primitives\7.0.0\lib\netstandard2.0\Microsoft.Toolkit.Uwp.UI.Controls.Primitives.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

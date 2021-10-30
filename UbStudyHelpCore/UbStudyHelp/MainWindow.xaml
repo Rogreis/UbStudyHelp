@@ -60,7 +60,12 @@
             <ComboBox x:Name="ComboTrack" Width="400" />
 
             <Separator Margin="10,2,2,2" />
+
+            <mah:ToggleSwitch x:Name="ToggleSwitchThemme" />
+            
             <Label x:Name="LabelThemes" Content="Theme:" Margin="0,10,0,0" VerticalAlignment="Center" />
+            
+            
             <ComboBox x:Name="ComboTheme"  SelectionChanged="ComboTheme_SelectionChanged" Width="400">
                 <ComboBoxItem>Red</ComboBoxItem>
                 <ComboBoxItem>Green</ComboBoxItem>

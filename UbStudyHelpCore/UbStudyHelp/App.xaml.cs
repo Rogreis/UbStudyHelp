@@ -27,6 +27,9 @@ namespace UbStudyHelp
 
         public static string BaseTubFilesPath = "";
 
+        public static ControlsAppearance Appearance = new ControlsAppearance();
+
+
 
         protected override void OnStartup(StartupEventArgs e)
         {

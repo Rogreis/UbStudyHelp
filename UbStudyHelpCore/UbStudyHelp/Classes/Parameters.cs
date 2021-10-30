@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
@@ -48,7 +49,6 @@ namespace UbStudyHelp.Classes
 
         public int SpliterDistance { get; set; } = 360;
 
-        public ControlsAppearance Appearance = new ControlsAppearance();
 
         public List<string> SearchIndexEntries = new List<string>();
 

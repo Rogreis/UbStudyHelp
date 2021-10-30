@@ -34,7 +34,7 @@ namespace UbStudyHelp.Classes
             Run run = new Run(line)
             {
                 FontWeight = FontWeights.Bold,
-                Foreground = Brushes.Blue
+                Foreground = System.Windows.Media.Brushes.Blue
             };
 
             Hyperlink hyperlink = new Hyperlink(run)
@@ -200,9 +200,9 @@ namespace UbStudyHelp.Classes
             var run = hyperlink.Inlines.FirstOrDefault() as Run;
             if (run != null)
             {
-                run.Foreground= Brushes.Red;
+                run.Foreground= System.Windows.Media.Brushes.Red;
             }
-            hyperlink.Foreground = Brushes.Red;
+            hyperlink.Foreground = System.Windows.Media.Brushes.Red;
         }
 
         private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)

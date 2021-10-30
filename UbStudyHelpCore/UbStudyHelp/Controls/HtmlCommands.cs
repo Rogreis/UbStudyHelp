@@ -41,14 +41,14 @@ namespace UbStudyHelp.Controls
         {
             get
             {
-                return App.ParametersData.Appearance.FontFamilyInfo;
+                return App.Appearance.FontFamilyInfo;
             }
         }
 
 
         protected string FontSize(int AddToSize)
         {
-            return (Convert.ToInt16(App.ParametersData.Appearance.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
+            return (Convert.ToInt16(App.Appearance.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
         }
 
         public string UbFontColor(FontColorType colorType)
