@@ -23,36 +23,46 @@ namespace UbStudyHelp.Pages
         {
             InitializeComponent();
             this.Loaded += UbTocPage_Loaded;
+            EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
+
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            SetControlsStyles();
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            SetFontSize();
+        }
+
+
+        private void SetFontSize()
+        {
+            App.Appearance.SetFontSize(TOC_Left);
+            App.Appearance.SetFontSize(TOC_Right);
+        }
+
+
+        private void SetControlsStyles()
+        {
+            App.Appearance.SetAll(TOC_Left);
+            App.Appearance.SetAll(TOC_Right);
+            SetFontSize();
+        }
+
 
         private void UbTocPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (LoadData())
-            {
-                FillTreeView(TOC_Left, true);
-                FillTreeView(TOC_Right, false);
-                TOC_Left.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-                TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-            }
+            SetFontSize();
+            SetControlsStyles();
+            FillTreeView(TOC_Left, true);
+            FillTreeView(TOC_Right, false);
+            TOC_Left.SelectedItemChanged += TableOfContents_SelectedItemChanged;
+            TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
         }
 
-        private bool LoadData()
-        {
-            GetDataFiles dataFiles = new GetDataFiles();
-            try
-            {
-                if (!dataFiles.CheckFiles(App.BaseTubFilesPath))
-                {
-                    return false;
-                }
-                return Book.Inicialize(App.BaseTubFilesPath);
-            }
-            catch (Exception ex)
-            {
-                EventsControl.FireSendMessage("Loading TOC data", ex);
-                return false;
-            }
-        }
 
         private void FillTreeView(TreeView tree, bool useLeftTranslation)
         {

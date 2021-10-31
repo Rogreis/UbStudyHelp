@@ -41,13 +41,19 @@ namespace UbStudyHelp.Classes
 
         public bool SimpleSearchIncludePartIV { get; set; } = true;
 
+        public string FontFamilyInfo { get; set; } = "Verdana";
+
+        public double FontSizeInfo { get; set; } = 20.0;
+
+        public int SpliterDistance { get; set; } = 360;
+
+
         public bool IsPaperIncluded(int PaperNo) => ((App.ParametersData.SimpleSearchIncludePartI && PaperNo < 32) ||
                                                     (App.ParametersData.SimpleSearchIncludePartII && PaperNo >= 32 && PaperNo <= 56) ||
                                                     (App.ParametersData.SimpleSearchIncludePartIII && PaperNo >= 57 && PaperNo <= 119) ||
                                                     (App.ParametersData.SimpleSearchIncludePartIV && PaperNo >= 120));
 
 
-        public int SpliterDistance { get; set; } = 360;
 
 
         public List<string> SearchIndexEntries = new List<string>();

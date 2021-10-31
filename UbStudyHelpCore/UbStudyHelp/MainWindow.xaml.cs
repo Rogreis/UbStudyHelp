@@ -16,7 +16,6 @@ namespace UbStudyHelp
         public MainWindow()
         {
             InitializeComponent();
-            ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
             EventsControl.SendMessage += EventsControl_SendMessage;
 
         }
@@ -29,12 +28,12 @@ namespace UbStudyHelp
         private void ShowMessage(string message, bool fatalError= false)
         {
             Debug.WriteLine(message);
-            //MessageBox.Show(message);
-            //if (fatalError)
-            //{
-            //    System.Windows.Application.Current.Shutdown();
-            //    // Environment.Exit(0)
-            //}
+            StatusBarMessages.Text = message;
+            if (fatalError)
+            {
+                MessageBox.Show(message);
+                System.Windows.Application.Current.Shutdown();
+            }
         }
 
         private bool LoadData()
@@ -50,80 +49,23 @@ namespace UbStudyHelp
             }
             catch (Exception ex)
             {
-                ShowMessage(ex.Message, true);
+                EventsControl.FireSendMessage("Loading TOC data", ex);
                 return false;
             }
         }
 
-        private void FillTreeView(TreeView tree, bool useLeftTranslation)
-        {
-            Translation translation = useLeftTranslation ? Book.LeftTranslation : Book.RightTranslation;
 
-            TreeViewItem nodePaper = null;
-            foreach (TOC_Entry entry in translation.TableOfContents)
-            {
-                if (entry.Section == 0)
-                {
-                    nodePaper = new TreeViewItemUB(entry);
-                    //if (entry.IsExpanded) nodePaper.Expand();
-                    tree.Items.Add(nodePaper);
-                }
-                else if (entry.ParagraphNo == 0)
-                {
-                    TreeViewItem nodeSection = new TreeViewItemUB(entry);
-                    nodeSection.Tag = entry;
-                    nodePaper.Items.Add(nodeSection);
-                }
-            }
-
-        }
-
-
-        private void SetFontSize()
-        {
-            App.Appearance.SetFontSize(LabelTranslations);
-            App.Appearance.SetFontSize(LabelTrack);
-            App.Appearance.SetFontSize(ComboTrack);
-            App.Appearance.SetFontSize(LabelThemes);
-            App.Appearance.SetFontSize(ComboTheme);
-            App.Appearance.SetFontSize(TOC_Left);
-            App.Appearance.SetFontSize(TOC_Right);
-            EventsControl.FireFontChanged(App.Appearance);
-        }
-
-        private void SetControlsStyles()
-        {
-            App.Appearance.SetAll(TOC_Left);
-            App.Appearance.SetAll(TOC_Right);
-            SetFontSize();
-        }
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
-
-            if (LoadData())
+            StatusBarVersion.Text = "v 2.0";
+            // Information about current theme stored for other controls
+            if (!LoadData())
             {
-                FillTreeView(TOC_Left, true);
-                FillTreeView(TOC_Right, false);
-                TOC_Left.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-                TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-                ComboTheme.Text= App.ParametersData.ThemeColor;
+                ShowMessage("Data not loaded!", true);
             }
-            SetTheme();
-            SetFontSize();
         }
 
-
-
-        #region Tree Events
-        private void TableOfContents_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            TreeView tree = sender as TreeView;
-            TreeViewItemUB item = tree.SelectedItem as TreeViewItemUB;
-            EventsControl.FireTOCClicked(item.Entry);
-        }
-
-        #endregion
 
         private void LaunchUFSite(object sender, RoutedEventArgs e)
         {
@@ -134,50 +76,10 @@ namespace UbStudyHelp
             cw.Show();
         }
 
-        private void SetTheme()
-        {
-            string theme = App.ParametersData.ThemeName + "." + App.ParametersData.ThemeColor;
-            ThemeManager.Current.ChangeTheme(Application.Current, theme);
-        }
-
-        private void ReverseTheme(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void ComboTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBoxItem item = ComboTheme.SelectedItem as ComboBoxItem;
-            App.ParametersData.ThemeColor = (string)item.Content; 
-            SetTheme();
-        }
-
-        private void BtIncreaseFontSize_Click(object sender, RoutedEventArgs e)
-        {
-            App.Appearance.FontSizeInfo++;
-            SetFontSize();
-        }
-
-        private void BtDecreseFontSize_Click(object sender, RoutedEventArgs e)
-        {
-            App.Appearance.FontSizeInfo--;
-            SetFontSize();
-        }
 
 
-        private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)
-        {
-            // Set the application theme to Dark.Green
-            Theme theme = ThemeManager.Current.DetectTheme();
-            if (theme.Name.StartsWith("Dark"))
-            {
-                App.ParametersData.ThemeName = "Light";
-            }
-            else
-            {
-                App.ParametersData.ThemeName = "Dark";
-            }
-            SetTheme();
-            SetFontSize();
-        }
+
+
+
     }
 }

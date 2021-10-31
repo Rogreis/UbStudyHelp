@@ -42,6 +42,7 @@ namespace UbStudyHelp.Classes
 
     public delegate void dlFontChanged(ControlsAppearance appearance);
 
+    public delegate void dlAppearanceChanged(ControlsAppearance appearance);
 
     public static class EventsControl
     {
@@ -65,6 +66,7 @@ namespace UbStudyHelp.Classes
 
         public static event dlFontChanged FontChanged = null;
 
+        public static event dlAppearanceChanged AppearanceChanged = null;
 
         public static void FireSeachClicked(TOC_Entry entry)
         {
@@ -115,22 +117,26 @@ namespace UbStudyHelp.Classes
         {
             LeftTranslationChanged?.Invoke(oLeftTranslation);
         }
+
         public static void FireRightTranslationChanged(Translation oRightTranslation)
         {
             RightTranslationChanged?.Invoke(oRightTranslation);
         }
-
 
         public static void FireBilingualChanged(bool ShowBilingual)
         {
             BilingualChanged?.Invoke(ShowBilingual);
         }
         
-        public static void FireFontChanged(ControlsAppearance appearance)
+        public static void FireFontChanged()
         {
-            FontChanged?.Invoke(appearance);
+            FontChanged?.Invoke(App.Appearance);
         }
 
+        public static void FireAppearanceChanged()
+        {
+            AppearanceChanged?.Invoke(App.Appearance);
+        }
 
 
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControlzEx.Theming;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Pages
 {
@@ -21,6 +23,45 @@ namespace UbStudyHelp.Pages
         public OptionsPage()
         {
             InitializeComponent();
+            EventsControl.FontChanged += EventsControl_FontChanged;
+            ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
         }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            App.Appearance.SetFontSize(LabelTranslations);
+            App.Appearance.SetFontSize(LabelTrack);
+            App.Appearance.SetFontSize(ComboTrack);
+            App.Appearance.SetFontSize(LabelThemes);
+            App.Appearance.SetFontSize(ComboTheme);
+        }
+
+        private void SetTheme()
+        {
+            string theme = App.ParametersData.ThemeName + "." + App.ParametersData.ThemeColor;
+            ThemeManager.Current.ChangeTheme(Application.Current, theme);
+        }
+
+
+        private void ComboTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem item = ComboTheme.SelectedItem as ComboBoxItem;
+            App.ParametersData.ThemeColor = (string)item.Content;
+            SetTheme();
+        }
+
+        private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (App.Appearance.Theme == "Dark")
+            {
+                App.Appearance.Theme = "Light";
+            }
+            else
+            {
+                App.Appearance.Theme = "Dark";
+            }
+        }
+
+
     }
 }

@@ -77,8 +77,8 @@ namespace UbStudyHelp.Controls
                     if (parLeft.Entry == entry)
                     {
                         cssClass = " class=\"border-highlight\"";
-                        TextLeft = SearchResults.HighlightWords(parLeft, UbFontColor(FontColorType.Highlight, true));
-                        TextRight = SearchResults.HighlightWords(parRight, UbFontColor(FontColorType.Highlight, true));
+                        TextLeft = SearchResults.HighlightWords(parLeft, GetFontColor(FontColorType.Highlight));
+                        TextRight = SearchResults.HighlightWords(parRight, GetFontColor(FontColorType.Highlight));
                     }
                 }
 

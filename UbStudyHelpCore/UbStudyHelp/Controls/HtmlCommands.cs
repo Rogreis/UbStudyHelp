@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UbStudyHelp.Classes;
+using static UbStudyHelp.Classes.ControlsAppearance;
 
 namespace UbStudyHelp.Controls
 {
@@ -41,19 +42,40 @@ namespace UbStudyHelp.Controls
         {
             get
             {
-                return App.Appearance.FontFamilyInfo;
+                return App.ParametersData.FontFamilyInfo;
             }
         }
 
 
         protected string FontSize(int AddToSize)
         {
-            return (Convert.ToInt16(App.Appearance.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
+            return (Convert.ToInt16(App.ParametersData.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
         }
 
         public string UbFontColor(FontColorType colorType)
         {
-            string color = ColorTable[(int)colorType];
+            //string color = ColorTable[(int)colorType];
+            MahColorNames mahColorNames = MahColorNames.Highlight;
+            switch (colorType)
+            {
+                case FontColorType.BackGround:
+                    mahColorNames = MahColorNames.ThemeBackground;
+                    break;
+                case FontColorType.FontColor:
+                    mahColorNames = MahColorNames.ThemeForeground;
+                    break;
+                case FontColorType.Highlight:
+                    mahColorNames = MahColorNames.Highlight;
+                    break;
+                case FontColorType.Gray:
+                    mahColorNames = MahColorNames.Gray;
+                    break;
+                case FontColorType.Title:
+                    mahColorNames = MahColorNames.Highlight;
+                    break;
+            }
+
+            string color = App.Appearance.GetColor(mahColorNames);
             return $"{color}";
         }
 
@@ -116,10 +138,9 @@ namespace UbStudyHelp.Controls
 
         #region public interface
 
-        public System.Drawing.Color UbFontColor(FontColorType colorType, bool WpfCOlor)
+        public System.Drawing.Color GetFontColor(FontColorType colorType)
         {
-            string color = ColorTable[(int)colorType];
-            return System.Drawing.Color.FromName(color);
+            return System.Drawing.Color.FromName(UbFontColor(colorType));
         }
 
         public abstract string HtmlLine(TOC_Entry entry, bool shouldHighlightText);

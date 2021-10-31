@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="TestWindow" Height="450" Width="800">
     <Grid>
-        <Controls:LeftPainel />
+        <Controls:LeftPanel />
     </Grid>
 </Window>

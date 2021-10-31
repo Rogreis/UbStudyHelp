@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Pages
 {
@@ -21,6 +22,11 @@ namespace UbStudyHelp.Pages
         public UbTrackPage()
         {
             InitializeComponent();
+            EventsControl.FontChanged += EventsControl_FontChanged;
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
         }
     }
 }
