@@ -1,5 +1,6 @@
 ﻿using ControlzEx.Theming;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using UbStudyHelp.Classes;
@@ -16,18 +17,24 @@ namespace UbStudyHelp
         {
             InitializeComponent();
             ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
+            EventsControl.SendMessage += EventsControl_SendMessage;
 
         }
 
+        private void EventsControl_SendMessage(string message)
+        {
+            ShowMessage(message);
+        }
 
         private void ShowMessage(string message, bool fatalError= false)
         {
-            MessageBox.Show(message);
-            if (fatalError)
-            {
-                System.Windows.Application.Current.Shutdown();
-                // Environment.Exit(0)
-            }
+            Debug.WriteLine(message);
+            //MessageBox.Show(message);
+            //if (fatalError)
+            //{
+            //    System.Windows.Application.Current.Shutdown();
+            //    // Environment.Exit(0)
+            //}
         }
 
         private bool LoadData()
@@ -121,6 +128,10 @@ namespace UbStudyHelp
         private void LaunchUFSite(object sender, RoutedEventArgs e)
         {
             //Process.Start("http://www.urantia.org");
+            TestWindow cw = new TestWindow();
+            cw.ShowInTaskbar = false;
+            cw.Owner = Application.Current.MainWindow;
+            cw.Show();
         }
 
         private void SetTheme()

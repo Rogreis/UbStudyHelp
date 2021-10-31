@@ -31,7 +31,7 @@ namespace UbStudyHelp.Classes
             string reference = line.Replace(':', ';');
             reference = reference.Replace('.', ';');
 
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetAccentColor());
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
             Run run = new Run(line)
             {
@@ -166,10 +166,11 @@ namespace UbStudyHelp.Classes
             return details.Select(d => d.Text).Distinct().ToList();
         }
 
+        private TextBlock tbIndex = null;
         public void ShowResults(string indexEntry, TextBlock tb)
         {
             IndexDetails detail = Indexes.Details.Find(d => string.Compare(d.Text, indexEntry) == 0);
-
+            tbIndex = tb;
             tb.Inlines.Clear();
             if (detail == null)
             {
@@ -189,6 +190,13 @@ namespace UbStudyHelp.Classes
             string reference = (string)hyperlink.Tag;
             char[] separators = { ';' };
             string[] parts = reference.Split(separators);
+
+            if (parts.Length < 3)
+            {
+                ShowResults(reference, tbIndex);
+                return;
+            }
+
             short Paper = -1;
             short.TryParse(parts[0], out Paper);
             short Section = -1;
@@ -199,7 +207,7 @@ namespace UbStudyHelp.Classes
             TOC_Entry entry = new TOC_Entry(Paper, Section, Paragraph);
             EventsControl.FireIndexClicked(entry);
 
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetAccent2Color());
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor());
             var run = hyperlink.Inlines.FirstOrDefault() as Run;
             if (run != null)
             {

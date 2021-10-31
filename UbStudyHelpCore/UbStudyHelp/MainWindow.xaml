@@ -21,6 +21,7 @@
             </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
+    
 
     <!--<mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
@@ -98,6 +99,7 @@
 
         </ToolBar>
 
+
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400">
@@ -108,7 +110,8 @@
 
                 </ColumnDefinition>
             </Grid.ColumnDefinitions>
-            
+
+
             <TabControl x:Name="TabLeft">
                 <TabItem x:Name="TabItremTOC" Header="Table of Contents">
                     <TabControl>

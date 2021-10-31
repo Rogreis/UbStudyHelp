@@ -33,18 +33,18 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public string GetAccentColor()
+        public string GetHighlightColor()
         {
             // https://mahapps.com/docs/themes/thememanager
             //Get a resource from the ResourceDictionary in code
-            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.AccentBase"));
+            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.Highlight"));
         }
 
-        public string GetAccent2Color()
+        public string GetGrayColor()
         {
             // https://mahapps.com/docs/themes/thememanager
             //Get a resource from the ResourceDictionary in code
-            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.Accent2"));
+            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.Gray1"));
         }
 
 

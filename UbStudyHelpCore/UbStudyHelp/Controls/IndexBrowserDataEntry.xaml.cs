@@ -36,11 +36,13 @@ namespace UbStudyHelp.Controls
 
             // Events
             this.KeyDown += IndexBrowserDataEntry_KeyDown;
+            this.Loaded += IndexBrowserDataEntry_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             TextBoxIndexLetters.KeyDown += TextBoxIndexLetters_KeyDown;
             ComboBoxIndexSearch.DropDownClosed += ComboBoxIndexSearch_DropDownClosed;
             ButtonHelp.Click += ButtonHelp_Click;
         }
+
 
 
         /// <summary>
@@ -53,8 +55,9 @@ namespace UbStudyHelp.Controls
 
         private void FillComboBoxIndexEntry(string indexEntry)
         {
-            if (!Index.Load())
+            if (!Index.Load() || indexEntry.Length < 2)
                 return;
+
             List<string> list = Index.Search(indexEntry);
             if (list == null || list.Count == 0)
             {
@@ -67,9 +70,9 @@ namespace UbStudyHelp.Controls
             {
                 ComboBoxIndexSearch.Items.Add(list[i]);
             }
+            App.ParametersData.IndexLetters = indexEntry;
             ComboBoxIndexSearch.SelectedIndex = 0;
             ComboBoxIndexSearch.IsEnabled = true;
-            App.ParametersData.IndexLetters = indexEntry;
         }
 
 
@@ -88,10 +91,7 @@ namespace UbStudyHelp.Controls
             if (e.Key == Key.Enter)
             {
                 string text = TextBoxIndexLetters.Text.Trim();
-                if (text.Length > 1)
-                {
-                    FillComboBoxIndexEntry(text);
-                }
+                FillComboBoxIndexEntry(text);
             }
             if (e.Key == Key.F1)
             {
@@ -99,6 +99,16 @@ namespace UbStudyHelp.Controls
             }
         }
 
+
+        private void IndexBrowserDataEntry_Loaded(object sender, RoutedEventArgs e)
+        {
+            TextBoxIndexLetters.Text = App.ParametersData.IndexLetters;
+            string text = TextBoxIndexLetters.Text.Trim();
+            if (text.Length > 1)
+            {
+                FillComboBoxIndexEntry(text);
+            }
+        }
 
         private void ButtonHelp_Click(object sender, RoutedEventArgs e)
         {
@@ -108,10 +118,7 @@ namespace UbStudyHelp.Controls
         private void ComboBoxIndexSearch_DropDownClosed(object sender, EventArgs e)
         {
             string text = ComboBoxIndexSearch.Text.Trim();
-            if (text.Length > 1)
-            {
-                ShowIndexDetails?.Invoke(text);
-            }
+            ShowIndexDetails?.Invoke(text);
         }
 
         private void TextBoxIndexLetters_KeyDown(object sender, KeyEventArgs e)
