@@ -76,7 +76,7 @@ namespace UbStudyHelp.Controls
             }
 
             string color = App.Appearance.GetColor(mahColorNames);
-            return $"{color}";
+            return color.Remove(1,2);
         }
 
 

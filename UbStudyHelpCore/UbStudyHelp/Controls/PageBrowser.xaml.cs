@@ -32,7 +32,9 @@ namespace UbStudyHelp.Controls
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.SeachClicked += EventsControl_SeachClicked;
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
+
 
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace UbStudyHelp.Controls
             App.ParametersData.Entry.Section = entry.Section;
             App.ParametersData.Entry.ParagraphNo = entry.ParagraphNo;
 
-            EventsControl.FireSendMessage(Book.LeftTranslation.PaperTranslation);
+            EventsControl.FireSendMessage("New paper loaded: " + Book.LeftTranslation.ToString());
             string htmlPage = commands.HtmlLine(entry, shouldHighlightText);
             BrowserText.NavigateToString(htmlPage);
         }
@@ -74,6 +76,12 @@ namespace UbStudyHelp.Controls
         {
             Show(entry);
         }
+
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            Show(App.ParametersData.Entry);
+        }
+
 
         private void EventsControl_FontChanged(Classes.ControlsAppearance appearance)
         {

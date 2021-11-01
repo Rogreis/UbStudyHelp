@@ -25,15 +25,30 @@ namespace UbStudyHelp.Pages
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
+            this.Loaded += OptionsPage_Loaded;
+        }
+
+        private void ChangeFont()
+        {
+            App.Appearance.SetFontSize(LabelTranslations);
+            App.Appearance.SetFontSize(LabelTrack);
+            App.Appearance.SetFontSize(LabelThemes);
+            App.Appearance.SetFontSize(LabelOptionPage);
+            App.Appearance.SetFontSize(LabelColorTheme);
+
+            App.Appearance.SetFontSize(ComboTrack);
+            App.Appearance.SetFontSize(ComboTheme);
+        }
+
+        private void OptionsPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            ChangeFont();
+            ComboTheme.Text = App.ParametersData.ThemeColor;
         }
 
         private void EventsControl_FontChanged(ControlsAppearance appearance)
         {
-            App.Appearance.SetFontSize(LabelTranslations);
-            App.Appearance.SetFontSize(LabelTrack);
-            App.Appearance.SetFontSize(ComboTrack);
-            App.Appearance.SetFontSize(LabelThemes);
-            App.Appearance.SetFontSize(ComboTheme);
+            ChangeFont();
         }
 
         private void SetTheme()
@@ -48,6 +63,7 @@ namespace UbStudyHelp.Pages
             ComboBoxItem item = ComboTheme.SelectedItem as ComboBoxItem;
             App.ParametersData.ThemeColor = (string)item.Content;
             SetTheme();
+            EventsControl.FireAppearanceChanged();
         }
 
         private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)

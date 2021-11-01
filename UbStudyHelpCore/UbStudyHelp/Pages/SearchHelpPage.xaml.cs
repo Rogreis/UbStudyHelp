@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Pages
 {
@@ -21,6 +12,25 @@ namespace UbStudyHelp.Pages
         public SearchHelpPage()
         {
             InitializeComponent();
+            this.Loaded += SearchHelpPage_Loaded;
+            EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+        }
+
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            App.Appearance.SetAll(MarkDownDisplay);
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            App.Appearance.SetFontSize(MarkDownDisplay);
+        }
+
+        private void SearchHelpPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            MarkDownDisplay.Markdown = Properties.Resources.SearchHelp;
+            App.Appearance.SetAll(MarkDownDisplay);
         }
     }
 }
