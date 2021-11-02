@@ -29,11 +29,13 @@ namespace UbStudyHelp.Controls
 
             this.Loaded += PageBrowser_Loaded;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
+            EventsControl.TrackSelected += EventsControl_TrackSelected;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.SeachClicked += EventsControl_SeachClicked;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
+
 
 
 
@@ -49,7 +51,7 @@ namespace UbStudyHelp.Controls
             App.ParametersData.Entry.Section = entry.Section;
             App.ParametersData.Entry.ParagraphNo = entry.ParagraphNo;
 
-            EventsControl.FireSendMessage("New paper loaded: " + Book.LeftTranslation.ToString());
+            EventsControl.FireSendMessage("Paper: " + entry.ToString());
             string htmlPage = commands.HtmlLine(entry, shouldHighlightText);
             BrowserText.NavigateToString(htmlPage);
         }
@@ -63,6 +65,11 @@ namespace UbStudyHelp.Controls
 
 
         private void EventsControl_TOCClicked(TOC_Entry entry)
+        {
+            Show(entry);
+        }
+
+        private void EventsControl_TrackSelected(TOC_Entry entry)
         {
             Show(entry);
         }

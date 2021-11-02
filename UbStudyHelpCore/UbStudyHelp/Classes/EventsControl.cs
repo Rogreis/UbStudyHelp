@@ -13,6 +13,12 @@ namespace UbStudyHelp.Classes
     public delegate void dlTOCClicked(TOC_Entry entry);
 
     /// <summary>
+    /// Used to indicate new track selected
+    /// </summary>
+    /// <param name="entry"></param>
+    public delegate void dlTrackSelected(TOC_Entry entry);
+
+    /// <summary>
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
@@ -48,6 +54,8 @@ namespace UbStudyHelp.Classes
 
         public static event dlTOCClicked TOCClicked = null;
 
+        public static event dlTrackSelected TrackSelected = null;
+
         public static event dlSendMessage SendMessage = null;
 
         public static event dlLeftTranslationChanged LeftTranslationChanged = null;
@@ -73,6 +81,11 @@ namespace UbStudyHelp.Classes
         public static void FireTOCClicked(TOC_Entry entry)
         {
             TOCClicked?.Invoke(entry);
+        }
+
+        public static void FireTrackSelected(TOC_Entry entry)
+        {
+            TrackSelected?.Invoke(entry);
         }
 
         public static void FireSendMessage(string location, Exception ex)

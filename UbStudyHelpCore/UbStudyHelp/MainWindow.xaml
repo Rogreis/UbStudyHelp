@@ -63,13 +63,28 @@
 
         </Grid>
 
-        <StatusBar Grid.Row="1" Margin="5,5,5,5">
-            <StatusBarItem>
-                <TextBlock Name="StatusBarVersion" />
+        <StatusBar Grid.Row="1">
+
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0" >
+                <TextBlock Name="StatusBarVersion" Margin="0,10,0,0"  />
             </StatusBarItem>
-            <StatusBarItem>
-                <TextBlock Name="StatusBarMessages" Margin="0,10,0,0" />
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2" >
+                <TextBlock Name="StatusBarMessages" Margin="0,10,0,0" TextTrimming="WordEllipsis" />
             </StatusBarItem>
+            
         </StatusBar>
 
 

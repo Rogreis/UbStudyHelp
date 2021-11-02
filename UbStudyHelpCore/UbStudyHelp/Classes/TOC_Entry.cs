@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using YamlDotNet.Serialization;
 
@@ -6,6 +7,8 @@ namespace UbStudyHelp.Classes
 {
     public class TOC_Entry : BaseClass
     {
+        private const int MaxSampleTextSize = 80;
+
         public short Paper { get; set; } = 0;
         public short Section { get; set; } = 1;
         public short ParagraphNo { get; set; } = 1;
@@ -54,6 +57,30 @@ namespace UbStudyHelp.Classes
         }
 
 
+        [YamlIgnore]
+        public string TextSample
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Text))
+                {
+                    return "";
+                }
+                if (Text.Length < MaxSampleTextSize)
+                {
+                    return Text;
+                }
+                // Return MaxSampleTextSize or until first not letter/number character
+                int position = Math.Min(MaxSampleTextSize, Text.Length);
+                position = Text.IndexOf(' ', position);
+                if (position >= 0)
+                {
+                    return Text.Substring(0, position);
+                }
+                return Text.Substring(0, MaxSampleTextSize);
+            }
+        }
+
 
         public TOC_Entry()
         {
@@ -86,7 +113,7 @@ namespace UbStudyHelp.Classes
 
         public override string ToString()
         {
-            return ParagraphID;
+            return $"{ParagraphID} {TextSample}";
         }
 
 

@@ -18,12 +18,25 @@ namespace UbStudyHelp
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
             EventsControl.SendMessage += EventsControl_SendMessage;
+            EventsControl.FontChanged += EventsControl_FontChanged;
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
+        }
+
+        private void FontChanged()
+        {
+            App.Appearance.SetFontSize(StatusBarVersion);
+            App.Appearance.SetFontSize(StatusBarMessages);
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            FontChanged();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             GridTexts.ColumnDefinitions[0].Width = new GridLength(App.ParametersData.SpliterDistance);
+            FontChanged();
         }
 
         private void GridSplitterLeft_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)

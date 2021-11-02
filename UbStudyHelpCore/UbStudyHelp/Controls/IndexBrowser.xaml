@@ -19,8 +19,6 @@
             <TextBlock x:Name="IndexResults" Grid.Row="1" Margin="10,10,10,10" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
         </ScrollViewer>
         
-        <MdXaml:MarkdownScrollViewer x:Name="MarkDownDisplay" Grid.Row="1" Margin="10,10,10,10"  Visibility="Hidden"  />
-        
     </Grid>
     
 </UserControl>

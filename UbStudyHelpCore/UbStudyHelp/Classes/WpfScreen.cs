@@ -7,6 +7,10 @@ using System.Windows.Interop;
 
 namespace UbStudyHelp.Classes
 {
+    /// <summary>
+    /// Class used to get information from screen
+    /// <see href="https://stackoverflow.com/questions/1927540/how-to-get-the-size-of-the-current-screen-in-wpf"/>
+    /// </summary>
     public class WpfScreen
     {
         public static IEnumerable<WpfScreen> AllScreens()

@@ -8,11 +8,41 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="UbTrackPage">
 
+    <!--"/«YourAssemblyName»;component/«YourPath»/«YourImage.png»"-->
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="pageLogo" UriSource="/Resources/Track.jpg" />
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid>
-        <StackPanel>
-            <TextBlock x:Name="LabelTrackList" Text="Location History:"/>
-            <ListBox x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedValuePath="Ident" DisplayMemberPath="Ident" />
+        <StackPanel Margin="10, 10, 10, 10">
+            <Image Source="{StaticResource pageLogo}" Width="60" Height="60" ToolTip="Last paragraphs seen"/>
+            <TextBlock x:Name="LabelTrackList" Text="Paragraphs History:"/>
+
+            <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                        <GridViewColumn Header="Ref" Width="100" >
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ParagraphID}" Width="60" TextAlignment="Right" FontWeight="Bold" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Text" Width="Auto" >
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TextSample}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
         </StackPanel>
     </Grid>
 

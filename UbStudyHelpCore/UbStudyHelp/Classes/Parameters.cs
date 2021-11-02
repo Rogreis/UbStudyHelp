@@ -59,7 +59,7 @@ namespace UbStudyHelp.Classes
 
         public List<string> SearchIndexEntries = new List<string>();
 
-        public ObservableCollection<string> TrachEntries = new ObservableCollection<string>();
+        public ObservableCollection<TOC_Entry> TrackEntries = new ObservableCollection<TOC_Entry>();
 
         public string IndexLetters = "";
 

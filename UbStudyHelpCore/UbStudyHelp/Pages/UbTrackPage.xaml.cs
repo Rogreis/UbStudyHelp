@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +20,7 @@ namespace UbStudyHelp.Pages
     /// </summary>
     public partial class UbTrackPage : Page
     {
+        ObservableCollection<TOC_Entry> LocalTrachEntries = new ObservableCollection<TOC_Entry>();
 
         public UbTrackPage()
         {
@@ -28,18 +30,36 @@ namespace UbStudyHelp.Pages
             EventsControl.SeachClicked += EventsControl_SeachClicked;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
+            TrackList.SelectionChanged += TrackList_SelectionChanged;
+        }
+
+        private void TrackList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TOC_Entry entry = e.AddedItems[0] as TOC_Entry;
+            EventsControl.FireTrackSelected(entry);
         }
 
         public void Initialize()
         {
             ChangeFont();
-            TrackList.ItemsSource = App.ParametersData.TrachEntries;
+            TrackList.Items.Clear();
+            TrackList.ItemsSource = LocalTrachEntries;
+            foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
+            {
+                LocalTrachEntries.Add(entry);
+            }
         }
 
 
         private void AddEntry(TOC_Entry entry)
         {
-            App.ParametersData.TrachEntries.Add(entry.Ident);
+            if (LocalTrachEntries.Count == App.ParametersData.MaxTrackItems)
+            {
+                LocalTrachEntries.RemoveAt(LocalTrachEntries.Count - 1);
+                App.ParametersData.TrackEntries.RemoveAt(LocalTrachEntries.Count - 1);
+            }
+            LocalTrachEntries.Insert(0, entry);
+            App.ParametersData.TrackEntries.Insert(0, entry);
         }
 
 
