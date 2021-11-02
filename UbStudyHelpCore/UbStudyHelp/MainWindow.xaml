@@ -46,16 +46,16 @@
         </Grid.RowDefinitions>
 
 
-        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="0">
+        <Grid x:Name="GridTexts" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="550" />
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <Controls:LeftPanel Grid.Column="0" />
-            
-            <GridSplitter Background="DarkGray"  ResizeDirection="Columns"  Grid.Column="1" Grid.RowSpan="2"
+
+            <GridSplitter x:Name="GridSplitterLeft" Background="DarkGray"  ResizeDirection="Columns"  Grid.Column="1" Grid.RowSpan="2"
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                       ResizeBehavior="PreviousAndNext" Margin="0,4,0,0" />
 

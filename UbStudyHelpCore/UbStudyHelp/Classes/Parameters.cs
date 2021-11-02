@@ -44,9 +44,9 @@ namespace UbStudyHelp.Classes
 
         public string FontFamilyInfo { get; set; } = "Verdana";
 
-        public double FontSizeInfo { get; set; } = 20.0;
+        public double FontSizeInfo { get; set; } = 20.0;    // BUG: Default size needs to be proportional to user screen resolution
 
-        public int SpliterDistance { get; set; } = 360;
+        public double SpliterDistance { get; set; } = 550;  // BUG: Default value needs to be proportional to user screen resolution
 
 
         public bool IsPaperIncluded(int PaperNo) => ((App.ParametersData.SimpleSearchIncludePartI && PaperNo < 32) ||

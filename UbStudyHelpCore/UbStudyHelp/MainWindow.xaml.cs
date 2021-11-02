@@ -16,8 +16,19 @@ namespace UbStudyHelp
         public MainWindow()
         {
             InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
             EventsControl.SendMessage += EventsControl_SendMessage;
+            GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
+        }
 
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            GridTexts.ColumnDefinitions[0].Width = new GridLength(App.ParametersData.SpliterDistance);
+        }
+
+        private void GridSplitterLeft_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            App.ParametersData.SpliterDistance = GridTexts.ColumnDefinitions[0].ActualWidth;
         }
 
         private void EventsControl_SendMessage(string message)
