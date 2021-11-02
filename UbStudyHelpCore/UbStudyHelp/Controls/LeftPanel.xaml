@@ -52,7 +52,7 @@
             <mah:HamburgerMenu.ItemsSource>
                 <mah:HamburgerMenuItemCollection>
 
-                    <mah:HamburgerMenuIconItem  Label="Table of Contents"  Tag="Pages\UbTocPage.xaml" ToolTip="Show the UB Table of Contents">
+                    <mah:HamburgerMenuIconItem  Label="Table of Contents"  Tag="UbTocPage" ToolTip="Show the UB Table of Contents">
                         <mah:HamburgerMenuIconItem.Icon>
                             <iconPacks:PackIconMaterial Width="22"
                                         Height="22"
@@ -62,7 +62,7 @@
                         </mah:HamburgerMenuIconItem.Icon>
                     </mah:HamburgerMenuIconItem>
 
-                    <mah:HamburgerMenuIconItem  Label="Index"  Tag="Pages\UbIndexPage.xaml" ToolTip="Show the Urantia Book Index">
+                    <mah:HamburgerMenuIconItem  Label="Index"  Tag="UbIndexPage" ToolTip="Show the Urantia Book Index">
                         <mah:HamburgerMenuIconItem.Icon>
                             <iconPacks:PackIconBootstrapIcons Width="22"
                                         Height="22"
@@ -72,7 +72,7 @@
                         </mah:HamburgerMenuIconItem.Icon>
                     </mah:HamburgerMenuIconItem>
 
-                    <mah:HamburgerMenuIconItem  Label="Search Engine"  Tag="Pages\UbSearchPage.xaml" ToolTip="Show the Urantia Book Search Engine">
+                    <mah:HamburgerMenuIconItem  Label="Search Engine"  Tag="UbSearchPage" ToolTip="Show the Urantia Book Search Engine">
                         <mah:HamburgerMenuIconItem.Icon>
                             <iconPacks:PackIconMaterial Width="22"
                                         Height="22"
@@ -82,7 +82,7 @@
                         </mah:HamburgerMenuIconItem.Icon>
                     </mah:HamburgerMenuIconItem>
 
-                    <mah:HamburgerMenuIconItem  Label="Track History"  Tag="Pages\UbTrackPage.xaml" ToolTip="Show a list of paragraphs previouly shown">
+                    <mah:HamburgerMenuIconItem  Label="Track History"  Tag="UbTrackPage" ToolTip="Show a list of paragraphs previouly shown">
                         <mah:HamburgerMenuIconItem.Icon>
                             <iconPacks:PackIconModern Width="22"
                                         Height="22"
@@ -119,7 +119,7 @@
             <mah:HamburgerMenu.OptionsItemsSource>
                 <mah:HamburgerMenuItemCollection>
 
-                    <mah:HamburgerMenuIconItem  Label="Search Help"  Tag="Pages\SearchHelpPage.xaml" ToolTip="How to use the search engine or index">
+                    <mah:HamburgerMenuIconItem  Label="Search Help"  Tag="SearchHelpPage" ToolTip="How to use the search engine or index">
                         <mah:HamburgerMenuIconItem.Icon>
                             <iconPacks:PackIconMaterial Width="22"
                                         Height="22"
@@ -129,7 +129,7 @@
                         </mah:HamburgerMenuIconItem.Icon>
                     </mah:HamburgerMenuIconItem>
 
-                    <mah:HamburgerMenuIconItem  Label="Options"  Tag="Pages\OptionsPage.xaml" ToolTip="Options for text view">
+                    <mah:HamburgerMenuIconItem  Label="Options"  Tag="OptionsPage" ToolTip="Options for text view">
                         <mah:HamburgerMenuIconItem.Icon>
                             <iconPacks:PackIconIonicons Width="22"
                                         Height="22"

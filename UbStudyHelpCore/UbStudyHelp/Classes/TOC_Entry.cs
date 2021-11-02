@@ -78,15 +78,6 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public TOC_Entry(BrowserPosition position)
-        {
-            Paper = (short)position.Entry.Paper;
-            Section = (short)position.Entry.Section;
-            this.ParagraphNo = 0;
-            Text = "";
-            IsExpanded = false;
-        }
-
 
         private bool SamePaperSection(TOC_Entry index)
         {

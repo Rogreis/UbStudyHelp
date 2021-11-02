@@ -22,5 +22,9 @@ namespace UbStudyHelp.Pages
         {
             InitializeComponent();
         }
+
+        public void Initialize()
+        {
+        }
     }
 }

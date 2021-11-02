@@ -22,10 +22,20 @@ namespace UbStudyHelp.Pages
         public UbTocPage()
         {
             InitializeComponent();
-            this.Loaded += UbTocPage_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            TOC_Left.SelectedItemChanged += TableOfContents_SelectedItemChanged;
+            TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
         }
+
+        public void Initialize()
+        {
+            SetFontSize();
+            SetControlsStyles();
+            FillTreeView(TOC_Left, true);
+            FillTreeView(TOC_Right, false);
+        }
+
 
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
         {
@@ -52,16 +62,6 @@ namespace UbStudyHelp.Pages
             SetFontSize();
         }
 
-
-        private void UbTocPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetFontSize();
-            SetControlsStyles();
-            FillTreeView(TOC_Left, true);
-            FillTreeView(TOC_Right, false);
-            TOC_Left.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-            TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-        }
 
 
         private void FillTreeView(TreeView tree, bool useLeftTranslation)

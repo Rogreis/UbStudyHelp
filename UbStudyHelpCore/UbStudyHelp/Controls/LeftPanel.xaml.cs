@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Pages;
 
 namespace UbStudyHelp.Controls
 {
@@ -20,17 +21,29 @@ namespace UbStudyHelp.Controls
     /// </summary>
     public partial class LeftPanel : UserControl
     {
+        UbTocPage ubTocPage = new UbTocPage();
+        UbIndexPage ubIndexPage = new UbIndexPage();
+        UbSearchPage ubSearchPage = new UbSearchPage();
+        UbTrackPage ubTrackPage = new UbTrackPage();
+        SearchHelpPage searchHelpPage = new SearchHelpPage();
+        OptionsPage optionsPage = new OptionsPage();
 
         public LeftPanel()
         {
             InitializeComponent();
             this.Loaded += LeftPainel_Loaded;
+            ubTocPage.Initialize();
+            ubIndexPage.Initialize();
+            ubSearchPage.Initialize();
+            ubTrackPage.Initialize();
+            searchHelpPage.Initialize();
+            optionsPage.Initialize();
         }
 
         private void LeftPainel_Loaded(object sender, RoutedEventArgs e)
         {
             // Default page
-            FrameControl.Navigate(new Uri(@"Pages\UbTocPage.xaml", UriKind.Relative));
+            FrameControl.Navigate(ubTocPage);
         }
 
         private void HamburgerMenuControl_OnItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs args)
@@ -43,13 +56,30 @@ namespace UbStudyHelp.Controls
                 case "IncreaseFontSize":
                     App.ParametersData.FontSizeInfo++;
                     EventsControl.FireFontChanged();
+                    args.Handled = true;
                     break;
                 case "DecreaseFontSize":
                     App.ParametersData.FontSizeInfo--;
                     EventsControl.FireFontChanged();
+                    args.Handled = true;
                     break;
-                default:
-                    FrameControl.Navigate(new Uri(targetView, UriKind.Relative));
+                case "UbTocPage":
+                    FrameControl.Navigate(ubTocPage);
+                    break;
+                case "UbIndexPage":
+                    FrameControl.Navigate(ubIndexPage);
+                    break;
+                case "UbSearchPage":
+                    FrameControl.Navigate(ubSearchPage);
+                    break;
+                case "UbTrackPage":
+                    FrameControl.Navigate(ubTrackPage);
+                    break;
+                case "SearchHelpPage":
+                    FrameControl.Navigate(searchHelpPage);
+                    break;
+                case "OptionsPage":
+                    FrameControl.Navigate(optionsPage);
                     break;
             }
 

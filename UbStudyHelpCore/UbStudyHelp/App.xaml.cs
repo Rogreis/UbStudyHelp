@@ -29,6 +29,23 @@ namespace UbStudyHelp
 
         public static ControlsAppearance Appearance = new ControlsAppearance();
 
+        private static bool LoadData()
+        {
+            GetDataFiles dataFiles = new GetDataFiles();
+            try
+            {
+                if (!dataFiles.CheckFiles(App.BaseTubFilesPath))
+                {
+                    return false;
+                }
+                return Book.Inicialize(App.BaseTubFilesPath);
+            }
+            catch (Exception ex)
+            {
+                EventsControl.FireSendMessage("Loading TOC data", ex);
+                return false;
+            }
+        }
 
 
         protected override void OnStartup(StartupEventArgs e)
@@ -57,6 +74,13 @@ namespace UbStudyHelp
                     string message = ex.Message;
                 }
             }
+
+            if (!LoadData())
+            {
+                throw new Exception("Data not loaded!");
+            }
+
+
             base.OnStartup(e);
         }
 

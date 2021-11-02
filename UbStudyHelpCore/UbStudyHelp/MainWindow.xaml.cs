@@ -36,34 +36,10 @@ namespace UbStudyHelp
             }
         }
 
-        private bool LoadData()
-        {
-            GetDataFiles dataFiles = new GetDataFiles();
-            try
-            {
-                if (!dataFiles.CheckFiles(App.BaseTubFilesPath))
-                {
-                    return false;
-                }
-                return Book.Inicialize(App.BaseTubFilesPath);
-            }
-            catch (Exception ex)
-            {
-                EventsControl.FireSendMessage("Loading TOC data", ex);
-                return false;
-            }
-        }
-
-
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
             StatusBarVersion.Text = "v 2.0";
-            // Information about current theme stored for other controls
-            if (!LoadData())
-            {
-                ShowMessage("Data not loaded!", true);
-            }
         }
 
 

@@ -12,9 +12,14 @@ namespace UbStudyHelp.Pages
         public SearchHelpPage()
         {
             InitializeComponent();
-            this.Loaded += SearchHelpPage_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+        }
+
+        public void Initialize()
+        {
+            MarkDownDisplay.Markdown = Properties.Resources.SearchHelp;
+            App.Appearance.SetAll(MarkDownDisplay);
         }
 
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
@@ -27,10 +32,5 @@ namespace UbStudyHelp.Pages
             App.Appearance.SetFontSize(MarkDownDisplay);
         }
 
-        private void SearchHelpPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            MarkDownDisplay.Markdown = Properties.Resources.SearchHelp;
-            App.Appearance.SetAll(MarkDownDisplay);
-        }
     }
 }

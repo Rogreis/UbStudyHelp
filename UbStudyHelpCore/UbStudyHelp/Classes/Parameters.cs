@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
@@ -57,6 +58,8 @@ namespace UbStudyHelp.Classes
 
 
         public List<string> SearchIndexEntries = new List<string>();
+
+        public ObservableCollection<string> TrachEntries = new ObservableCollection<string>();
 
         public string IndexLetters = "";
 

@@ -8,7 +8,12 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="UbTrackPage">
 
+
     <Grid>
-        <Label Content="This is the TRACK page" />
+        <StackPanel>
+            <TextBlock x:Name="LabelTrackList" Text="Location History:"/>
+            <ListBox x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedValuePath="Ident" DisplayMemberPath="Ident" />
+        </StackPanel>
     </Grid>
+
 </Page>

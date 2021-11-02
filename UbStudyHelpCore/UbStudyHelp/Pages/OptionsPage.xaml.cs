@@ -25,8 +25,14 @@ namespace UbStudyHelp.Pages
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
-            this.Loaded += OptionsPage_Loaded;
         }
+
+        public void Initialize()
+        {
+            ChangeFont();
+            ComboTheme.Text = App.ParametersData.ThemeColor;
+        }
+
 
         private void ChangeFont()
         {
@@ -38,12 +44,6 @@ namespace UbStudyHelp.Pages
 
             App.Appearance.SetFontSize(ComboTrack);
             App.Appearance.SetFontSize(ComboTheme);
-        }
-
-        private void OptionsPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            ChangeFont();
-            ComboTheme.Text = App.ParametersData.ThemeColor;
         }
 
         private void EventsControl_FontChanged(ControlsAppearance appearance)

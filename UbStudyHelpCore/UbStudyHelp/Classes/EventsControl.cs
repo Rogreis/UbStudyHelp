@@ -30,10 +30,6 @@ namespace UbStudyHelp.Classes
     /// <param name="Message"></param>
     public delegate void dlSendMessage(string Message);
 
-    public delegate void dlCurrentBrowserTrack(BrowserPosition track);
-
-    public delegate void dlBrowserTrackAdded(BrowserPosition track);
-
     public delegate void dlLeftTranslationChanged(Translation oLeftTranslation);
 
     public delegate void dlRightTranslationChanged(Translation oRightTranslation);
@@ -53,10 +49,6 @@ namespace UbStudyHelp.Classes
         public static event dlTOCClicked TOCClicked = null;
 
         public static event dlSendMessage SendMessage = null;
-
-        public static event dlCurrentBrowserTrack CurrentBrowserTrack = null;
-
-        public static event dlBrowserTrackAdded BrowserTrackAdded = null;
 
         public static event dlLeftTranslationChanged LeftTranslationChanged = null;
 
@@ -82,18 +74,6 @@ namespace UbStudyHelp.Classes
         {
             TOCClicked?.Invoke(entry);
         }
-
-        public static void FireCurrentBrowserTrack(BrowserPosition track)
-        {
-            CurrentBrowserTrack?.Invoke(track);
-        }
-
-        public static void FireBrowserTrackAdded(BrowserPosition track)
-        {
-            BrowserTrackAdded?.Invoke(track);
-        }
-
-
 
         public static void FireSendMessage(string location, Exception ex)
         {
