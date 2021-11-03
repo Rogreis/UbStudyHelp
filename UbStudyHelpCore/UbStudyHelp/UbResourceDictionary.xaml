@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="UbStudyHelp.Controls.UbResourceDictionary"
+                    x:ClassModifier="public"                    >
+
+    <BitmapImage x:Key="TrackLogo" UriSource="pack://application:,,,/Resources/Track.jpg" />
+    <BitmapImage x:Key="SettingsLogo" UriSource="pack://application:,,,/Resources/Settings.png" />
+    <BitmapImage x:Key="HelpLogo" UriSource="pack://application:,,,/Resources/Help.png" />
+    <BitmapImage x:Key="IndexLogo" UriSource="pack://application:,,,/Resources/Index.jpg" />
+    <BitmapImage x:Key="SearchEngineLogo" UriSource="pack://application:,,,/Resources/SearchEngine.png" />
+    <BitmapImage x:Key="TocLogo" UriSource="pack://application:,,,/Resources/Track.jpg" />
+
+</ResourceDictionary>

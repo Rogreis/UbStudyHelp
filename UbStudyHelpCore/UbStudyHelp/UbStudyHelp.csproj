@@ -16,9 +16,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\SearchHelp.md" />
-    <None Remove="SearchHelp.md" />
+    <None Remove="Resources\Bookmark.png" />
+    <None Remove="Resources\Help.png" />
+    <None Remove="Resources\Index.jpg" />
+    <None Remove="Resources\SearchEngine.png" />
+    <None Remove="Resources\Settings.png" />
+    <None Remove="Resources\threeCirclesBig.png" />
+    <None Remove="Resources\threeCirclesSmall.png" />
+    <None Remove="Resources\TOC.png" />
   </ItemGroup>
+
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\SearchHelp.md" />
@@ -46,6 +53,36 @@
     <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls.Primitives">
       <HintPath>..\..\..\..\..\..\Users\CTW01001\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls.primitives\7.0.0\lib\netstandard2.0\Microsoft.Toolkit.Uwp.UI.Controls.Primitives.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Bookmark.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Help.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Index.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\SearchEngine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Settings.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\threeCirclesBig.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\threeCirclesSmall.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\TOC.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Track.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

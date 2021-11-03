@@ -37,12 +37,9 @@ namespace UbStudyHelp.Pages
         private void ChangeFont()
         {
             App.Appearance.SetFontSize(LabelTranslations);
-            App.Appearance.SetFontSize(LabelTrack);
             App.Appearance.SetFontSize(LabelThemes);
             App.Appearance.SetFontSize(LabelOptionPage);
             App.Appearance.SetFontSize(LabelColorTheme);
-
-            App.Appearance.SetFontSize(ComboTrack);
             App.Appearance.SetFontSize(ComboTheme);
         }
 

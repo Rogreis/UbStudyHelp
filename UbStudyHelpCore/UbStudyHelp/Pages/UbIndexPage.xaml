@@ -8,7 +8,17 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="UbIndexPage">
 
+    <!--<Page.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="pageLogo" UriSource="pack://application:,,,/Resources/Index.jpg" />
+        </ResourceDictionary>
+    </Page.Resources>-->
+
+
     <Grid>
-        <Controls:IndexBrowser x:Name="IndexBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+        <StackPanel Margin="10, 10, 10, 10">
+            <Controls:LeftMenuTop Text="Subject index for the Urantia Book" ImageSourceName="IndexLogo" />
+            <Controls:IndexBrowser x:Name="IndexBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+        </StackPanel>
     </Grid>
 </Page>

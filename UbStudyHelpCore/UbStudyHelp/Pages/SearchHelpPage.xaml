@@ -1,4 +1,5 @@
-﻿<Page xmlns:MdXaml="clr-namespace:MdXaml;assembly=MdXaml"  x:Class="UbStudyHelp.Pages.SearchHelpPage"
+﻿<Page xmlns:Controls="clr-namespace:UbStudyHelp.Controls" 
+      xmlns:MdXaml="clr-namespace:MdXaml;assembly=MdXaml"  x:Class="UbStudyHelp.Pages.SearchHelpPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,6 +10,9 @@
       Title="SearchHelpPage">
 
     <Grid>
-        <MdXaml:MarkdownScrollViewer x:Name="MarkDownDisplay" Margin="10,10,10,10" />
+        <StackPanel Margin="10, 10, 10, 10">
+            <Controls:LeftMenuTop Text="Some help information useful to use this app" ImageSourceName="HelpLogo" />
+            <MdXaml:MarkdownScrollViewer x:Name="MarkDownDisplay" />
+        </StackPanel>
     </Grid>
 </Page>

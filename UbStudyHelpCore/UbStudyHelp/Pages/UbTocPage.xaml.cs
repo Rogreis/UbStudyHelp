@@ -52,6 +52,7 @@ namespace UbStudyHelp.Pages
         {
             App.Appearance.SetFontSize(TOC_Left);
             App.Appearance.SetFontSize(TOC_Right);
+            LeftMenuTop.SetFontSize();
         }
 
 
@@ -95,7 +96,11 @@ namespace UbStudyHelp.Pages
             EventsControl.FireTOCClicked(item.Entry);
         }
 
-
-
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
     }
 }

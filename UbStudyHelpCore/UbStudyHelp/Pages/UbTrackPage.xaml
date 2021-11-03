@@ -8,23 +8,42 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="UbTrackPage">
 
-    <!--"/«YourAssemblyName»;component/«YourPath»/«YourImage.png»"-->
+    
+    <!--
+    
+    https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8
+    
+    "/«YourAssemblyName»;component/«YourPath»/«YourImage.png»"
+    
+    -->
 
     <Page.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="pageLogo" UriSource="/Resources/Track.jpg" />
+            <BitmapImage x:Key="pageLogo" UriSource="pack://application:,,,/Resources/Track.jpg" />
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
         <StackPanel Margin="10, 10, 10, 10">
-            <Image Source="{StaticResource pageLogo}" Width="60" Height="60" ToolTip="Last paragraphs seen"/>
-            <TextBlock x:Name="LabelTrackList" Text="Paragraphs History:"/>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
+                <Image Grid.Row="0" Grid.Column="0" Source="{StaticResource pageLogo}" Height="160" Width="180" Margin="10,10,10,10" ToolTip="Last paragraphs seen"/>
+                <TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
+                           Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>
+            </Grid>
 
             <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 
                 <ListView.View>
-                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
                         <GridViewColumn Header="Ref" Width="100" >
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
