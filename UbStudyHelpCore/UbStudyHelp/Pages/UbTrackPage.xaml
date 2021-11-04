@@ -40,27 +40,30 @@
                            Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>
             </Grid>
 
-            <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" >
 
-                <ListView.View>
-                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
-                        <GridViewColumn Header="Ref" Width="100" >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ParagraphID}" Width="60" TextAlignment="Right" FontWeight="Bold" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Text" Width="Auto" >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding TextSample}" TextWrapping="Wrap"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
+                            <GridViewColumn Header="Ref" Width="100" >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ParagraphID}" Width="60" TextAlignment="Right" FontWeight="Bold" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Text" Width="Auto" >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TextSample}" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </ScrollViewer>
+
             
         </StackPanel>
     </Grid>

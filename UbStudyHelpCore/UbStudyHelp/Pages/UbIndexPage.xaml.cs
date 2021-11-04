@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Pages
 {
@@ -21,10 +22,34 @@ namespace UbStudyHelp.Pages
         public UbIndexPage()
         {
             InitializeComponent();
+            EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
+
+        private void SetFontSize()
+        {
+        }
+
+        private void SetAppearence()
+        {
+        }
+
+        #region events
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            SetAppearence();
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            SetFontSize();
+        }
+        #endregion
 
         public void Initialize()
         {
+            SetAppearence();
+            SetFontSize();
         }
 
 

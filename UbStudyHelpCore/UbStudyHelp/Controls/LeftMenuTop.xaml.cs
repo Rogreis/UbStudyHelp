@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Resources;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using UbStudyHelp.Properties;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
 {
@@ -24,10 +15,10 @@ namespace UbStudyHelp.Controls
 
         public UbResourceDictionary()
         {
-            //Resources.SearchEngine
         }
 
     }
+    //ResourceManager temp = new ResourceManager("UbStudyHelp.Controls.UbResourceDictionary", typeof(UbResourceDictionary).Assembly);
 
     public static class ConvertBitmapToBitmapImage
     {
@@ -55,14 +46,15 @@ namespace UbStudyHelp.Controls
     /// </summary>
     public partial class LeftMenuTop : UserControl
     {
-        ResourceManager temp = new ResourceManager("UbStudyHelp.Controls.UbResourceDictionary", typeof(UbResourceDictionary).Assembly);
         ImageSourceConverter imageSourceConverter = new ImageSourceConverter();
 
         public LeftMenuTop()
         {
             InitializeComponent();
             //this.DataContext = new MainWindowViewModel();
-
+            EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            this.Loaded += LeftMenuTop_Loaded;
             this.Resources["ImageSourcePath"] = ConvertBitmapToBitmapImage.Convert(UbStudyHelp.Properties.Resources.SearchEngine);
             this.Resources["TextToDisplay"] = "No Text";
         }
@@ -79,7 +71,7 @@ namespace UbStudyHelp.Controls
             {
                 _imageSourceName = value;
                 Bitmap bitmap = null;
-                switch(_imageSourceName)
+                switch (_imageSourceName)
                 {
                     case "TrackLogo":
                         bitmap = UbStudyHelp.Properties.Resources.Track;
@@ -118,10 +110,27 @@ namespace UbStudyHelp.Controls
             }
         }
 
-        public void SetFontSize()
+        private void SetFontSize()
         {
             App.Appearance.SetFontSize(TextBlockCaption);
         }
+
+        private void LeftMenuTop_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetFontSize();
+            App.Appearance.SetThemeInfo(TextBlockCaption);
+        }
+
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            App.Appearance.SetThemeInfo(TextBlockCaption);
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            SetFontSize();
+        }
+
 
 
     }

@@ -146,7 +146,7 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public void SetAll(Control control)
+        public void SetThemeInfo(Control control)
         {
 
             Style style = new Style
@@ -160,6 +160,22 @@ namespace UbStudyHelp.Classes
             style.Setters.Add(new Setter(Control.ForegroundProperty, GetForegroundColorBrush()));
             control.Style = style;
         }
+
+        public void SetThemeInfo(TextBlock control)
+        {
+
+            Style style = new Style
+            {
+                TargetType = typeof(TextBlock)
+            };
+
+            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
+            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, App.ParametersData.FontSizeInfo));
+            style.Setters.Add(new Setter(TextBlock.BackgroundProperty, GetBackgroundColorBrush()));
+            style.Setters.Add(new Setter(TextBlock.ForegroundProperty, GetForegroundColorBrush()));
+            control.Style = style;
+        }
+
 
         public void SetFontSize(Control control)
         {

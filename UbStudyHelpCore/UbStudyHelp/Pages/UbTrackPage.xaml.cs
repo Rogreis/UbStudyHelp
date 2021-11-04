@@ -20,7 +20,7 @@ namespace UbStudyHelp.Pages
     /// </summary>
     public partial class UbTrackPage : Page
     {
-        ObservableCollection<TOC_Entry> LocalTrachEntries = new ObservableCollection<TOC_Entry>();
+        ObservableCollection<TOC_Entry> LocalTrackEntries = new ObservableCollection<TOC_Entry>();
 
         public UbTrackPage()
         {
@@ -33,36 +33,30 @@ namespace UbStudyHelp.Pages
             TrackList.SelectionChanged += TrackList_SelectionChanged;
         }
 
-        private void TrackList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SetFontSize()
         {
-            TOC_Entry entry = e.AddedItems[0] as TOC_Entry;
-            EventsControl.FireTrackSelected(entry);
+            App.Appearance.SetFontSize(LabelTrackList);
+            App.Appearance.SetFontSize(TrackList);
         }
 
-        public void Initialize()
+        private void SetAppearence()
         {
-            ChangeFont();
-            TrackList.Items.Clear();
-            TrackList.ItemsSource = LocalTrachEntries;
-            foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
-            {
-                LocalTrachEntries.Add(entry);
-            }
+            App.Appearance.SetThemeInfo(LabelTrackList);
+            App.Appearance.SetThemeInfo(TrackList);
         }
-
 
         private void AddEntry(TOC_Entry entry)
         {
-            if (LocalTrachEntries.Count == App.ParametersData.MaxTrackItems)
+            if (LocalTrackEntries.Count == App.ParametersData.MaxTrackItems)
             {
-                LocalTrachEntries.RemoveAt(LocalTrachEntries.Count - 1);
-                App.ParametersData.TrackEntries.RemoveAt(LocalTrachEntries.Count - 1);
+                LocalTrackEntries.RemoveAt(LocalTrackEntries.Count - 1);
+                App.ParametersData.TrackEntries.RemoveAt(LocalTrackEntries.Count - 1);
             }
-            LocalTrachEntries.Insert(0, entry);
+            LocalTrackEntries.Insert(0, entry);
             App.ParametersData.TrackEntries.Insert(0, entry);
         }
 
-
+        #region events
         private void EventsControl_TOCClicked(TOC_Entry entry)
         {
             AddEntry(entry);
@@ -80,19 +74,41 @@ namespace UbStudyHelp.Pages
 
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
         {
-            //throw new NotImplementedException();
+            SetAppearence();
         }
-
-        private void ChangeFont()
-        {
-            App.Appearance.SetFontSize(LabelTrackList);
-            App.Appearance.SetFontSize(TrackList);
-        }
-
 
         private void EventsControl_FontChanged(ControlsAppearance appearance)
         {
-            ChangeFont();
+            SetFontSize();
         }
+
+        private void TrackList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TOC_Entry entry = e.AddedItems[0] as TOC_Entry;
+            EventsControl.FireTrackSelected(entry);
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
+        #endregion
+
+
+        public void Initialize()
+        {
+            SetFontSize();
+            SetAppearence();
+            TrackList.Items.Clear();
+            TrackList.ItemsSource = LocalTrackEntries;
+            foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
+            {
+                LocalTrackEntries.Add(entry);
+            }
+        }
+
+
     }
 }

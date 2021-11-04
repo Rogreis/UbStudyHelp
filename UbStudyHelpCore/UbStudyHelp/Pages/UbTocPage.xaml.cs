@@ -28,42 +28,19 @@ namespace UbStudyHelp.Pages
             TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
         }
 
-        public void Initialize()
-        {
-            SetFontSize();
-            SetControlsStyles();
-            FillTreeView(TOC_Left, true);
-            FillTreeView(TOC_Right, false);
-        }
-
-
-        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
-        {
-            SetControlsStyles();
-        }
-
-        private void EventsControl_FontChanged(ControlsAppearance appearance)
-        {
-            SetFontSize();
-        }
-
 
         private void SetFontSize()
         {
             App.Appearance.SetFontSize(TOC_Left);
             App.Appearance.SetFontSize(TOC_Right);
-            LeftMenuTop.SetFontSize();
         }
 
 
-        private void SetControlsStyles()
+        private void SetAppearence()
         {
-            App.Appearance.SetAll(TOC_Left);
-            App.Appearance.SetAll(TOC_Right);
-            SetFontSize();
+            App.Appearance.SetThemeInfo(TOC_Left);
+            App.Appearance.SetThemeInfo(TOC_Right);
         }
-
-
 
         private void FillTreeView(TreeView tree, bool useLeftTranslation)
         {
@@ -89,6 +66,17 @@ namespace UbStudyHelp.Pages
         }
 
 
+        #region events
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            SetAppearence();
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            SetFontSize();
+        }
+
         private void TableOfContents_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeView tree = sender as TreeView;
@@ -102,5 +90,17 @@ namespace UbStudyHelp.Pages
             scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
             e.Handled = true;
         }
+        #endregion
+
+
+        public void Initialize()
+        {
+            SetFontSize();
+            SetAppearence();
+            FillTreeView(TOC_Left, true);
+            FillTreeView(TOC_Right, false);
+        }
+
+
     }
 }

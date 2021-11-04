@@ -16,21 +16,37 @@ namespace UbStudyHelp.Pages
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
 
-        public void Initialize()
+        private void SetFontSize()
         {
-            MarkDownDisplay.Markdown = Properties.Resources.SearchHelp;
-            App.Appearance.SetAll(MarkDownDisplay);
+            App.Appearance.SetFontSize(MarkDownDisplay);
         }
 
+        private void SetAppearence()
+        {
+            App.Appearance.SetThemeInfo(MarkDownDisplay);
+        }
+
+
+        #region events
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
         {
-            App.Appearance.SetAll(MarkDownDisplay);
+            SetAppearence();
         }
 
         private void EventsControl_FontChanged(ControlsAppearance appearance)
         {
-            App.Appearance.SetFontSize(MarkDownDisplay);
+            SetFontSize();
         }
+        #endregion
+
+        public void Initialize()
+        {
+            SetAppearence();
+            SetFontSize();
+            MarkDownDisplay.Markdown = Properties.Resources.SearchHelp;
+            App.Appearance.SetThemeInfo(MarkDownDisplay);
+        }
+
 
     }
 }

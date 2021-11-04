@@ -24,17 +24,12 @@ namespace UbStudyHelp.Pages
         {
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
         }
 
-        public void Initialize()
-        {
-            ChangeFont();
-            ComboTheme.Text = App.ParametersData.ThemeColor;
-        }
 
-
-        private void ChangeFont()
+        private void SetFontSize()
         {
             App.Appearance.SetFontSize(LabelTranslations);
             App.Appearance.SetFontSize(LabelThemes);
@@ -43,10 +38,15 @@ namespace UbStudyHelp.Pages
             App.Appearance.SetFontSize(ComboTheme);
         }
 
-        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        private void SetAppearence()
         {
-            ChangeFont();
+            App.Appearance.SetThemeInfo(LabelTranslations);
+            App.Appearance.SetThemeInfo(LabelThemes);
+            App.Appearance.SetThemeInfo(LabelOptionPage);
+            App.Appearance.SetThemeInfo(LabelColorTheme);
+            App.Appearance.SetThemeInfo(ComboTheme);
         }
+
 
         private void SetTheme()
         {
@@ -54,6 +54,15 @@ namespace UbStudyHelp.Pages
             ThemeManager.Current.ChangeTheme(Application.Current, theme);
         }
 
+        #region events
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            SetFontSize();
+        }
 
         private void ComboTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -73,6 +82,14 @@ namespace UbStudyHelp.Pages
             {
                 App.Appearance.Theme = "Dark";
             }
+        }
+        #endregion
+
+        public void Initialize()
+        {
+            SetFontSize();
+            SetAppearence();
+            ComboTheme.Text = App.ParametersData.ThemeColor;
         }
 
 
