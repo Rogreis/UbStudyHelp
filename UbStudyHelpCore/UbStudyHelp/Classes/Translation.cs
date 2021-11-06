@@ -10,7 +10,6 @@ using UbStudyHelp;
 
 namespace UbStudyHelp.Classes
 {
-    public delegate void dlNewBook();
 
     public class Translation : BaseClass
     {

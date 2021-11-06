@@ -30,6 +30,39 @@ namespace UbStudyHelp.Controls
             sb.AppendLine("</tr>");
         }
 
+
+        //public static string HighlightWords(Paragraph par, Color color)
+        //{
+        //    string newText = par.Text;
+        //    if (Words.Count == 0)
+        //    {
+        //        return newText;
+        //    }
+
+        //    SearchResult result = Findings.Find(l => l.Entry.Paper == par.Paper && l.Entry.Section == par.Section && l.Entry.ParagraphNo == par.ParagraphNo);
+        //    if (result == null)
+        //    {
+        //        return newText;
+        //    }
+
+
+        //    foreach (var replace in Words)
+        //    {
+        //        int ind = newText.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase);
+        //        if (ind >= 0)
+        //        {
+        //            string wordInText = newText.Substring(newText.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase), replace.Length);
+        //            string replacement = $"<span style=\"color: {System.Drawing.ColorTranslator.ToHtml(color).Trim()}\">{wordInText}</span>";
+        //            newText = Regex.Replace(newText, wordInText, replacement, RegexOptions.IgnoreCase);
+        //        }
+        //    }
+
+        //    return newText;
+
+        //}
+
+
+
         public override string HtmlLine(TOC_Entry entry, bool shouldHighlightText)
         {
             Paper paperLeft = Book.LeftTranslation.Paper(entry.Paper);
@@ -77,8 +110,8 @@ namespace UbStudyHelp.Controls
                     if (parLeft.Entry == entry)
                     {
                         cssClass = " class=\"border-highlight\"";
-                        TextLeft = SearchResults.HighlightWords(parLeft, GetFontColor(FontColorType.Highlight));
-                        TextRight = SearchResults.HighlightWords(parRight, GetFontColor(FontColorType.Highlight));
+                    //    TextLeft = SearchResults.HighlightWords(parLeft, GetFontColor(FontColorType.Highlight));
+                    //    TextRight = SearchResults.HighlightWords(parRight, GetFontColor(FontColorType.Highlight));
                     }
                 }
 

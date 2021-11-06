@@ -23,10 +23,11 @@ namespace UbStudyHelp.Controls
         {
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             DataEntry.Index = Index;
-            DataEntry.ShowIndexHelp += DataEntry_ShowIndexHelp;
             DataEntry.ShowIndexDetails += DataEntry_ShowIndexDetails;
         }
+
 
         /// <summary>
         /// Show the details for some index entry
@@ -42,17 +43,28 @@ namespace UbStudyHelp.Controls
 
 
 
-        private void UpdateFont()
+        private void SetFontSize()
         {
             App.Appearance.SetFontSize(IndexResults);
         }
 
+        private void SetAppearence()
+        {
+            App.Appearance.SetThemeInfo(IndexResults);
+        }
+
+
 
         #region Events
 
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            SetAppearence();
+        }
+
         private void EventsControl_FontChanged(Classes.ControlsAppearance appearance)
         {
-            UpdateFont();
+            SetFontSize();
         }
 
         private void DataEntry_ShowIndexDetails(string indexEntry)
@@ -60,19 +72,14 @@ namespace UbStudyHelp.Controls
             CreateWebIndexPage(indexEntry);
         }
 
-        /// <summary>
-        /// Make the search help visible
-        /// </summary>
-        private void DataEntry_ShowIndexHelp()
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            // TO DO: show the help
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
 
         #endregion
-
-
-
-
 
     }
 }

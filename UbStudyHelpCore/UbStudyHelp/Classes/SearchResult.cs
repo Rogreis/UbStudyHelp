@@ -3,9 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace UbStudyHelp.Classes
 {
@@ -14,17 +18,26 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public class SearchResult
     {
+        private const string highStart = "|~S~|";
+
+        private const string highEnd = "|~E~|";
+
         public TOC_Entry Entry { get; set; }
 
         public string Text { get; set; }
 
-        public SearchResult(Document doc)
+        public int OriginalPosition { get; set; } = -1;
+
+        public SearchResult(TOC_Entry entry, string text)
         {
-            Entry = new TOC_Entry(Convert.ToInt16(doc.GetField("Paper").GetSingleValue()), Convert.ToInt16(doc.GetField("Section").GetSingleValue()), Convert.ToInt16(doc.GetField("ParagraphNo").GetSingleValue()));
-            Text = doc.GetField("Text").GetStringValue();
+            Entry = entry;
+            Text = text;
         }
 
-         public string HtmlText
+        /// <summary>
+        /// Get text start
+        /// </summary>
+        private string TextStart
         {
             get
             {
@@ -35,120 +48,108 @@ namespace UbStudyHelp.Classes
                 {
                     size = maxCharCount;
                 }
-                string textToShow= Text.Length < maxCharCount ? Text : Text.Substring(0, size);
-                return "<p><a id=\"" + Entry.Href + "\" target=\"_blank\" href=\"about:blank\">" + Entry.ToString() + "  " + textToShow + "</a></p>";
-            }
-        }
-    }
-
-    public static class SearchResults
-    {
-        // Fields for Lucene Index Searc
-        public const string FieldPaper = "Paper";
-        public const string FieldSection = "Section";
-        public const string FieldParagraph = "ParagraphNo";
-        public const string FieldText = "Text";
-
-        public static List<string> Words { get; set; } = new List<string>();
-
-        public static List<SearchResult> Findings { get; set; } = new List<SearchResult>();
-
-
-        private static List<int> AllIndexesOf(string str, string value)
-        {
-            List<int> indexes = new List<int>();
-            for (int index = 0; ; index += value.Length)
-            {
-                index = str.IndexOf(value, index, StringComparison.CurrentCultureIgnoreCase);
-                if (index == -1)
-                    return indexes;
-                indexes.Add(index);
+                return Text.Length < maxCharCount ? Text : Text.Substring(0, size);
             }
         }
 
-        public static void Clear()
+
+
+
+        private void Convert(InlineCollection Inlines, List<string> Words)
         {
-            Findings.Clear();
-            Words.Clear();
-        }
-
-
-        public static bool WasFound(TOC_Entry entry)
-        {
-            return Findings.Find(f => f.Entry.Paper == entry.Paper && f.Entry.Section == entry.Section && f.Entry.ParagraphNo == entry.ParagraphNo) != null;
-        }
-
-
-        public static void SetSearchString(string searchString)
-        {
-            string textPrefix = SearchResults.FieldText + ":";
-            Words = new List<string>();
-            bool continues = true;
-            int lastStartPos = 0;
-
-            searchString = searchString.Replace('~', ' ');
-            searchString = searchString.Replace('^', ' ');
-
-            while (continues)
+            if (!string.IsNullOrEmpty(Text))
             {
-                int pos = searchString.IndexOf(textPrefix, lastStartPos);
-                continues = pos >= 0 && lastStartPos < searchString.Length;
-                if (continues)
+                SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+
+                string cleaned = Text;
+                foreach (string word in Words)
                 {
-                    int startPos= pos + textPrefix.Length;
-                    char divisor = searchString.ToCharArray()[startPos] == '"' ? '"' : ' ';
-                    if (divisor == '"')
+                    cleaned = Regex.Replace(cleaned, "\\b" + string.Join("\\b|\\b", word) + "\\b", "");
+                }
+
+                string escapedXml = SecurityElement.Escape(Text);
+
+                while (escapedXml.IndexOf(highStart) != -1)
+                {
+                    //up to highStart is normal
+                    Inlines.Add(new Run(escapedXml.Substring(0, escapedXml.IndexOf(highStart))));
+                    //between highStart and highEnd is highlighted
+                    Inlines.Add(new Run(escapedXml.Substring(escapedXml.IndexOf(highStart) + 5,
+                                              escapedXml.IndexOf(highEnd) - (escapedXml.IndexOf(highStart) + 5)))
                     {
-                        startPos += 1;
-                    }
-                    int endPos = searchString.IndexOf(divisor, startPos);
-                    endPos = (endPos >= 0 ? endPos : searchString.Length);
-                    int size = endPos - startPos;
-                    Words.Add(searchString.Substring(startPos, size));
-                    lastStartPos = endPos + 1;
+                        FontSize = App.ParametersData.FontSizeInfo,
+                        FontWeight = FontWeights.Bold,
+                        Background = accentBrush
+                    });
+
+                    //the rest of the string (after the highEnd)
+                    escapedXml = escapedXml.Substring(escapedXml.IndexOf(highEnd) + 5);
                 }
-                else
+
+                if (escapedXml.Length > 0)
                 {
-                    break;
+                    Inlines.Add(new Run(escapedXml));
                 }
-                continues = lastStartPos < searchString.Length;
             }
         }
 
-
-        public static string HighlightWords(Paragraph par, Color color)
+        /// <summary>
+        /// Generate inlines collection from result text, highlighting found words
+        /// </summary>
+        /// <returns></returns>
+        public void GetInlinesText(InlineCollection Inlines, List<string> Words)
         {
-            string newText = par.Text;
-            if (Words.Count == 0)
-            {
-                return newText;
-            }
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
-            SearchResult result = Findings.Find(l => l.Entry.Paper == par.Paper && l.Entry.Section == par.Section && l.Entry.ParagraphNo == par.ParagraphNo);
-            if (result == null)
+            if (Words == null || Words.Count == 0)
             {
-                return newText;
-            }
-
-
-            foreach (var replace in Words)
-            {
-                int ind = newText.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase);
-                if (ind >= 0)
+                Run run = new Run(TextStart)
                 {
-                    string wordInText = newText.Substring(newText.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase), replace.Length);
-                    string replacement = $"<span style=\"color: {System.Drawing.ColorTranslator.ToHtml(color).Trim()}\">{wordInText}</span>";
-                    newText = Regex.Replace(newText, wordInText, replacement, RegexOptions.IgnoreCase);
-                }
+                    FontSize = App.ParametersData.FontSizeInfo,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = accentBrush
+                };
+                Inlines.Add(run);
+                return;
             }
 
-            return newText;
-
+            Convert(Inlines, Words);
         }
-
-
 
     }
+
+    //public static class SearchResults
+    //{
+
+
+    //    public static List<SearchResult> Findings { get; set; } = new List<SearchResult>();
+
+
+    //    private static List<int> AllIndexesOf(string str, string value)
+    //    {
+    //        List<int> indexes = new List<int>();
+    //        for (int index = 0; ; index += value.Length)
+    //        {
+    //            index = str.IndexOf(value, index, StringComparison.CurrentCultureIgnoreCase);
+    //            if (index == -1)
+    //                return indexes;
+    //            indexes.Add(index);
+    //        }
+    //    }
+
+
+
+    //    public static bool WasFound(TOC_Entry entry)
+    //    {
+    //        return Findings.Find(f => f.Entry.Paper == entry.Paper && f.Entry.Section == entry.Section && f.Entry.ParagraphNo == entry.ParagraphNo) != null;
+    //    }
+
+
+
+
+
+
+    //}
 
 
 }

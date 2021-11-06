@@ -19,19 +19,30 @@ namespace UbStudyHelp.Pages
     /// </summary>
     public partial class UbSearchPage : Page
     {
+
         public UbSearchPage()
         {
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            SearchDataEntry.ShowSearchResults += SearchDataEntry_ShowSearchResults; 
         }
+
 
         private void SetFontSize()
         {
+            App.Appearance.SetFontSize(TextBlockSearchResults);
         }
 
         private void SetAppearence()
         {
+            App.Appearance.SetThemeInfo(TextBlockSearchResults);
+        }
+
+        private void ShowSearchResults(SearchData data)
+        {
+            TextBlockSearchResults.Inlines.Clear();
+            data.GetInlinesText(TextBlockSearchResults.Inlines);
         }
 
         #region events
@@ -44,6 +55,12 @@ namespace UbStudyHelp.Pages
         {
             SetFontSize();
         }
+
+        private void SearchDataEntry_ShowSearchResults(SearchData data)
+        {
+            ShowSearchResults(data);
+        }
+
         #endregion
 
 
@@ -51,6 +68,7 @@ namespace UbStudyHelp.Pages
         {
             SetAppearence();
             SetFontSize();
+            SearchDataEntry.Initialize();
         }
     }
 }

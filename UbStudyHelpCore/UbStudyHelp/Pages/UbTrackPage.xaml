@@ -40,15 +40,15 @@
                            Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>
             </Grid>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                 <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" >
 
                     <ListView.View>
                         <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
-                            <GridViewColumn Header="Ref" Width="100" >
+                            <GridViewColumn Header="Ref" Width="Auto" >
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding ParagraphID}" Width="60" TextAlignment="Right" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding ParagraphID}" Width="Auto" TextAlignment="Right"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

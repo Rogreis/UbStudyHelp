@@ -33,6 +33,19 @@ namespace UbStudyHelp.Pages
             TrackList.SelectionChanged += TrackList_SelectionChanged;
         }
 
+        public void Initialize()
+        {
+            SetFontSize();
+            SetAppearence();
+            TrackList.Items.Clear();
+            TrackList.ItemsSource = LocalTrackEntries;
+            foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
+            {
+                LocalTrackEntries.Add(entry);
+            }
+        }
+
+
         private void SetFontSize()
         {
             App.Appearance.SetFontSize(LabelTrackList);
@@ -96,18 +109,6 @@ namespace UbStudyHelp.Pages
         }
         #endregion
 
-
-        public void Initialize()
-        {
-            SetFontSize();
-            SetAppearence();
-            TrackList.Items.Clear();
-            TrackList.ItemsSource = LocalTrackEntries;
-            foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
-            {
-                LocalTrackEntries.Add(entry);
-            }
-        }
 
 
     }

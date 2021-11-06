@@ -110,7 +110,7 @@ namespace UbStudyHelp.Controls
             sb.AppendLine("}");
 
             sb.AppendLine(".border-highlight{ ");
-            sb.AppendLine("  border:2px dashed red;   ");
+            sb.AppendLine("  border:2px dashed " + UbFontColor(FontColorType.Highlight) + ";   ");
             sb.AppendLine("  padding:0.03em 0.25em; ");
             sb.AppendLine("} ");
 

@@ -85,6 +85,20 @@ namespace UbStudyHelpUnitTest
             Assert.IsTrue(list.Count > 0, $"Word not found");
         }
 
+        [Test, Order(6)]
+        public void TestBookSearch()
+        {
+            LuceneBookSearch lucene = new LuceneBookSearch(GetBaseTubPath(), 0);
+            string baseTubFilesPath = GetBaseTubPath();
+            Index index = new Index(baseTubFilesPath);
+            Assert.IsTrue(index.Load(), $"Index not loaded");
+            List<string> list = index.Search("Cabinet");
+            Assert.IsTrue(list.Count > 0, $"Word not found");
+        }
+
+
+
+
 
     }
 }

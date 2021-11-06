@@ -42,20 +42,13 @@ namespace UbStudyHelp.Classes
 
         public bool SimpleSearchIncludePartIV { get; set; } = true;
 
+        public bool SimpleSearchCurrentPaperOnly { get; set; } = false;
+
         public string FontFamilyInfo { get; set; } = "Verdana";
 
         public double FontSizeInfo { get; set; } = 20.0;    // BUG: Default size needs to be proportional to user screen resolution
 
         public double SpliterDistance { get; set; } = 550;  // BUG: Default value needs to be proportional to user screen resolution
-
-
-        public bool IsPaperIncluded(int PaperNo) => ((App.ParametersData.SimpleSearchIncludePartI && PaperNo < 32) ||
-                                                    (App.ParametersData.SimpleSearchIncludePartII && PaperNo >= 32 && PaperNo <= 56) ||
-                                                    (App.ParametersData.SimpleSearchIncludePartIII && PaperNo >= 57 && PaperNo <= 119) ||
-                                                    (App.ParametersData.SimpleSearchIncludePartIV && PaperNo >= 120));
-
-
-
 
         public List<string> SearchIndexEntries = new List<string>();
 

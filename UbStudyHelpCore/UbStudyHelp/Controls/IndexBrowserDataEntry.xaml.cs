@@ -14,7 +14,6 @@ using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
 {
-    public delegate void dlShowIndexHelp();
     public delegate void dlShowIndexDetails(string indexEntry);
 
     /// <summary>
@@ -23,7 +22,6 @@ namespace UbStudyHelp.Controls
     public partial class IndexBrowserDataEntry : UserControl
     {
 
-        public event dlShowIndexHelp ShowIndexHelp = null;
         public event dlShowIndexDetails ShowIndexDetails = null;
 
         // Object to manipulate the index
@@ -38,20 +36,11 @@ namespace UbStudyHelp.Controls
             this.KeyDown += IndexBrowserDataEntry_KeyDown;
             this.Loaded += IndexBrowserDataEntry_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             TextBoxIndexLetters.KeyDown += TextBoxIndexLetters_KeyDown;
             ComboBoxIndexSearch.DropDownClosed += ComboBoxIndexSearch_DropDownClosed;
-            ButtonHelp.Click += ButtonHelp_Click;
         }
 
-
-
-        /// <summary>
-        /// Make the search help visible
-        /// </summary>
-        private void ShowHelp()
-        {
-            ShowIndexHelp?.Invoke();
-        }
 
         private void FillComboBoxIndexEntry(string indexEntry)
         {
@@ -76,26 +65,32 @@ namespace UbStudyHelp.Controls
         }
 
 
-        private void UpdateFont()
+        private void SetFontSize()
         {
             App.Appearance.SetFontSize(TextBlockLabelIndex);
             App.Appearance.SetFontSize(TextBoxIndexLetters);
             App.Appearance.SetFontSize(ComboBoxIndexSearch);
             App.Appearance.SetFontSize(TextBlockLabelIndex);
             App.Appearance.SetHeight(TextBoxIndexLetters);
-            App.Appearance.SetHeight(ComboBoxIndexSearch);
         }
 
+        private void SetAppearence()
+        {
+            App.Appearance.SetThemeInfo(TextBlockLabelIndex);
+            App.Appearance.SetThemeInfo(TextBoxIndexLetters);
+            App.Appearance.SetThemeInfo(ComboBoxIndexSearch);
+            App.Appearance.SetThemeInfo(TextBlockLabelIndex);
+            App.Appearance.SetThemeInfo(TextBoxIndexLetters);
+        }
+
+
+        #region events
         private void CheckKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 string text = TextBoxIndexLetters.Text.Trim();
                 FillComboBoxIndexEntry(text);
-            }
-            if (e.Key == Key.F1)
-            {
-                ShowHelp();
             }
         }
 
@@ -110,10 +105,6 @@ namespace UbStudyHelp.Controls
             }
         }
 
-        private void ButtonHelp_Click(object sender, RoutedEventArgs e)
-        {
-            ShowHelp();
-        }
 
         private void ComboBoxIndexSearch_DropDownClosed(object sender, EventArgs e)
         {
@@ -128,13 +119,21 @@ namespace UbStudyHelp.Controls
 
         private void EventsControl_FontChanged(ControlsAppearance appearance)
         {
-            UpdateFont();
+            SetFontSize();
         }
+
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            SetAppearence();
+        }
+
 
         private void IndexBrowserDataEntry_KeyDown(object sender, KeyEventArgs e)
         {
             CheckKeyDown(e);
         }
+
+        #endregion
 
     }
 }

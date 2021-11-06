@@ -1,16 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using UbStudyHelp;
 
 namespace UbStudyHelp.Classes
 {
@@ -35,7 +31,6 @@ namespace UbStudyHelp.Classes
 
             Run run = new Run(line)
             {
-                FontWeight = FontWeights.Bold,
                 Foreground = accentBrush
             };
 
@@ -45,7 +40,7 @@ namespace UbStudyHelp.Classes
                 TextDecorations = null
             };
             hyperlink.Tag = reference;
-            hyperlink.Click += Hyperlink_Click;
+            hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
             hyperlink.MouseEnter += Hyperlink_MouseEnter;
             hyperlink.MouseLeave += Hyperlink_MouseLeave;       
             Inlines.Add(hyperlink);
@@ -78,10 +73,7 @@ namespace UbStudyHelp.Classes
                     }
                     else
                     {
-                        Run run = new Run(linePart)
-                        {
-                            FontWeight = FontWeights.Bold
-                        };
+                        Run run = new Run(linePart);
                         tb.Inlines.Add(run);
                     }
                 }
@@ -184,9 +176,23 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = null;
+        }
+
+        private void Hyperlink_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = TextDecorations.Underline;
+        }
+
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            e.Handled = true;
             string reference = (string)hyperlink.Tag;
             char[] separators = { ';' };
             string[] parts = reference.Split(separators);
@@ -213,21 +219,9 @@ namespace UbStudyHelp.Classes
             {
                 //run.Foreground= System.Windows.Media.Brushes.Red;
                 run.Foreground = accentBrush;
-                
+
             }
             hyperlink.Foreground = accentBrush;
-        }
-
-        private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            Hyperlink hyperlink = sender as Hyperlink;
-            hyperlink.TextDecorations = null;
-        }
-
-        private void Hyperlink_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            Hyperlink hyperlink = sender as Hyperlink;
-            hyperlink.TextDecorations = TextDecorations.Underline;
         }
 
 

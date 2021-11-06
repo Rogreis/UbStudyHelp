@@ -8,15 +8,14 @@
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="80" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <!-- Left Grid -->
         <Controls:IndexBrowserDataEntry x:Name="DataEntry" Grid.Row="0" />
 
-        <ScrollViewer Grid.Row="1">
-            <TextBlock x:Name="IndexResults" Grid.Row="1" Margin="10,10,10,10" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <TextBlock x:Name="IndexResults" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Stretch" Margin="10,10,10,10" />
         </ScrollViewer>
         
     </Grid>

@@ -148,16 +148,18 @@ namespace UbStudyHelp.Classes
 
         public void SetThemeInfo(Control control)
         {
-
             Style style = new Style
             {
                 TargetType = typeof(Control)
             };
-
+            
             style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
             style.Setters.Add(new Setter(Control.FontSizeProperty, App.ParametersData.FontSizeInfo));
-            style.Setters.Add(new Setter(Control.BackgroundProperty, GetBackgroundColorBrush()));
-            style.Setters.Add(new Setter(Control.ForegroundProperty, GetForegroundColorBrush()));
+            if (!(control is ComboBox || control is ListView))
+            {
+                style.Setters.Add(new Setter(Control.BackgroundProperty, GetBackgroundColorBrush()));
+                style.Setters.Add(new Setter(Control.ForegroundProperty, GetForegroundColorBrush()));
+            }
             control.Style = style;
         }
 
@@ -171,6 +173,7 @@ namespace UbStudyHelp.Classes
 
             style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
             style.Setters.Add(new Setter(TextBlock.FontSizeProperty, App.ParametersData.FontSizeInfo));
+
             style.Setters.Add(new Setter(TextBlock.BackgroundProperty, GetBackgroundColorBrush()));
             style.Setters.Add(new Setter(TextBlock.ForegroundProperty, GetForegroundColorBrush()));
             control.Style = style;

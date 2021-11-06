@@ -165,6 +165,19 @@ namespace UbStudyHelp.Classes
             return true;
         }
 
+        public int CompareTo(TOC_Entry entry)
+        {
+            if (this == entry)
+            {
+                return 0;
+            }
+            if (this < entry)
+            {
+                return -1;
+            }
+            return 1;
+        }
+
 
         public override int GetHashCode()
         {

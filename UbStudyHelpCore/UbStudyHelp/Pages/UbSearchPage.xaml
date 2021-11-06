@@ -9,9 +9,18 @@
       Title="UbSearchPage">
 
     <Grid>
-        <StackPanel Margin="10, 10, 10, 10">
-            <Controls:LeftMenuTop Text="Search Engine tool for the Urantia Book" ImageSourceName="SearchEngineLogo" />
-            <Label Content="This is the SEARCH page" />
-        </StackPanel>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Controls:LeftMenuTop Grid.Row="0" Text="Search Engine tool for the Urantia Book" ImageSourceName="SearchEngineLogo" />
+        <Controls:SearchDataEntry Grid.Row="1" x:Name="SearchDataEntry" />
+
+        <ScrollViewer Grid.Row="2">
+            <TextBlock x:Name="TextBlockSearchResults" Grid.Row="1" Margin="10,10,10,10" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </ScrollViewer>
     </Grid>
 </Page>

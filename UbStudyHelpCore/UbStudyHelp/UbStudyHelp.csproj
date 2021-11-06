@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <!--<RuntimeIdentifier>win10-64;osx.10.12-x64</RuntimeIdentifier>-->
     <StartupObject>UbStudyHelp.App</StartupObject>
+    <ApplicationIcon>urantia.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

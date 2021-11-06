@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UbStudyHelp.Classes;
@@ -45,6 +46,12 @@ namespace UbStudyHelp.Classes
     public delegate void dlFontChanged(ControlsAppearance appearance);
 
     public delegate void dlAppearanceChanged(ControlsAppearance appearance);
+
+    /// <summary>
+    /// Used by SearchDataEntry to communicate a search for its parent control
+    /// </summary>
+    /// <param name="data"></param>
+    public delegate void dlShowSearchResults(SearchData data);
 
     public static class EventsControl
     {
@@ -123,7 +130,15 @@ namespace UbStudyHelp.Classes
         
         public static void FireFontChanged()
         {
-            FontChanged?.Invoke(App.Appearance);
+            // We keep a max and a min size for text
+            if (App.ParametersData.FontSizeInfo <= 18 && App.ParametersData.FontSizeInfo >= 10)
+            {
+                FontChanged?.Invoke(App.Appearance);
+            }
+            else
+            {
+                FireSendMessage("Min/Maz font size reached.");
+            }
         }
 
         public static void FireAppearanceChanged()

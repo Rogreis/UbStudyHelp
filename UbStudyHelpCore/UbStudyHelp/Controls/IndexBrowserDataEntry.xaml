@@ -21,27 +21,16 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="36"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="TextBlockLabelIndex" Height="Auto" Width="Auto" Grid.Column="0" Margin="5,5,5,5" TextWrapping="Wrap">
-                <TextBlock.Inlines>
-                    <Run FontWeight="Bold" FontSize="14" Text="Type to search index:" />
-                </TextBlock.Inlines>
-            </TextBlock>
-            
-            
+            <TextBlock x:Name="TextBlockLabelIndex" Height="Auto" Width="Auto" Grid.Column="0" Margin="5,5,5,5" TextWrapping="Wrap" Text="Type to search index:" />
 
-            <Button x:Name="ButtonHelp" Grid.Column="1" Width="Auto" Height="Auto"  Margin="5,5,5,5">
-                <iconPacks:PackIconFontAwesome Kind="QuestionSolid"  Width="16" Height="16" />
-            </Button>
-
-            <TextBox Grid.Row="0" Grid.Column="2" Name="TextBoxIndexLetters" HorizontalAlignment="Stretch" Text="" />
+            <TextBox Grid.Row="0" Grid.Column="1" Name="TextBoxIndexLetters" HorizontalAlignment="Stretch" Text="" />
 
         </Grid>
 
-        <ComboBox Grid.Row="1" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="26" Margin="5,5,5,5">
+        <ComboBox Grid.Row="1" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5">
             <ComboBox.Effect>
                 <DropShadowEffect/>
             </ComboBox.Effect>
