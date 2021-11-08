@@ -52,9 +52,11 @@ namespace UbStudyHelp.Classes
 
         public List<string> SearchIndexEntries = new List<string>();
 
-        public ObservableCollection<TOC_Entry> TrackEntries = new ObservableCollection<TOC_Entry>();
+        public List<TOC_Entry> TrackEntries = new List<TOC_Entry>();
 
         public string IndexLetters = "";
+
+        public string LastTrackFileSaved = "";
 
     }
 }

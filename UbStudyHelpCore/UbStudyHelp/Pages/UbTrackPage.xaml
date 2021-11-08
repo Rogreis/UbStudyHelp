@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:local="clr-namespace:UbStudyHelp.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -24,48 +25,87 @@
     </Page.Resources>
 
     <Grid>
-        <StackPanel Margin="10, 10, 10, 10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
+            <Image Grid.Row="0" Grid.Column="0" Source="{StaticResource pageLogo}" Height="160" Width="180" Margin="10,10,10,10" ToolTip="Last paragraphs seen"/>
+            <TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
+                        Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>
+        </Grid>
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
-                <Image Grid.Row="0" Grid.Column="0" Source="{StaticResource pageLogo}" Height="160" Width="180" Margin="10,10,10,10" ToolTip="Last paragraphs seen"/>
-                <TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
-                           Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>
-            </Grid>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" >
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="ButtonTrackSort" Grid.Column="0" Click="ButtonTrackSort_Click">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconBootstrapIcons Kind="SortAlphaDown" Width="22" Height="22" />
+                    <!--<TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>-->
+                </StackPanel>
+            </Button>
 
-                    <ListView.View>
-                        <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
-                            <GridViewColumn Header="Ref" Width="Auto" >
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding ParagraphID}" Width="Auto" TextAlignment="Right"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Header="Text" Width="Auto" >
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding TextSample}" TextWrapping="Wrap"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </ScrollViewer>
+            <Button x:Name="ButtonTrackClear" Grid.Column="1" Click="ButtonTrackClear_Click">
+                <StackPanel Orientation="Horizontal">
+                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
+                    <TextBlock x:Name="ButtonTrackClearText">Clear</TextBlock>
+                </StackPanel>
+            </Button>
 
-            
-        </StackPanel>
+            <Button x:Name="ButtonTrackSave" Grid.Column="2" Click="ButtonTrackSave_Click">
+                <StackPanel Orientation="Horizontal">
+                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
+                    <TextBlock x:Name="ButtonTrackSaveText">Save</TextBlock>
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="ButtonTrackLoad" Grid.Column="3" Click="ButtonTrackLoad_Click">
+                <StackPanel Orientation="Horizontal">
+                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
+                    <TextBlock x:Name="ButtonTrackLoadText">Load</TextBlock>
+                </StackPanel>
+            </Button>
+
+        </Grid>
+
+
+        <ScrollViewer Grid.Row="2"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" >
+
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
+                        <GridViewColumn Header="Ref" Width="Auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ParagraphID}" Width="Auto" TextAlignment="Right"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Text">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TextSample}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ScrollViewer>
     </Grid>
 
 </Page>
