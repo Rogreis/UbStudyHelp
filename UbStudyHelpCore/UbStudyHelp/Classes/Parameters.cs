@@ -21,7 +21,7 @@ namespace UbStudyHelp.Classes
 
         public short LanguageIDRightTranslation { get; set; } = 34;
 
-        public int MaxTrackItems { get; set; } = 30;
+        public int MaxTrackItems { get; set; } = 60;
 
         public int SearchPageSize { get; set; } = 20;
 
