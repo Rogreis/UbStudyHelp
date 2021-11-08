@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml;
 using System.Globalization;
+using YamlDotNet.Serialization;
 
 namespace UbStudyHelp.Classes
 {
@@ -165,7 +166,10 @@ namespace UbStudyHelp.Classes
             return _ToSimpleCharacters;
         }
 
+        [YamlIgnore]
         private Dictionary<char, string> _lookup;
+
+        [YamlIgnore]
         private Dictionary<char, string> Lookup
         {
             get

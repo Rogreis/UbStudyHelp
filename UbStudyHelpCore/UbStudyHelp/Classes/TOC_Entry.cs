@@ -149,20 +149,30 @@ namespace UbStudyHelp.Classes
         {
             if (System.Object.ReferenceEquals(e1, e2)) return false;
             if ((object)e1 == null || (object)e2 == null) return false;
-            if (e1.Paper >= e2.Paper) return false;
-            if (e1.Section >= e2.Section) return false;
-            if (e1.ParagraphNo >= e2.ParagraphNo) return false;
-            return true;
+
+            if (e1.Paper < e2.Paper) return true;
+            if (e1.Paper > e2.Paper) return false;
+
+            if (e1.Section < e2.Section) return true;
+            if (e1.Section > e2.Section) return false;
+
+            if (e1.ParagraphNo < e2.ParagraphNo) return true;
+            return false;
         }
 
         public static bool operator >(TOC_Entry e1, TOC_Entry e2)
         {
             if (System.Object.ReferenceEquals(e1, e2)) return false;
             if ((object)e1 == null || (object)e2 == null) return false;
-            if (e1.Paper <= e2.Paper) return false;
-            if (e1.Section <= e2.Section) return false;
-            if (e1.ParagraphNo <= e2.ParagraphNo) return false;
-            return true;
+
+            if (e1.Paper > e2.Paper) return true;
+            if (e1.Paper < e2.Paper) return false;
+
+            if (e1.Section > e2.Section) return true;
+            if (e1.Section < e2.Section) return false;
+
+            if (e1.ParagraphNo > e2.ParagraphNo) return true;
+            return false;
         }
 
         public int CompareTo(TOC_Entry entry)
