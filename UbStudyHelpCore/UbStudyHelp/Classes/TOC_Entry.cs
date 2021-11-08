@@ -127,6 +127,7 @@ namespace UbStudyHelp.Classes
         {
             if (obj == null) return false;
             TOC_Entry entry = obj as TOC_Entry;
+            if (entry == null) return false;
             if (entry.Paper != this.Paper) return false;
             if (entry.Section != Section) return false;
             if (entry.ParagraphNo != ParagraphNo) return false;
