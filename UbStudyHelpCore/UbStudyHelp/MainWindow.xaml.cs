@@ -51,7 +51,7 @@ namespace UbStudyHelp
 
         private void ShowMessage(string message, bool fatalError= false)
         {
-            Debug.WriteLine(message);
+            //Debug.WriteLine(message);
             StatusBarMessages.Text = message;
             if (fatalError)
             {

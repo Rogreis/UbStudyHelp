@@ -10,11 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\Urantia-Translators\Publish.bat = ..\..\Urantia-Translators\Publish.bat
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UbStudyHelpUnitTest", "UbStudyHelpUnitTest\UbStudyHelpUnitTest.csproj", "{A6AAE5E0-0794-4957-B85A-81ACC4651A97}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml", "MdXaml\MdXaml.csproj", "{DEC897E0-0547-4408-B18C-BA6DB3F9B4AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfAppTest", "..\WpfAppTest\WpfAppTest.csproj", "{BB6C4508-3C69-4FFF-9A3C-0CBED91150B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfAppTest", "..\WpfAppTest\WpfAppTest.csproj", "{BB6C4508-3C69-4FFF-9A3C-0CBED91150B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UbStudyHelpMSTest", "UbStudyHelpMSTest\UbStudyHelpMSTest.csproj", "{2236798C-CAB6-4CF2-A77D-E6B5805398F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +26,6 @@ Global
 		{032746BB-96FB-4F5D-80FC-1693BEB72CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{032746BB-96FB-4F5D-80FC-1693BEB72CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{032746BB-96FB-4F5D-80FC-1693BEB72CC5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6AAE5E0-0794-4957-B85A-81ACC4651A97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6AAE5E0-0794-4957-B85A-81ACC4651A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6AAE5E0-0794-4957-B85A-81ACC4651A97}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DEC897E0-0547-4408-B18C-BA6DB3F9B4AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DEC897E0-0547-4408-B18C-BA6DB3F9B4AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEC897E0-0547-4408-B18C-BA6DB3F9B4AA}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -36,6 +33,10 @@ Global
 		{BB6C4508-3C69-4FFF-9A3C-0CBED91150B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB6C4508-3C69-4FFF-9A3C-0CBED91150B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB6C4508-3C69-4FFF-9A3C-0CBED91150B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2236798C-CAB6-4CF2-A77D-E6B5805398F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2236798C-CAB6-4CF2-A77D-E6B5805398F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2236798C-CAB6-4CF2-A77D-E6B5805398F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2236798C-CAB6-4CF2-A77D-E6B5805398F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

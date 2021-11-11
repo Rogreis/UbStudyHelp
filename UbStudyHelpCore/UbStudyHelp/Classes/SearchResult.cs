@@ -41,14 +41,16 @@ namespace UbStudyHelp.Classes
         {
             get
             {
+                TextWork work = new TextWork(Text);
+                string htmlText = work.DecodedText;
                 const int maxCount = 80;
-                int maxCharCount = Text.Length < maxCount ? Text.Length : maxCount;
-                int size = Text.IndexOf(' ', maxCharCount);
+                int maxCharCount = htmlText.Length < maxCount ? htmlText.Length : maxCount;
+                int size = htmlText.IndexOf(' ', maxCharCount);
                 if (size < 0)
                 {
                     size = maxCharCount;
                 }
-                return Text.Length < maxCharCount ? Text : Text.Substring(0, size);
+                return htmlText.Length < maxCharCount ? htmlText : htmlText.Substring(0, size);
             }
         }
 

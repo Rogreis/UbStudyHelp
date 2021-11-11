@@ -33,6 +33,11 @@ namespace UbStudyHelp.Classes
 
         private string BaseFilesPath { get; set; }
 
+        public Translation()
+        {
+        }
+
+
         public Translation(XElement record)
         {
             // LanguageID, Description, TUB, TIN, UseBold, RightToLeft, TextButton, CultureID, StartingYear, EndingYear

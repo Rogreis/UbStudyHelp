@@ -20,6 +20,7 @@ namespace UbStudyHelp.Classes
     /// <summary>
     /// 
     /// Nuget from https://www.nuget.org/packages/Lucene.Net/4.8.0-beta00014
+    /// Install-Package Lucene.Net -Version 4.8.0-beta00014
     /// https://www.byteblocks.com/Post/How-to-use-Lucene-In-Net-Core-project
     /// Packages used:
     /// https://www.nuget.org/packages/Lucene.Net.Analysis.Common/
