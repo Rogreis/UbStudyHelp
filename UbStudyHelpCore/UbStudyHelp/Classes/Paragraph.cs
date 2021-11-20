@@ -10,13 +10,30 @@ namespace UbStudyHelp.Classes
 {
     public class Paragraph : BaseClass
     {
+
+        private TextWork TextWork = new TextWork();
+
         public short Paper { get; set; }
         public short PK_Seq { get; set; }
         public short Section { get; set; }
         public short ParagraphNo { get; set; }
         public short Page { get; set; }
         public short Line { get; set; }
-        public string Text { get; set; }
+
+        private string _text = "";
+        public string Text 
+        { 
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                TextWork.LoadText(value);
+                _text = TextWork.GetHtml();
+            }
+        }
+
         public enHtmlType Format { get; set; }
 
         public TOC_Entry Entry { get; private set; }
@@ -39,27 +56,7 @@ namespace UbStudyHelp.Classes
         {
             get
             {
-                return System.Text.RegularExpressions.Regex.Replace(Text, @"<[^>]*>", string.Empty,
-                                  System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            }
-        }
-
-
-        public string TextForSearchEngine
-        {
-            get
-            {
-                string result = System.Text.RegularExpressions.Regex.Replace(Text, @"<[^>]*>", string.Empty,
-                                  System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                return ToSimpleCharacters(result);
-            }
-        }
-
-        public string HtmlTextForSearchEngine
-        {
-            get
-            {
-                return ToSimpleCharacters(Text);
+                return TextWork.GetPlainText();
             }
         }
 
@@ -87,16 +84,9 @@ namespace UbStudyHelp.Classes
             {
                 partText = "";
             }
-            else if (ParagraphNo == 0)
+            else 
             {
-                partText = Text;
-            }
-            else
-            {
-                int position = Math.Min(40, Text.Length);
-                position = Text.IndexOf(' ', position);
-                if (position >= 0)
-                    partText = Text.Substring(0, position);
+                partText = TextWork.GetReducedText();
             }
             return $"{Identification} {partText}";
         }

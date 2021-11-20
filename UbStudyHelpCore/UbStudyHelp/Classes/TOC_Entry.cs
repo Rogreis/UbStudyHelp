@@ -95,6 +95,16 @@ namespace UbStudyHelp.Classes
             IsExpanded = false;
         }
 
+        public TOC_Entry(TOC_Entry entry)
+        {
+            this.Paper = entry.Paper;
+            this.Section = entry.Section;
+            this.ParagraphNo = entry.ParagraphNo;
+            Text = entry.Text;
+            IsExpanded = entry.IsExpanded;
+        }
+
+
         public TOC_Entry(XElement xElemParagraph)
         {
             Paper = GetShort(xElemParagraph.Element("Paper"));

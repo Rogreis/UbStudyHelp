@@ -29,8 +29,12 @@ namespace UbStudyHelp.Classes
 
         public string ThemeColor { get; set; } = "Blue";
 
+        public bool ShowParIdent { get; set; } = true;
+
+        public bool ShowBilingual { get; set; } = true;
+
         // Simple Search parameters
-        public int MaxExpressionsStored { get; set; } = 20;
+        public int MaxExpressionsStored { get; set; } = 50;
 
         public List<string> SearchStrings { get; set; } = new List<string>();
 

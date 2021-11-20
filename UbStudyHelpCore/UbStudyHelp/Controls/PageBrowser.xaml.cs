@@ -22,6 +22,10 @@ namespace UbStudyHelp.Controls
 
         private HtmlCommandsPage commands = new HtmlCommandsPage();
 
+        private TOC_Entry lastEntry = new TOC_Entry(0,1,0);
+
+        private bool lastShouldHighlightText = false;
+
 
         public PageBrowser()
         {
@@ -33,6 +37,7 @@ namespace UbStudyHelp.Controls
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.SeachClicked += EventsControl_SeachClicked;
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
 
@@ -47,15 +52,19 @@ namespace UbStudyHelp.Controls
         private void Show(TOC_Entry entry, bool shouldHighlightText= false)
         {
             // Keep latest pragraph shown for next program section
-            App.ParametersData.Entry.Paper = entry.Paper;
-            App.ParametersData.Entry.Section = entry.Section;
-            App.ParametersData.Entry.ParagraphNo = entry.ParagraphNo;
+            App.ParametersData.Entry= new TOC_Entry(entry);
+            lastEntry = new TOC_Entry(entry);
+            lastShouldHighlightText = shouldHighlightText;
 
             EventsControl.FireSendMessage("Paper: " + entry.ToString());
             string htmlPage = commands.HtmlLine(entry, shouldHighlightText);
             BrowserText.NavigateToString(htmlPage);
         }
 
+        private void Refresh()
+        {
+            Show(lastEntry, lastShouldHighlightText);
+        }
 
 
         private void PageBrowser_Loaded(object sender, RoutedEventArgs e)
@@ -94,6 +103,13 @@ namespace UbStudyHelp.Controls
         {
             Show(App.ParametersData.Entry);
         }
+
+        private void EventsControl_TranslationsChanged()
+        {
+            Refresh();
+        }
+
+
 
     }
 }

@@ -132,7 +132,7 @@ namespace UbStudyHelp.Controls
 
         protected abstract string IdentedLine(string text);
 
-        protected abstract void HtmlSingleLine(StringBuilder sb, string LeftText, string RightText, bool Ident = false);
+        protected abstract void HtmlSingleLine(StringBuilder sb, string LeftText, string RightText);
 
         #endregion
 

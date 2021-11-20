@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
+using J2N.Text;
+using YamlDotNet.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace UbStudyHelp.Classes
 {
@@ -26,7 +30,9 @@ namespace UbStudyHelp.Classes
         }
     }
 
-
+    /// <summary>
+    /// Works with a text string to remove html tags and create an element list for WPF Inline
+    /// </summary>
     public class TextWork
     {
         private const int maxTextSixe = 80;
@@ -104,37 +110,125 @@ namespace UbStudyHelp.Classes
             }
         }
 
+        public TextWork()
+        {
+        }
+
         public TextWork(string text)
         {
-            sbText = new StringBuilder(text);
+            LoadText(text);
+        }
+
+
+        public void LoadText(string text)
+        {
+            /*
+             Encoded chars
+                  &lt;    <
+                  &gt;    >
+
+             Possible Html tags found in the text
+                  "<span class=\"SCaps\">", "</span>"
+                  "<b>", "</b>"
+                  "<em>", "</em>"
+                  "<br />"
+                  "<sup>", "</sup>"
+                  <span class="Colored">
+                  </span>
+            */
+            sbText = new StringBuilder(SecurityElement.Escape(text));
             foreach (KeyValuePair<string, string> pair in EncodedCharacters)
             {
                 sbText.Replace(pair.Key, pair.Value);
             }
+            sbText.Replace("<span class=\"Colored\">", "");
+            sbText.Replace("<span class=\"SCaps\">", "");
+            sbText.Replace("</span>", "");
         }
 
 
         private string RemoveAll(string input, string toReplace, string newValue)
         {
-            //Regex rx = new Regex("/" + toReplace + "/gi");
             return Regex.Replace(input, toReplace, newValue);
         }
 
-        private string GetPlainText()
+        public string GetPlainText()
         {
             string text = SecurityElement.Escape(sbText.ToString());
-            text = RemoveAll(sbText.ToString(), "&lt;", "<");
-            text = RemoveAll(text, "&gt;", "<");
-            text = RemoveAll(text, "<span class=\"Colored\">", "");
-            text = RemoveAll(text, "<span class=\"SCaps\">", "");
-            foreach(HtmlTag tag in HtmlTags)
-            {
-                text = RemoveAll(text, tag.Start, "");
-                text = RemoveAll(text, tag.End, "");
-            }
-            return RemoveAll(text, "</span>", "");
+            return Regex.Replace(text, @"<[^>]*>", string.Empty, RegexOptions.IgnoreCase);
+
+            //text = RemoveAll(text, "<span class=\"Colored\">", "");
+            //text = RemoveAll(text, "<span class=\"SCaps\">", "");
+            //foreach(HtmlTag tag in HtmlTags)
+            //{
+            //    text = RemoveAll(text, tag.Start, "");
+            //    text = RemoveAll(text, tag.End, "");
+            //}
+            //return RemoveAll(text, "</span>", "");
 
         }
+
+
+        #region Eliminate accentued letters
+
+        /// <summary>
+        /// Replaces Accented Characters with Closest Equivalents
+        /// </summary>
+        /// <param name="original">The original.</param>
+        /// <returns></returns>
+        /// Test line:   string result = ToSimpleCharacters("áéíóú ÁÉÍÓÚ Çç  Ü ü Ö ö Ñ ñ ÄËÏÖÜ äëïöü ");
+        /// <remarks>Based on code from: 
+        /// http://blogs.msdn.com/b/michkap/archive/2007/05/14/2629747.aspx</remarks>
+        private string _ToSimpleCharacters = null;
+        protected string ToSimpleCharacters(string original)
+        {
+            if (!string.IsNullOrEmpty(_ToSimpleCharacters)) return _ToSimpleCharacters;
+            if (string.IsNullOrEmpty(original)) return string.Empty;
+            string stFormD = original.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+
+            for (int ich = 0; ich < stFormD.Length; ich++)
+            {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
+
+                if (uc != UnicodeCategory.NonSpacingMark)
+                {
+                    if (Lookup.ContainsKey(stFormD[ich]))
+                    {
+                        sb.Append(Lookup[stFormD[ich]]);
+                    }
+                    else
+                    {
+                        sb.Append(stFormD[ich]);
+                    }
+                }
+            }
+            _ToSimpleCharacters = (sb.ToString().Normalize(NormalizationForm.FormC));
+            return _ToSimpleCharacters;
+        }
+
+        [YamlIgnore]
+        private Dictionary<char, string> _lookup;
+
+        [YamlIgnore]
+        private Dictionary<char, string> Lookup
+        {
+            get
+            {
+                if (_lookup == null)
+                {
+                    _lookup = new Dictionary<char, string>();
+                    _lookup[char.ConvertFromUtf32(230)[0]] = "ae";//_lookup['æ']="ae";
+                    _lookup[char.ConvertFromUtf32(198)[0]] = "Ae";//_lookup['Æ']="Ae";
+                    _lookup[char.ConvertFromUtf32(240)[0]] = "d";//_lookup['ð']="d";
+                }
+                return _lookup;
+            }
+        }
+
+
+        #endregion
+
 
         public string GetReducedText()
         {
@@ -156,29 +250,13 @@ namespace UbStudyHelp.Classes
             return text.Substring(0, size);
         }
 
+        /// <summary>
+        /// Returns the html fro the current paragraph
+        /// </summary>
+        /// <returns></returns>
         public string GetHtml()
         {
-            /*
-             Encoded chars
-                  &lt;    <
-                  &gt;    >
-
-             Possible Html tags found in the text
-                  "<span class=\"SCaps\">", "</span>"
-                  "<b>", "</b>"
-                  "<em>", "</em>"
-                  "<br />"
-                  "<sup>", "</sup>"
-                  <span class="Colored">
-                  </span>
-            */
-
-            string text = SecurityElement.Escape(sbText.ToString());
-            text= RemoveAll(sbText.ToString(), "&lt;", "<");
-            text = RemoveAll(text, "&gt;", "<");
-            text = RemoveAll(text, "<span class=\"Colored\">", "");
-            text = RemoveAll(text, "<span class=\"SCaps\">", "");
-            return RemoveAll(text, "</span>", "");
+            return sbText.ToString();
         }
 
 

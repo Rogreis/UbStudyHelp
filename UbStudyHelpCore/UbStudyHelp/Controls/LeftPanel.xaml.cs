@@ -26,7 +26,7 @@ namespace UbStudyHelp.Controls
         UbSearchPage ubSearchPage = new UbSearchPage();
         UbTrackPage ubTrackPage = new UbTrackPage();
         SearchHelpPage searchHelpPage = new SearchHelpPage();
-        OptionsPage optionsPage = new OptionsPage();
+        SettingsPage optionsPage = new SettingsPage();
 
         public LeftPanel()
         {

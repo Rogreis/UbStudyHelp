@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace UbStudyHelp.Classes
 {
@@ -18,13 +20,28 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public class SearchResult
     {
+        private TextWork TextWork = new TextWork();
+
+
         private const string highStart = "|~S~|";
 
         private const string highEnd = "|~E~|";
 
         public TOC_Entry Entry { get; set; }
 
-        public string Text { get; set; }
+        private string _text = "";
+        public string Text
+        {
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                TextWork.LoadText(value);
+                _text = TextWork.GetHtml();
+            }
+        }
 
         public int OriginalPosition { get; set; } = -1;
 
@@ -41,16 +58,17 @@ namespace UbStudyHelp.Classes
         {
             get
             {
-                TextWork work = new TextWork(Text);
-                string htmlText = work.DecodedText;
-                const int maxCount = 80;
-                int maxCharCount = htmlText.Length < maxCount ? htmlText.Length : maxCount;
-                int size = htmlText.IndexOf(' ', maxCharCount);
-                if (size < 0)
-                {
-                    size = maxCharCount;
-                }
-                return htmlText.Length < maxCharCount ? htmlText : htmlText.Substring(0, size);
+                return TextWork.GetReducedText();
+                //TextWork work = new TextWork(Text);
+                //string htmlText = work.DecodedText;
+                //const int maxCount = 80;
+                //int maxCharCount = htmlText.Length < maxCount ? htmlText.Length : maxCount;
+                //int size = htmlText.IndexOf(' ', maxCharCount);
+                //if (size < 0)
+                //{
+                //    size = maxCharCount;
+                //}
+                //return htmlText.Length < maxCharCount ? htmlText : htmlText.Substring(0, size);
             }
         }
 
@@ -59,40 +77,38 @@ namespace UbStudyHelp.Classes
 
         private void Convert(InlineCollection Inlines, List<string> Words)
         {
-            if (!string.IsNullOrEmpty(Text))
+
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+            foreach (UbTextTag textTag in TextWork.Tags(false))
             {
-                SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
-
-                string cleaned = Text;
-                foreach (string word in Words)
+                switch (textTag.Tag)
                 {
-                    cleaned = Regex.Replace(cleaned, "\\b" + string.Join("\\b|\\b", word) + "\\b", "");
-                }
-
-                string escapedXml = SecurityElement.Escape(Text);
-
-                while (escapedXml.IndexOf(highStart) != -1)
-                {
-                    //up to highStart is normal
-                    Inlines.Add(new Run(escapedXml.Substring(0, escapedXml.IndexOf(highStart))));
-                    //between highStart and highEnd is highlighted
-                    Inlines.Add(new Run(escapedXml.Substring(escapedXml.IndexOf(highStart) + 5,
-                                              escapedXml.IndexOf(highEnd) - (escapedXml.IndexOf(highStart) + 5)))
-                    {
-                        FontSize = App.ParametersData.FontSizeInfo,
-                        FontWeight = FontWeights.Bold,
-                        Background = accentBrush
-                    });
-
-                    //the rest of the string (after the highEnd)
-                    escapedXml = escapedXml.Substring(escapedXml.IndexOf(highEnd) + 5);
-                }
-
-                if (escapedXml.Length > 0)
-                {
-                    Inlines.Add(new Run(escapedXml));
+                    case TextTag.Normal:
+                        Run runNormal = new Run(textTag.Text);
+                        runNormal.FontSize = App.ParametersData.FontSizeInfo;
+                        Inlines.Add(runNormal);
+                        break;
+                    case TextTag.Italic:
+                        var i = new Italic();
+                        i.FontSize = App.ParametersData.FontSizeInfo;
+                        i.Inlines.Add(textTag.Text);
+                        Inlines.Add(i);
+                        break;
+                    case TextTag.Bold:
+                        var b = new Bold();
+                        b.FontSize = App.ParametersData.FontSizeInfo;
+                        b.Inlines.Add(textTag.Text);
+                        Inlines.Add(b);
+                        break;
+                    case TextTag.Superscript:
+                        Run runSuper = new Run(textTag.Text);
+                        runSuper.FontSize = App.ParametersData.FontSizeInfo;
+                        runSuper.BaselineAlignment = BaselineAlignment.Superscript;
+                        Inlines.Add(runSuper);
+                        break;
                 }
             }
+
         }
 
         /// <summary>
@@ -108,7 +124,6 @@ namespace UbStudyHelp.Classes
                 Run run = new Run(TextStart)
                 {
                     FontSize = App.ParametersData.FontSizeInfo,
-                    FontWeight = FontWeights.Bold,
                     Foreground = accentBrush
                 };
                 Inlines.Add(run);

@@ -37,7 +37,7 @@ namespace UbStudyHelp.Classes
     /// <param name="Message"></param>
     public delegate void dlSendMessage(string Message);
 
-    public delegate void dlLeftTranslationChanged(Translation oLeftTranslation);
+    public delegate void dlTranslationsChanged();
 
     public delegate void dlRightTranslationChanged(Translation oRightTranslation);
 
@@ -65,9 +65,7 @@ namespace UbStudyHelp.Classes
 
         public static event dlSendMessage SendMessage = null;
 
-        public static event dlLeftTranslationChanged LeftTranslationChanged = null;
-
-        public static event dlRightTranslationChanged RightTranslationChanged = null;
+        public static event dlTranslationsChanged TranslationsChanged = null;
 
         public static event dlBilingualChanged BilingualChanged = null;
 
@@ -113,14 +111,9 @@ namespace UbStudyHelp.Classes
             SendMessage?.Invoke(Message);
         }
 
-        public static void FireLeftTranslationChanged(Translation oLeftTranslation)
+        public static void FireTranslationsChanged()
         {
-            LeftTranslationChanged?.Invoke(oLeftTranslation);
-        }
-
-        public static void FireRightTranslationChanged(Translation oRightTranslation)
-        {
-            RightTranslationChanged?.Invoke(oRightTranslation);
+            TranslationsChanged?.Invoke();
         }
 
         public static void FireBilingualChanged(bool ShowBilingual)

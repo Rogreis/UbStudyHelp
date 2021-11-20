@@ -14,10 +14,10 @@ namespace UbStudyHelp.Controls
             return "<table><tr><td width= \"30px\" >&nbsp;</td><td valign=\"top\"><p>" + text + "</p></td></tr></table>";
         }
 
-        protected override void HtmlSingleLine(StringBuilder sb, string LeftText, string RightText, bool Ident = false)
+        protected override void HtmlSingleLine(StringBuilder sb, string LeftText, string RightText)
         {
             sb.AppendLine("<tr>");
-            if (Ident)
+            if (App.ParametersData.ShowParIdent)
             {
                 sb.AppendLine(" <td width= \"50%\" valign=\"top\">" + IdentedLine(LeftText) + "</td>");
                 sb.AppendLine(" <td width= \"50%\" valign=\"top\">" + IdentedLine(RightText) + "</td>");
@@ -144,7 +144,7 @@ namespace UbStudyHelp.Controls
                         //TextLeft = string.Format("<p><a name=\"{0}\"><sup>{1}</sup></a> {2}</p>", oParagraph.AName, oParagraph.Identification, TextLeft);
                         TextLeft = $"<p{cssClass}><a name=\"{parLeft.AName}\"><sup>{parLeft.Identification}</sup></a> {TextLeft}</p>";
                         TextRight = $"<p{cssClass}><sup>{parLeft.Identification}</sup></a> {TextRight}</p>";
-                        HtmlSingleLine(sb, TextLeft, TextRight, true);
+                        HtmlSingleLine(sb, TextLeft, TextRight);
                         break;
                 }
                 sb.AppendLine("</tr>");
