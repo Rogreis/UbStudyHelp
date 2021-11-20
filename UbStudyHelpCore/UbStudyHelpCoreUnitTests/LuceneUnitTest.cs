@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.IO;
 using UbStudyHelp.Classes;
 
-namespace UbStudyHelpMSTest
+namespace UbStudyHelpCoreUnitTests
 {
     [TestClass]
     public class LuceneUnitTest
     {
 
         private string baseDataPath = @"..\..\..\..\UbStudyHelp\bin\Debug\netcoreapp3.1\TUB_Files";
+        //               C:\Trabalho\GitHub\Rogerio\UbStudyHelp\UbStudyHelpCore\UbStudyHelpCoreUnitTests\bin\Debug\netcoreapp3.1\TUB_Files\aa-az.json'.
 
         [TestMethod]
         public void TestMethod1()
@@ -100,7 +101,7 @@ namespace UbStudyHelpMSTest
         {
             Translation translation034 = new Translation();
             string pathTranslation = Path.Combine(baseDataPath, "L034");
-            translation034.Inicialize(pathTranslation);
+            translation034.Inicialize(baseDataPath);
             LuceneBookSearch lucene = new LuceneBookSearch(GetBaseTubPath(), translation034);
             string baseTubFilesPath = GetBaseTubPath();
             UbStudyHelp.Classes.Index index = new UbStudyHelp.Classes.Index(baseTubFilesPath);

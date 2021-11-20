@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:local="clr-namespace:UbStudyHelp.Pages"
+      xmlns:Controls="clr-namespace:UbStudyHelp.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="UbTrackPage">
@@ -39,7 +40,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
-            <Image Grid.Row="0" Grid.Column="0" Source="{StaticResource pageLogo}" Height="160" Width="180" Margin="10,10,10,10" ToolTip="Last paragraphs seen"/>
+            <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" Text="History of paragraphs visited" ImageSourceName="TrackLogo" />
             <TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
                         Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>
         </Grid>

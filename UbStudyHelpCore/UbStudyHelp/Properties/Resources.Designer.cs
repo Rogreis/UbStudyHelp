@@ -63,6 +63,36 @@ namespace UbStudyHelp.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _6__Settings {
+            get {
+                object obj = ResourceManager.GetObject("_6__Settings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _7__Estudo {
+            get {
+                object obj = ResourceManager.GetObject("_7__Estudo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _7__Estudo_2 {
+            get {
+                object obj = ResourceManager.GetObject("_7__Estudo_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Bookmark {
             get {
                 object obj = ResourceManager.GetObject("Bookmark", resourceCulture);
@@ -76,6 +106,16 @@ namespace UbStudyHelp.Properties {
         internal static System.Drawing.Bitmap Help {
             get {
                 object obj = ResourceManager.GetObject("Help", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HelpDark {
+            get {
+                object obj = ResourceManager.GetObject("HelpDark", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

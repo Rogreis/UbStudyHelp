@@ -71,28 +71,37 @@ namespace UbStudyHelp.Controls
             {
                 _imageSourceName = value;
                 Bitmap bitmap = null;
+                string toolTip = "";
                 switch (_imageSourceName)
                 {
                     case "TrackLogo":
                         bitmap = UbStudyHelp.Properties.Resources.Track;
+                        toolTip = "Visited paragraphs history";
                         break;
                     case "SettingsLogo":
                         bitmap = UbStudyHelp.Properties.Resources.Settings;
+                        toolTip = "Change the settings of this tool";
                         break;
                     case "HelpLogo":
                         bitmap = UbStudyHelp.Properties.Resources.Help;
+                        toolTip = "Help information";
                         break;
                     case "IndexLogo":
                         bitmap = UbStudyHelp.Properties.Resources.Index;
+                        toolTip = "Index of The Urantia Book";
                         break;
                     case "SearchEngineLogo":
                         bitmap = UbStudyHelp.Properties.Resources.SearchEngine;
+                        toolTip = "Search engine - see help about how to use";
                         break;
                     case "TocLogo":
                         bitmap = UbStudyHelp.Properties.Resources.TOC;
+                        toolTip = "Table of contents";
                         break;
                 }
                 this.Resources["ImageSourcePath"] = ConvertBitmapToBitmapImage.Convert(bitmap);
+                this.Resources["ToolTip"] = toolTip;
+                
             }
         }
 

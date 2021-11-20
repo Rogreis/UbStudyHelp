@@ -16,16 +16,17 @@
     </UserControl.Resources>-->
 
 
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition  />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
-        <Image Grid.Row="0" Grid.Column="0"  Source="{DynamicResource ImageSourcePath}" Height="160" Width="180" Margin="10,10,10,10" ToolTip="Last paragraphs seen"/>
+        <Image Grid.Row="0" Grid.Column="0"  Source="{DynamicResource ImageSourcePath}" 
+               Height="160" Width="180" Margin="10,10,10,10" ToolTip="{DynamicResource ToolTip}" HorizontalAlignment="Left" />
         <TextBlock Grid.Row="0" Grid.Column="1"  x:Name="TextBlockCaption" Margin="10,10,10,10"
                            Text="{DynamicResource TextToDisplay}" 
                            TextWrapping="Wrap"/>
