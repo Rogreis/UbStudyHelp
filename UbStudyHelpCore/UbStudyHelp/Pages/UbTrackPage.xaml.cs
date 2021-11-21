@@ -93,7 +93,7 @@ namespace UbStudyHelp.Pages
             AddEntry(entry);
         }
 
-        private void EventsControl_SeachClicked(TOC_Entry entry)
+        private void EventsControl_SeachClicked(TOC_Entry entry, List<string> Words = null)
         {
             AddEntry(entry);
         }

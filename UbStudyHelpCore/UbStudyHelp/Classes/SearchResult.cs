@@ -59,16 +59,6 @@ namespace UbStudyHelp.Classes
             get
             {
                 return TextWork.GetReducedText();
-                //TextWork work = new TextWork(Text);
-                //string htmlText = work.DecodedText;
-                //const int maxCount = 80;
-                //int maxCharCount = htmlText.Length < maxCount ? htmlText.Length : maxCount;
-                //int size = htmlText.IndexOf(' ', maxCharCount);
-                //if (size < 0)
-                //{
-                //    size = maxCharCount;
-                //}
-                //return htmlText.Length < maxCharCount ? htmlText : htmlText.Substring(0, size);
             }
         }
 

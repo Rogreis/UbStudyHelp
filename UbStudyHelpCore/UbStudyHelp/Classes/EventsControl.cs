@@ -23,7 +23,7 @@ namespace UbStudyHelp.Classes
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlSeachClicked(TOC_Entry entry);
+    public delegate void dlSeachClicked(TOC_Entry entry, List<string> Words);
 
     /// <summary>
     /// Used to fire a click on index
@@ -36,6 +36,11 @@ namespace UbStudyHelp.Classes
     /// </summary>
     /// <param name="Message"></param>
     public delegate void dlSendMessage(string Message);
+
+    /// <summary>
+    /// Used to ask to a text refresh in the main screen
+    /// </summary>
+    public delegate void dlRefreshText();
 
     public delegate void dlTranslationsChanged();
 
@@ -65,6 +70,8 @@ namespace UbStudyHelp.Classes
 
         public static event dlSendMessage SendMessage = null;
 
+        public static event dlRefreshText RefreshText = null;
+
         public static event dlTranslationsChanged TranslationsChanged = null;
 
         public static event dlBilingualChanged BilingualChanged = null;
@@ -73,9 +80,9 @@ namespace UbStudyHelp.Classes
 
         public static event dlAppearanceChanged AppearanceChanged = null;
 
-        public static void FireSeachClicked(TOC_Entry entry)
+        public static void FireSeachClicked(TOC_Entry entry, List<string> Words)
         {
-            SeachClicked?.Invoke(entry);
+            SeachClicked?.Invoke(entry, Words);
         }
 
         public static void FireIndexClicked(TOC_Entry entry)
@@ -110,6 +117,12 @@ namespace UbStudyHelp.Classes
         {
             SendMessage?.Invoke(Message);
         }
+
+        public static void FireRefreshText()
+        {
+            RefreshText?.Invoke();
+        }
+        
 
         public static void FireTranslationsChanged()
         {

@@ -182,7 +182,7 @@ namespace UbStudyHelp.Classes
                 return;
             }
 
-            EventsControl.FireSeachClicked(entry);
+            EventsControl.FireSeachClicked(entry, Words);
 
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor());
             var run = hyperlink.Inlines.FirstOrDefault() as Run;

@@ -79,16 +79,6 @@ namespace UbStudyHelp.Pages
             EventsControl.FireAppearanceChanged();
         }
 
-        private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)
-        {
-            App.Appearance.Theme = ToggleSwitchThemme.IsOn ? "Dark" : "Light";
-        }
-
-        private void ToggleSwitchShowParIdent_Toggled(object sender, RoutedEventArgs e)
-        {
-            App.ParametersData.ShowParIdent = ToggleSwitchShowParIdent.IsOn;
-        }
-
         private void ComboLeftTranslations_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
@@ -101,6 +91,17 @@ namespace UbStudyHelp.Pages
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
             App.ParametersData.LanguageIDRightTranslation = trans.LanguageID;
             EventsControl.FireTranslationsChanged();
+        }
+
+        private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)
+        {
+            App.Appearance.Theme = ToggleSwitchThemme.IsOn ? "Dark" : "Light";
+        }
+
+        private void ToggleSwitchShowParIdent_Toggled(object sender, RoutedEventArgs e)
+        {
+            App.ParametersData.ShowParagraphIdentification = ToggleSwitchShowParIdent.IsOn;
+            EventsControl.FireRefreshText();
         }
 
         private void ToggleSwitchBilingual_Toggled(object sender, RoutedEventArgs e)
@@ -130,7 +131,7 @@ namespace UbStudyHelp.Pages
 
             ComboTheme.Text = App.ParametersData.ThemeColor;
             ToggleSwitchThemme.IsOn = App.Appearance.Theme == "Dark";
-            ToggleSwitchShowParIdent.IsOn = App.ParametersData.ShowParIdent;
+            ToggleSwitchShowParIdent.IsOn = App.ParametersData.ShowParagraphIdentification;
             ToggleSwitchBilingual.IsOn= App.ParametersData.ShowBilingual;
         }
 

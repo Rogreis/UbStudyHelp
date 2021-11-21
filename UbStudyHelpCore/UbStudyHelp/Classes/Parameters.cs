@@ -29,7 +29,7 @@ namespace UbStudyHelp.Classes
 
         public string ThemeColor { get; set; } = "Blue";
 
-        public bool ShowParIdent { get; set; } = true;
+        public bool ShowParagraphIdentification { get; set; } = true;
 
         public bool ShowBilingual { get; set; } = true;
 
