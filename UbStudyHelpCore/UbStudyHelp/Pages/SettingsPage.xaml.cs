@@ -1,19 +1,8 @@
 ﻿using ControlzEx.Theming;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using UbStudyHelp.Classes;
-using static Lucene.Net.Documents.Field;
 
 namespace UbStudyHelp.Pages
 {
@@ -107,7 +96,7 @@ namespace UbStudyHelp.Pages
         private void ToggleSwitchBilingual_Toggled(object sender, RoutedEventArgs e)
         {
             App.ParametersData.ShowBilingual = ToggleSwitchBilingual.IsOn;
-            EventsControl.FireTranslationsChanged();
+            EventsControl.FireBilingualChanged(ToggleSwitchBilingual.IsOn);
         }
 
         #endregion
@@ -123,6 +112,13 @@ namespace UbStudyHelp.Pages
         {
             SetFontSize();
             SetAppearence();
+
+            //< iconPacks:PackIconIonicons Width = "22"
+            //                                       Height = "22"
+            //                                       HorizontalAlignment = "Center"
+            //                                       VerticalAlignment = "Center"
+            //                                       Kind = "SettingsMD" />
+
 
             ComboLeftTranslations.ItemsSource = Book.ObservableTranslations;
             ComboRightTranslation.ItemsSource = Book.ObservableTranslations;

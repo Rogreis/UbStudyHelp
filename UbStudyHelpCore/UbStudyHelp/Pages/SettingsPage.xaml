@@ -4,15 +4,20 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:local="clr-namespace:UbStudyHelp.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OptionsPage">
 
+
     <Grid>
         <StackPanel Margin="10, 10, 10, 10">
 
             <Controls:LeftMenuTop Text="Settings" ImageSourceName="SettingsLogo" />
+
+            <Image x:Name="image" Grid.Row="0" Grid.Column="0"  
+               Height="160" Width="180" Margin="10,10,10,10" ToolTip="{DynamicResource ToolTip}" HorizontalAlignment="Left" />
 
             <Label x:Name="LabelLeftTranslations" Content="Left Translation:" Margin="0,10,0,0" />
             <ComboBox x:Name="ComboLeftTranslations" Width="Auto" Margin="0,10,0,0"  DisplayMemberPath="Description" SelectionChanged="ComboLeftTranslations_SelectionChanged"/>

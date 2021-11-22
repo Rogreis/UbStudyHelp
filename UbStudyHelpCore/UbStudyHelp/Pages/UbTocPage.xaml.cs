@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using UbStudyHelp.Classes;
 
@@ -28,6 +20,8 @@ namespace UbStudyHelp.Pages
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            EventsControl.BilingualChanged += EventsControl_BilingualChanged;
+            EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
             TOC_Left.SelectedItemChanged += TOC_Left_SelectedItemChanged;
             TOC_Right.SelectedItemChanged += TOC_Right_SelectedItemChanged;
         }
@@ -56,8 +50,10 @@ namespace UbStudyHelp.Pages
         private void FillTreeView(TreeView tree, bool useLeftTranslation)
         {
             Translation translation = useLeftTranslation ? Book.LeftTranslation : Book.RightTranslation;
-
+            tree.Tag = translation;
             TreeViewItemUB itemPaper = null;
+
+            tree.Items.Clear();
             foreach (TOC_Entry entry in translation.TableOfContents)
             {
                 if (entry.Section == 0)
@@ -198,13 +194,26 @@ namespace UbStudyHelp.Pages
         }
 
 
-
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             ScrollViewer scv = (ScrollViewer)sender;
             scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
             e.Handled = true;
         }
+
+        private void EventsControl_BilingualChanged(bool ShowBilingual)
+        {
+            TOC_Right.Visibility = ShowBilingual ? Visibility.Visible : Visibility.Hidden;
+            TabItemRight.Visibility = ShowBilingual ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void EventsControl_TranslationsChanged()
+        {
+            FillTreeView(TOC_Left, true);
+            FillTreeView(TOC_Right, false);
+        }
+
+
         #endregion
 
 
@@ -212,6 +221,8 @@ namespace UbStudyHelp.Pages
         {
             SetFontSize();
             SetAppearence();
+            TOC_Right.Visibility = App.ParametersData.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
+            TabItemRight.Visibility = App.ParametersData.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
             FillTreeView(TOC_Left, true);
             FillTreeView(TOC_Right, false);
         }

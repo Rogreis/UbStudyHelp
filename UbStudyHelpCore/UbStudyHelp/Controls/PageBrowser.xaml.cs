@@ -39,8 +39,10 @@ namespace UbStudyHelp.Controls
             EventsControl.RefreshText += EventsControl_RefreshText;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
+            EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
+
 
 
         /// <summary>
@@ -98,7 +100,7 @@ namespace UbStudyHelp.Controls
 
         private void EventsControl_IndexClicked(TOC_Entry entry)
         {
-            Show(entry);
+            Show(entry, true, null);
         }
 
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
@@ -113,6 +115,11 @@ namespace UbStudyHelp.Controls
         }
 
         private void EventsControl_TranslationsChanged()
+        {
+            Refresh();
+        }
+
+        private void EventsControl_BilingualChanged(bool ShowBilingual)
         {
             Refresh();
         }
