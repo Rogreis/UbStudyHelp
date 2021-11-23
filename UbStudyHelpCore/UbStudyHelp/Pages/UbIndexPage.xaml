@@ -16,7 +16,7 @@
 
 
     <Grid>
-        <StackPanel Margin="10, 10, 10, 10">
+        <StackPanel>
             <Controls:LeftMenuTop Text="Subject index for the Urantia Book" ImageSourceName="IndexLogo" />
             <Controls:IndexBrowser x:Name="IndexBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
         </StackPanel>

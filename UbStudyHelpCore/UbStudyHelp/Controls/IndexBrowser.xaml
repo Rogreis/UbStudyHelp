@@ -9,14 +9,14 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Controls:IndexBrowserDataEntry x:Name="DataEntry" Grid.Row="0" />
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden"  
-                      PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"  Height="1100">
-            <TextBlock x:Name="IndexResults" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Stretch" />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  
+                      PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"  Height="Auto">
+            <TextBlock x:Name="IndexResults" TextWrapping="Wrap"/>
         </ScrollViewer>
         
     </Grid>

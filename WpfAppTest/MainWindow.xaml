@@ -10,14 +10,17 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="pageLogo" UriSource="pack://application:,,,/Resources/Track.jpg" />
 
-            <ResourceDictionary.MergedDictionaries>
+            <!--
+                <BitmapImage x:Key="pageLogo" UriSource="pack://application:,,,/Resources/Settings.svg" />
+            
+            
+                <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Olive.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>-->
 
 
         </ResourceDictionary>
@@ -38,8 +41,8 @@
         <Image Grid.Row="0" Grid.Column="0" Source="pack://application:,,,/Resources/Track.jpg" 
                HorizontalAlignment="Left" Height="160" Width="180" Margin="10,10,10,10" />
         <Label Grid.Row="0" Grid.Column="1" Content="Imagem: "></Label>
-        <Image Grid.Row="1" Grid.Column="0" Source="{StaticResource pageLogo}" 
-               HorizontalAlignment="Left" Height="160" Width="180" Margin="10,10,10,10" />
+        <!--<Image Grid.Row="1" Grid.Column="0" Source="{StaticResource pageLogo}" 
+               HorizontalAlignment="Left" Height="160" Width="180" Margin="10,10,10,10" />-->
         <Label Grid.Row="1" Grid.Column="1" Content=" 2 - 2 "></Label>
         
         <Button />

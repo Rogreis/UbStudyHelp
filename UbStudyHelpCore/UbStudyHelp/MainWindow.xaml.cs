@@ -42,6 +42,7 @@ namespace UbStudyHelp
         private void GridSplitterLeft_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             App.ParametersData.SpliterDistance = GridTexts.ColumnDefinitions[0].ActualWidth;
+            EventsControl.FireGridSplitter(GridTexts.ColumnDefinitions[0].ActualWidth);
         }
 
         private void EventsControl_SendMessage(string message)
@@ -75,11 +76,6 @@ namespace UbStudyHelp
             cw.Owner = Application.Current.MainWindow;
             cw.Show();
         }
-
-
-
-
-
 
     }
 }

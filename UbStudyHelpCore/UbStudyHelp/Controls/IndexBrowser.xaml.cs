@@ -24,6 +24,7 @@ namespace UbStudyHelp.Controls
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            EventsControl.GridSplitterChanged += EventsControl_GridSplitterChanged;
             DataEntry.Index = Index;
             DataEntry.ShowIndexDetails += DataEntry_ShowIndexDetails;
         }
@@ -78,6 +79,12 @@ namespace UbStudyHelp.Controls
             scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
             e.Handled = true;
         }
+
+        private void EventsControl_GridSplitterChanged(double newWidth)
+        {
+            IndexResults.Width= newWidth - 20;
+        }
+
 
         #endregion
 

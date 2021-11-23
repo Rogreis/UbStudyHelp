@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Classes
@@ -36,6 +37,12 @@ namespace UbStudyHelp.Classes
     /// </summary>
     /// <param name="Message"></param>
     public delegate void dlSendMessage(string Message);
+
+    /// <summary>
+    /// Used to infor about a change in the left column
+    /// </summary>
+    /// <param name="newWidth"></param>
+    public delegate void dlGridSplitter(double newWidth);
 
     /// <summary>
     /// Used to ask to a text refresh in the main screen
@@ -80,6 +87,8 @@ namespace UbStudyHelp.Classes
 
         public static event dlAppearanceChanged AppearanceChanged = null;
 
+        public static event dlGridSplitter GridSplitterChanged = null;
+
         public static void FireSeachClicked(TOC_Entry entry, List<string> Words)
         {
             SeachClicked?.Invoke(entry, Words);
@@ -112,6 +121,10 @@ namespace UbStudyHelp.Classes
             SendMessage?.Invoke(message);
         }
 
+        public static void FireGridSplitter(double newWidth)
+        {
+            GridSplitterChanged?.Invoke(newWidth);
+        }
 
         public static void FireSendMessage(string Message)
         {

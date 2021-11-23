@@ -174,6 +174,7 @@ namespace UbStudyHelp.Classes
                 tb.Inlines.Add(new LineBreak());
                 tb.Inlines.Add(new LineBreak());
             }
+            tb.TextWrapping = TextWrapping.WrapWithOverflow;
         }
 
         private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
