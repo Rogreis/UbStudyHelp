@@ -19,11 +19,19 @@ namespace UbStudyHelp.Pages
     /// </summary>
     public partial class UbIndexPage : Page
     {
+
+        // Object to manipulate the index
+        private UbStudyHelp.Classes.Index Index = new UbStudyHelp.Classes.Index(App.BaseTubFilesPath);
+
         public UbIndexPage()
         {
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            DataEntry.Index = Index;
+            DataEntry.ShowIndexDetails += DataEntry_ShowIndexDetails;
+            if (!Index.Load())
+                return;
         }
 
         private void SetFontSize()
@@ -33,6 +41,13 @@ namespace UbStudyHelp.Pages
         private void SetAppearence()
         {
         }
+
+        private void CreateWebIndexPage(string indexEntry)
+        {
+            TubIndex index = Index.GetIndexEntry(indexEntry);
+            IndexBrowserInstance.CreateWebIndexPage(index);
+        }
+
 
         #region events
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
@@ -44,6 +59,12 @@ namespace UbStudyHelp.Pages
         {
             SetFontSize();
         }
+
+        private void DataEntry_ShowIndexDetails(string indexEntry)
+        {
+            CreateWebIndexPage(indexEntry);
+        }
+
         #endregion
 
         public void Initialize()
@@ -51,6 +72,8 @@ namespace UbStudyHelp.Pages
             SetAppearence();
             SetFontSize();
         }
+
+
 
 
     }

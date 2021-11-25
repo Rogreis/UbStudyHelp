@@ -1,11 +1,14 @@
 ﻿using MdXaml;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using UbStudyHelp.Classes;
+using static System.Windows.Forms.LinkLabel;
+using Paragraph = System.Windows.Documents.Paragraph;
 
 namespace UbStudyHelp.Controls
 {
@@ -15,43 +18,44 @@ namespace UbStudyHelp.Controls
     public partial class IndexBrowser : UserControl
     {
 
-        // Object to manipulate the index
-        private UbStudyHelp.Classes.Index Index = new UbStudyHelp.Classes.Index(App.BaseTubFilesPath);
-
-
         public IndexBrowser()
         {
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.GridSplitterChanged += EventsControl_GridSplitterChanged;
-            DataEntry.Index = Index;
-            DataEntry.ShowIndexDetails += DataEntry_ShowIndexDetails;
         }
-
 
         /// <summary>
         /// Show the details for some index entry
         /// </summary>
         /// <param name="indexEntry"></param>
-        private void CreateWebIndexPage(string indexEntry)
+        public void CreateWebIndexPage(TubIndex index)
         {
-            if (!Index.Load())
-                return;
-            IndexResults.Visibility = Visibility.Visible;
-            Index.ShowResults(indexEntry, IndexResults);
+            List<IndexTextblockEntry> items = new List<IndexTextblockEntry>();
+            foreach (IndexDetails detail in index.Details)
+            {
+                string links = "";
+                double margin = (detail.DetailType - 100) * 5;
+                foreach (string link in detail.Links)
+                {
+                    links += link + " ";
+                }
+                items.Add(new IndexTextblockEntry(detail.Text, links, margin));
+            }
+            StackPanelIndexResult.ItemsSource = items;
         }
 
 
 
         private void SetFontSize()
         {
-            App.Appearance.SetFontSize(IndexResults);
+            App.Appearance.SetFontSize(StackPanelIndexResult);
         }
 
         private void SetAppearence()
         {
-            App.Appearance.SetThemeInfo(IndexResults);
+            App.Appearance.SetThemeInfo(StackPanelIndexResult);
         }
 
 
@@ -68,21 +72,23 @@ namespace UbStudyHelp.Controls
             SetFontSize();
         }
 
-        private void DataEntry_ShowIndexDetails(string indexEntry)
-        {
-            CreateWebIndexPage(indexEntry);
-        }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            ScrollViewer scv = (ScrollViewer)sender;
-            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
-            e.Handled = true;
+            //ScrollViewer scv = (ScrollViewer)sender;
+            //scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            //e.Handled = true;
+
+            //ListView scv = (ListView)sender;
+            //scv.Sc .ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            //e.Handled = true;
+
+
         }
 
         private void EventsControl_GridSplitterChanged(double newWidth)
         {
-            IndexResults.Width= newWidth - 20;
+            //IndexResults.Width= newWidth - 20;
         }
 
 

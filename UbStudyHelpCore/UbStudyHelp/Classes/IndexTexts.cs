@@ -7,30 +7,32 @@ namespace UbStudyHelp.Classes
 
     public class IndexDetails
     {
-        public string Text { get; set; }
+        public int DetailType { get; set; }
+        public string Text { get; set; } = "";
+        public List<string> Links { get; set; } = new List<string>();
 
-        public string Details { get; set; }
+    }
 
-        public List<string> References { get; set; } = new List<string>();
-
+    public class TubIndex
+    {
+        public string Title { get; set; }
+        public List<IndexDetails> Details { get; set; } = new List<IndexDetails>();
         public override string ToString()
         {
-            return Text;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(Title);
+            foreach (IndexDetails detail in Details)
+            {
+                sb.AppendLine($"   {detail.DetailType}  {detail.Text}");
+                foreach (string link in detail.Links)
+                {
+                    sb.AppendLine("      " + link);
+                }
+            }
+            sb.AppendLine("");
+            return sb.ToString();
         }
     }
 
-
-
-    public class IndexTexts
-    {
-        public List<IndexDetails> Details { get; set; } = new List<IndexDetails>();
-
-        public static IndexTexts operator +(IndexTexts index1, IndexTexts index2)
-        {
-            index1.Details.AddRange(index2.Details);
-            return index1;
-        }
-
-    }
 
 }

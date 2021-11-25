@@ -41,7 +41,7 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public bool CreateLuceneIndexForUBIndex(IndexTexts Indexes)
+        public bool CreateLuceneIndexForUBIndex(List<TubIndex> Indexes)
         {
             try
             {
@@ -55,12 +55,12 @@ namespace UbStudyHelp.Classes
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer);
                 IndexWriter writer = new IndexWriter(luceneIndexDirectory, config);
 
-                foreach (IndexDetails details in Indexes.Details)
+                foreach (TubIndex index in Indexes)
                 {
                     Document doc = new Document();
                     // StringField indexes but doesn't tokenize
-                    doc.Add(new StringField(IndexFieldName, details.Text, Field.Store.YES));
-                    doc.Add(new TextField(IndexFieldData, details.Text, Field.Store.YES));
+                    doc.Add(new StringField(IndexFieldName, index.Title, Field.Store.YES));
+                    doc.Add(new TextField(IndexFieldData, index.Title, Field.Store.YES));
                     writer.AddDocument(doc);
                 }
                 writer.Flush(triggerMerge: false, applyAllDeletes: false);
