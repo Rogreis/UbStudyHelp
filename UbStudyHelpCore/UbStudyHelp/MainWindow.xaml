@@ -10,7 +10,7 @@
                 SaveWindowPosition="True" 
                 mc:Ignorable="d"
                 Loaded="formText_Loaded"
-                Title="The Urantia Book Study Help" Height="800" Width="1800" WindowState="Maximized">
+                Title="The Urantia Book Study Help" Height="800" Width="1800" SizeChanged="MetroWindow_SizeChanged" WindowState="Maximized">
 
     <!--Setting a custom Icon see https://mahapps.com/docs/controls/metrowindow  -->
     
@@ -63,7 +63,7 @@
 
         </Grid>
 
-        <StatusBar Grid.Row="1">
+        <StatusBar x:Name="StatusBarMainWindow" Grid.Row="1">
 
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>

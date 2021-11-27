@@ -18,13 +18,19 @@ namespace UbStudyHelp.Controls
     public partial class IndexBrowser : UserControl
     {
 
+        public double HeaderHeight { get; set; } = 0;
+
+        public double HeaderWidth { get; set; } = 0;
+
         public IndexBrowser()
         {
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.GridSplitterChanged += EventsControl_GridSplitterChanged;
+            EventsControl.MainWindowSizeChanged += EventsControl_MainWindowSizeChanged;
         }
+
 
         /// <summary>
         /// Show the details for some index entry
@@ -43,19 +49,19 @@ namespace UbStudyHelp.Controls
                 }
                 items.Add(new IndexTextblockEntry(detail.Text, links, margin));
             }
-            StackPanelIndexResult.ItemsSource = items;
+            ListViewIndexResult.ItemsSource = items;
         }
 
 
 
         private void SetFontSize()
         {
-            App.Appearance.SetFontSize(StackPanelIndexResult);
+            App.Appearance.SetFontSize(ListViewIndexResult);
         }
 
         private void SetAppearence()
         {
-            App.Appearance.SetThemeInfo(StackPanelIndexResult);
+            App.Appearance.SetThemeInfo(ListViewIndexResult);
         }
 
 
@@ -89,6 +95,17 @@ namespace UbStudyHelp.Controls
         private void EventsControl_GridSplitterChanged(double newWidth)
         {
             //IndexResults.Width= newWidth - 20;
+        }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //DockPanelIndexResult.Width = this.ActualWidth - 30;
+            //DockPanelIndexResult.Height = this.ActualHeight - 30;
+        }
+
+        private void EventsControl_MainWindowSizeChanged(double width, double height)
+        {
+           // DockPanelIndexResult.Height = height - HeaderHeight;
         }
 
 

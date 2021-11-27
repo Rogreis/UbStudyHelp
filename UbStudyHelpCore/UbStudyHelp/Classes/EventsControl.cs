@@ -45,6 +45,13 @@ namespace UbStudyHelp.Classes
     public delegate void dlGridSplitter(double newWidth);
 
     /// <summary>
+    /// Used to communicate a change in he size of main window for objects that do not have a good resize
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    public delegate void dlMainWindowSizeChanged(double width, double height);
+
+    /// <summary>
     /// Used to ask to a text refresh in the main screen
     /// </summary>
     public delegate void dlRefreshText();
@@ -89,6 +96,8 @@ namespace UbStudyHelp.Classes
 
         public static event dlGridSplitter GridSplitterChanged = null;
 
+        public static event dlMainWindowSizeChanged MainWindowSizeChanged = null;
+
         public static void FireSeachClicked(TOC_Entry entry, List<string> Words)
         {
             SeachClicked?.Invoke(entry, Words);
@@ -124,6 +133,11 @@ namespace UbStudyHelp.Classes
         public static void FireGridSplitter(double newWidth)
         {
             GridSplitterChanged?.Invoke(newWidth);
+        }
+
+        public static void FireMainWindowSizeChanged(double width, double height)
+        {
+            MainWindowSizeChanged?.Invoke(width, height);
         }
 
         public static void FireSendMessage(string Message)

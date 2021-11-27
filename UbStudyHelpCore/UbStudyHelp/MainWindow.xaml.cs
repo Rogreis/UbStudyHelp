@@ -77,5 +77,24 @@ namespace UbStudyHelp
             cw.Show();
         }
 
+        private void MetroWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            try
+            {
+                double width = this.ActualWidth;
+                double height = gridMain.ActualHeight - StatusBarMainWindow.ActualHeight - SystemParameters.CaptionHeight;
+                
+                //Debug.WriteLine($"{this.ActualWidth}   {this.ActualHeight} Splitter= {GridTexts.ColumnDefinitions[0].ActualWidth}");
+                //Debug.WriteLine($"{gridMain.ActualWidth}   {gridMain.ActualHeight}  {StatusBarMainWindow.ActualWidth}  {StatusBarMainWindow.ActualHeight}");
+
+                EventsControl.FireMainWindowSizeChanged(width, height);
+            }
+            catch
+            {
+                Debug.WriteLine("Error");
+            }
+
+
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace UbStudyHelp.Classes
                 return null;
             }
             var words = GetWords(text);
-            return GetInlines(words).ToList();
+            return GetInlines(words);
         }
 
         private static Hyperlink LinkFromReference(string line)
@@ -53,19 +53,26 @@ namespace UbStudyHelp.Classes
         }
 
 
-        private static IEnumerable<Inline> GetInlines(IEnumerable<string> words)
+        private static List<Inline> GetInlines(List<string> words)
         {
             List<Inline> Inlines = new List<Inline>();
             foreach (string word in words)
             {
-                Inlines.Add(LinkFromReference(word));
+                if (!string.IsNullOrEmpty(word))
+                {
+                    Inlines.Add(LinkFromReference(word));
+                    if (words.Last() != word)
+                    {
+                        Inlines.Add(new LineBreak());
+                    }
+                }
             }
             return Inlines; // words.Select(x => new Run(x));
         }
 
-        private static IEnumerable<string> GetWords(string text)
+        private static List<string> GetWords(string text)
         {
-            return text.Split(' ');
+            return text.Split(' ').ToList();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
