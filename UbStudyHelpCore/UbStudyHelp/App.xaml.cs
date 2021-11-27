@@ -50,37 +50,19 @@ namespace UbStudyHelp
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            pathParameters = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.yaml");
+            pathParameters = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.json");
             string exePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             BaseTubFilesPath = System.IO.Path.Combine(exePath, "TUB_Files");
 
             ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();
 
-
-
-            // When parameters files does not exist, we use the default already created.
-            if (File.Exists(pathParameters))
-            {
-                try
-                {
-                    Deserializer deserializer = new Deserializer();
-                    string yamlData = File.ReadAllText(pathParameters);
-                    ParametersData = deserializer.Deserialize<Parameters>(yamlData);
-                }
-                catch (Exception ex) 
-                {
-                    // In case of error, use default data, ignoring errors
-                    string message = ex.Message;
-                }
-            }
+            ParametersData = Parameters.Deserialize(pathParameters);
 
             if (!LoadData())
             {
                 throw new Exception("Data not loaded!");
             }
-
-
             base.OnStartup(e);
         }
 
@@ -88,8 +70,7 @@ namespace UbStudyHelp
         protected override void OnExit(ExitEventArgs e)
         {
             // Serialize parameters
-            Serializer serializer = new Serializer();
-            File.WriteAllText(pathParameters, serializer.Serialize(ParametersData));
+            Parameters.Serialize(ParametersData, pathParameters);
             base.OnExit(e);
         }
 

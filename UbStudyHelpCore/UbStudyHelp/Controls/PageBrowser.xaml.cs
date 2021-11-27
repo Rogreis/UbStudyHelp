@@ -50,7 +50,7 @@ namespace UbStudyHelp.Controls
         /// </summary>
         /// <param name="entry"></param>
         /// <param name="addToTrack"></param>
-        private void Show(TOC_Entry entry, bool shouldHighlightText= false, List<string> Words= null)
+        private void Show(TOC_Entry entry, bool shouldHighlightText= true, List<string> Words= null)
         {
             if (App.ParametersData.ShowBilingual)
             {

@@ -78,6 +78,14 @@ namespace UbStudyHelp.Pages
                 LocalTrackEntries.RemoveAt(LocalTrackEntries.Count - 1);
                 App.ParametersData.TrackEntries.RemoveAt(LocalTrackEntries.Count - 1);
             }
+
+            if (string.IsNullOrEmpty(entry.Text))
+            {
+                Paper paperLeft = Book.LeftTranslation.Paper(entry.Paper);
+                Paragraph par = paperLeft.GetParagraph(entry);
+                entry.Text = par.ReducedText;
+            }
+
             LocalTrackEntries.Insert(0, entry);
             App.ParametersData.TrackEntries.Insert(0, entry);
         }

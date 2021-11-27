@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using UbStudyHelp;
 using UbStudyHelp.Classes;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace UbStudyHelp.Classes
 {
+
+    [Serializable]
     public class Parameters
     {
 
@@ -61,6 +67,41 @@ namespace UbStudyHelp.Classes
         public string IndexLetters = "";
 
         public string LastTrackFileSaved = "";
+
+        /// <summary>
+        /// Serialize the parameters instance
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="pathParameters"></param>
+        public static void Serialize(Parameters p, string pathParameters)
+        {
+            try
+            {
+                var jsonString = JsonConvert.SerializeObject(p, Formatting.Indented);
+                File.WriteAllText(pathParameters, jsonString);
+            }
+            catch  {    }
+        }
+
+        /// <summary>
+        /// Deserialize the parameters instance
+        /// </summary>
+        /// <param name="pathParameters"></param>
+        /// <returns></returns>
+        public static Parameters Deserialize(string pathParameters)
+        {
+            try
+            {
+                var jsonString = File.ReadAllText(pathParameters);
+                return JsonConvert.DeserializeObject<Parameters>(jsonString);
+            }
+            catch 
+            {
+                return new Parameters();
+            }
+        }
+
+
 
     }
 }

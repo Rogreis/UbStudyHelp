@@ -77,6 +77,15 @@ namespace UbStudyHelp.Classes
         }
 
 
+        public string ReducedText
+        {
+            get
+            {
+                return TextWork.GetReducedText();
+            }
+        }
+
+
         public override string ToString()
         {
             string partText= "";
