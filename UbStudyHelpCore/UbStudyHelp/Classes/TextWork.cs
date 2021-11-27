@@ -154,7 +154,8 @@ namespace UbStudyHelp.Classes
 
         public string GetPlainText()
         {
-            string text = SecurityElement.Escape(sbText.ToString());
+            //string text = SecurityElement.Escape(sbText.ToString());
+            string text = sbText.ToString();
             return Regex.Replace(text, @"<[^>]*>", string.Empty, RegexOptions.IgnoreCase);
 
             //text = RemoveAll(text, "<span class=\"Colored\">", "");
@@ -247,7 +248,7 @@ namespace UbStudyHelp.Classes
                     break;
                 }
             }
-            return text.Substring(0, size);
+            return GetPlainText().Substring(0, size);
         }
 
         /// <summary>
