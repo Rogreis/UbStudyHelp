@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" Text="Table of Contents" ImageSourceName="TocLogo" />
+        <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" ImageSourceName="TocLogo" />
         <TabControl Grid.Row="1" Margin="10, 10, 10, 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <TabItem Name="TabItemLeft" Header="Left">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">

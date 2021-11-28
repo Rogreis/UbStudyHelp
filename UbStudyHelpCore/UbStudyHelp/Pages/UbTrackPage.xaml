@@ -19,11 +19,6 @@
     
     -->
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <BitmapImage x:Key="pageLogo" UriSource="pack://application:,,,/Resources/Track.jpg" />
-        </ResourceDictionary>
-    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -35,14 +30,14 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
+            <!--<Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>-->
             <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
-            <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" Text="History of paragraphs visited" ImageSourceName="TrackLogo" />
-            <TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
-                        Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>
+            <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" ImageSourceName="TrackLogo" />
+            <!--<TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
+                        Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>-->
         </Grid>
 
 

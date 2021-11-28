@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -7,25 +7,47 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Help.svg" />
+    <None Remove="Resources\Indice.svg" />
+    <None Remove="Resources\Search.svg" />
     <None Remove="Resources\Settings.svg" />
-    <None Remove="Resources\Track.jpg" />
+    <None Remove="Resources\threeCirclesBig.svg" />
+    <None Remove="Resources\TOC.svg" />
+    <None Remove="Resources\Track.svg" />
+    <None Remove="Resources\UbStudyHelpIcon.svg" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Settings.svg">
+    <Resource Include="Resources\Help.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Resource>
+    <Resource Include="Resources\Indice.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Search.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Settings.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\threeCirclesBig.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\TOC.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Track.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\UbStudyHelpIcon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\Track.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <PackageReference Include="SharpVectors" Version="1.7.6" />
   </ItemGroup>
 
   <ItemGroup>

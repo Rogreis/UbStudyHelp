@@ -26,7 +26,7 @@
 
     <Grid>
         <StackPanel>
-            <Controls:LeftMenuTop x:Name="LeftMenuTopControl" Text="Subject index for the Urantia Book" ImageSourceName="IndexLogo" />
+            <Controls:LeftMenuTop x:Name="LeftMenuTopControl" ImageSourceName="IndexLogo" />
             <Controls:IndexBrowserDataEntry x:Name="DataEntry" Grid.Row="0" />
             <Controls:IndexBrowser x:Name="IndexBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
         </StackPanel>

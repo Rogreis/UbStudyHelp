@@ -1,0 +1,38 @@
+<!-- ####################################################################
+
+This file was generates automatically via the 
+IconPacks.Browser (MIT-License). 
+
+Visit https://github.com/MahApps/MahApps.Metro.IconPacks and 
+https://github.com/MahApps/MahApps.Metro.IconPacks/blob/develop/LICENSE 
+for more information.
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+Icon-Name: 			Fonts
+Iconpack:			BootstrapIcons
+Iconpack-Homepage: 	https://icons.getbootstrap.com/
+Iconpack-License:	https://github.com/twbs/icons/blob/main/LICENSE.md
+
+#####################################################################-->
+
+<Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Width="16" 
+        Height="16">
+    <Canvas.LayoutTransform>
+        <MatrixTransform Matrix="1,0,0,-1,0,0" />
+    </Canvas.LayoutTransform>
+    <Path Data="M229.8375 243.75H70.275L68.71875 197.625H77.7C82.575 226.575 91.9125 231.05625 128.19375 232.21875L136.14375 232.4625V85.70625C136.14375 73.275 133.44375 70.33125 111.76875 68.4V58.65H188.30625V68.4C166.51875 70.33125 163.81875 73.275 163.81875 85.70625V232.4625L171.9 232.21875C208.1624999999999 231.05625 217.5374999999999 226.575 222.39375 197.60625H231.375L229.8375 243.75z"
+          Stroke="{x:Null}"
+          Fill="#FF000000"
+          Stretch="Uniform"
+          Width="16"
+          Height="16"
+          SnapsToDevicePixels="False"
+          UseLayoutRounding="False"
+          StrokeThickness="0"
+          StrokeStartLineCap="flat"
+          StrokeEndLineCap="flat"
+          StrokeLineJoin="miter"/>
+</Canvas>

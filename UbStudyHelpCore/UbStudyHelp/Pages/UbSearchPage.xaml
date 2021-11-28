@@ -16,7 +16,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Controls:LeftMenuTop Grid.Row="0" Text="Search Engine tool for the Urantia Book" ImageSourceName="SearchEngineLogo" />
+        <Controls:LeftMenuTop Grid.Row="0" ImageSourceName="SearchEngineLogo" />
         <Controls:SearchDataEntry Grid.Row="1" x:Name="SearchDataEntry" />
 
         <ScrollViewer Grid.Row="2">

@@ -53,7 +53,7 @@ namespace UbStudyHelp.Pages
 
         private void SetFontSize()
         {
-            App.Appearance.SetFontSize(LabelTrackList);
+            //App.Appearance.SetFontSize(LabelTrackList);
             App.Appearance.SetFontSize(TrackList);
             App.Appearance.SetFontSize(ButtonTrackSort);
             App.Appearance.SetFontSize(ButtonTrackClear);
@@ -63,7 +63,7 @@ namespace UbStudyHelp.Pages
 
         private void SetAppearence()
         {
-            App.Appearance.SetThemeInfo(LabelTrackList);
+            //App.Appearance.SetThemeInfo(LabelTrackList);
             App.Appearance.SetThemeInfo(TrackList);
             App.Appearance.SetThemeInfo(ButtonTrackSort);
             App.Appearance.SetThemeInfo(ButtonTrackClear);

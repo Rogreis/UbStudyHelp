@@ -14,7 +14,7 @@
     <Grid>
         <StackPanel Margin="10, 10, 10, 10">
 
-            <Controls:LeftMenuTop Text="Settings" ImageSourceName="SettingsLogo" />
+            <Controls:LeftMenuTop ImageSourceName="SettingsLogo" />
 
             <Image x:Name="image" Grid.Row="0" Grid.Column="0"  
                Height="160" Width="180" Margin="10,10,10,10" ToolTip="{DynamicResource ToolTip}" HorizontalAlignment="Left" />

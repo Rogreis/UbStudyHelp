@@ -11,7 +11,7 @@
 
     <Grid>
         <StackPanel Margin="10, 10, 10, 10">
-            <Controls:LeftMenuTop Text="Some help information useful to use this app" ImageSourceName="HelpLogo" />
+            <Controls:LeftMenuTop ImageSourceName="HelpLogo" />
             <MdXaml:MarkdownScrollViewer x:Name="MarkDownDisplay" />
         </StackPanel>
     </Grid>
