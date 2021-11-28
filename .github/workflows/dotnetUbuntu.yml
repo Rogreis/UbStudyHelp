@@ -1,3 +1,4 @@
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 name: .NET
 
 on:
@@ -24,6 +25,6 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore UbStudyHelpCore/UbStudyHelp/UbStudyHelp.csproj
       - name: Test
         run: dotnet test --no-restore --verbosity normal
