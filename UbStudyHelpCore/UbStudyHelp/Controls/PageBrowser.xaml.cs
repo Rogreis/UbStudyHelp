@@ -35,7 +35,7 @@ namespace UbStudyHelp.Controls
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
-            EventsControl.SeachClicked += EventsControl_SeachClicked;
+            EventsControl.SearchClicked += EventsControl_SeachClicked;
             EventsControl.RefreshText += EventsControl_RefreshText;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;

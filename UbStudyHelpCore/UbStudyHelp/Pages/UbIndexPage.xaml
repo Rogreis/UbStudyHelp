@@ -23,13 +23,15 @@
     
     -->
 
-
-    <Grid>
-        <StackPanel>
-            <Controls:LeftMenuTop x:Name="LeftMenuTopControl" ImageSourceName="IndexLogo" />
-            <Controls:IndexBrowserDataEntry x:Name="DataEntry" Grid.Row="0" />
-            <Controls:IndexBrowser x:Name="IndexBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-        </StackPanel>
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Controls:LeftMenuTop x:Name="LeftMenuTopControl" ImageSourceName="IndexLogo" />
+        <Controls:IndexBrowserDataEntry x:Name="DataEntry" Grid.Row="1" />
+        <Controls:IndexBrowser x:Name="IndexBrowserInstance"  Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
     </Grid>
-    
+
 </Page>

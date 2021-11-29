@@ -12,25 +12,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Grid for text input  -->
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock x:Name="TextBlockLabelIndex" Height="Auto" Width="Auto" Grid.Column="0" Margin="5,5,5,5" TextWrapping="Wrap" Text="Type to search index:" />
-
-            <TextBox Grid.Row="0" Grid.Column="1" Name="TextBoxIndexLetters" HorizontalAlignment="Stretch" Text="" />
-
-        </Grid>
-
-        <ComboBox Grid.Row="1" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5">
+        <TextBlock x:Name="TextBlockLabelIndex" Height="Auto" Width="Auto" Grid.Row="0" Margin="5,5,5,5" TextWrapping="Wrap" Text="Type to search index:" />
+        <TextBox Grid.Row="1" Grid.Column="1" Name="TextBoxIndexLetters" Margin="5,5,5,5" HorizontalAlignment="Stretch" Text="" />
+        <ComboBox Grid.Row="2" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5">
             <ComboBox.Effect>
                 <DropShadowEffect/>
             </ComboBox.Effect>

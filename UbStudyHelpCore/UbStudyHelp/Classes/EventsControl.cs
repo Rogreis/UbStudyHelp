@@ -24,13 +24,20 @@ namespace UbStudyHelp.Classes
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlSeachClicked(TOC_Entry entry, List<string> Words);
+    public delegate void dlSearchClicked(TOC_Entry entry, List<string> Words);
 
     /// <summary>
     /// Used to fire a click on index
     /// </summary>
     /// <param name="loc"></param>
     public delegate void dlIndexClicked(TOC_Entry entry);
+
+    /// <summary>
+    /// Used to ask for a new index entry
+    /// </summary>
+    /// <param name="indexEntry"></param>
+    public delegate void dlOpenNewIndexEntry(string indexEntry);
+
 
     /// <summary>
     /// Used to send a message to be shown in the main form
@@ -74,9 +81,11 @@ namespace UbStudyHelp.Classes
 
     public static class EventsControl
     {
-        public static event dlSeachClicked SeachClicked = null;
+        public static event dlSearchClicked SearchClicked = null;
 
         public static event dlIndexClicked IndexClicked = null;
+
+        public static event dlOpenNewIndexEntry OpenNewIndexEntry = null;
 
         public static event dlTOCClicked TOCClicked = null;
 
@@ -98,14 +107,20 @@ namespace UbStudyHelp.Classes
 
         public static event dlMainWindowSizeChanged MainWindowSizeChanged = null;
 
-        public static void FireSeachClicked(TOC_Entry entry, List<string> Words)
+
+        public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
         {
-            SeachClicked?.Invoke(entry, Words);
+            SearchClicked?.Invoke(entry, Words);
         }
 
         public static void FireIndexClicked(TOC_Entry entry)
         {
             IndexClicked?.Invoke(entry);
+        }
+
+        public static void FireOpenNewIndexEntry(string indexEntry)
+        {
+            OpenNewIndexEntry?.Invoke(indexEntry);
         }
 
         public static void FireTOCClicked(TOC_Entry entry)

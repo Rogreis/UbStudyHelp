@@ -10,9 +10,13 @@
       Title="SearchHelpPage">
 
     <Grid>
-        <StackPanel Margin="10, 10, 10, 10">
-            <Controls:LeftMenuTop ImageSourceName="HelpLogo" />
-            <MdXaml:MarkdownScrollViewer x:Name="MarkDownDisplay" />
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Controls:LeftMenuTop ImageSourceName="HelpLogo" />
+        <MdXaml:MarkdownScrollViewer x:Name="MarkDownDisplay" Grid.Row="1" Margin="10" />
+
+
     </Grid>
 </Page>

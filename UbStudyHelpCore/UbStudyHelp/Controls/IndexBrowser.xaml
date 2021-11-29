@@ -7,34 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" SizeChanged="UserControl_SizeChanged">
     
-    <UserControl.Resources>
-        <local:StringToInlinesConverter x:Key="stringToInlinesConverter" />
-        <local:MarginConverter x:Key="marginConverter"/>
-    </UserControl.Resources>
-
-    <DockPanel x:Name="DockPanelIndexResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="800" Margin="20" >
-        <ListView Name="ListViewIndexResult">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Text" Width="Auto">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Text}" Margin="{Binding MarginValue, 
-                                    Converter={StaticResource marginConverter}}" TextWrapping="Wrap" Padding="3" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Link" Width="90" >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock local:Attached.Inlines="{Binding Hyperlink, 
-                                    Converter={StaticResource stringToInlinesConverter}}" Padding="3"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </DockPanel>
-
+     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <FlowDocumentScrollViewer Name="IndexDocumentResults" IsToolBarVisible="True"
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+        </FlowDocumentScrollViewer>
+    </Grid>
 </UserControl>

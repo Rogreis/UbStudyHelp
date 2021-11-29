@@ -18,11 +18,13 @@ namespace UbStudyHelp.Pages
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            EventsControl.OpenNewIndexEntry += EventsControl_OpenNewIndexEntry;
             DataEntry.Index = Index;
             DataEntry.ShowIndexDetails += DataEntry_ShowIndexDetails;
             if (!Index.Load())
                 return;
         }
+
 
         private void SetFontSize()
         {
@@ -55,6 +57,11 @@ namespace UbStudyHelp.Pages
             CreateWebIndexPage(indexEntry);
         }
 
+        private void EventsControl_OpenNewIndexEntry(string indexEntry)
+        {
+            CreateWebIndexPage(indexEntry);
+        }
+
         #endregion
 
         public void Initialize()
@@ -63,12 +70,6 @@ namespace UbStudyHelp.Pages
             SetFontSize();
             IndexBrowserInstance.HeaderHeight = LeftMenuTopControl.ActualHeight + DataEntry.ActualHeight;
             IndexBrowserInstance.HeaderWidth = LeftMenuTopControl.ActualWidth + DataEntry.ActualWidth;
-
-
         }
-
-
-
-
     }
 }
