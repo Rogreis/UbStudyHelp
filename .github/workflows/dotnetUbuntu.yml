@@ -23,6 +23,6 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet restore UbStudyHelpCore/UbStudyHelp/UbStudyHelp.csproj
+        run: dotnet restore UbStudyHelpCore/UbStudyHelpCore.sln
       - name: Build
-        run: dotnet build --configuration Release --no-restore UbStudyHelpCore/UbStudyHelp/UbStudyHelp.csproj
+        run: dotnet build --configuration Release --no-restore UbStudyHelpCore/UbStudyHelpCore.sln
