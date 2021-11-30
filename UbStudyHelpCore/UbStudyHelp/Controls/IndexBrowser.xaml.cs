@@ -1,17 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using UbStudyHelp.Classes;
-using Paragraph = System.Windows.Documents.Paragraph;
-using Hyperlink = System.Windows.Documents.Hyperlink;
-using System.Linq;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using static System.Windows.Forms.LinkLabel;
-using System;
-using static Lucene.Net.Search.FieldValueHitQueue;
+using UbStudyHelp.Classes;
+using Hyperlink = System.Windows.Documents.Hyperlink;
+using Paragraph = System.Windows.Documents.Paragraph;
 
 namespace UbStudyHelp.Controls
 {

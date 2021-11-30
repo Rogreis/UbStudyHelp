@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using ICSharpCode.AvalonEdit.Highlighting;
 using UbStudyHelp.Classes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UbStudyHelp.Controls
 {

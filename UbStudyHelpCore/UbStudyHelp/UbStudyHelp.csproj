@@ -29,10 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls.Core">
       <HintPath>..\..\..\..\..\..\Users\CTW01001\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls.core\7.0.0\lib\netstandard2.0\Microsoft.Toolkit.Uwp.UI.Controls.Core.dll</HintPath>
     </Reference>

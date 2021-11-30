@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using UbStudyHelp.Classes;
-using static Lucene.Net.Search.FieldValueHitQueue;
 using static UbStudyHelp.Classes.ControlsAppearance;
 
 namespace UbStudyHelp.Controls
