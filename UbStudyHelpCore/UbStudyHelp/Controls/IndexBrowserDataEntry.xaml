@@ -16,7 +16,13 @@
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="TextBlockLabelIndex" Height="Auto" Width="Auto" Grid.Row="0" Margin="5,5,5,5" TextWrapping="Wrap" Text="Type to search index:" />
-        <TextBox Grid.Row="1" Grid.Column="1" Name="TextBoxIndexLetters" Margin="5,5,5,5" HorizontalAlignment="Stretch" Text="" />
+
+        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearchInIndex" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5">
+            <ComboBox.Effect>
+                <DropShadowEffect/>
+            </ComboBox.Effect>
+        </ComboBox>
+
         <ComboBox Grid.Row="2" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5">
             <ComboBox.Effect>
                 <DropShadowEffect/>

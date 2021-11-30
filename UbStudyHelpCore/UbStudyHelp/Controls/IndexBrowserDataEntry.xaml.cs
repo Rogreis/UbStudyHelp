@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
@@ -24,6 +19,8 @@ namespace UbStudyHelp.Controls
 
         public event dlShowIndexDetails ShowIndexDetails = null;
 
+        private ObservableCollection<string> LocalIndexLettersEntries = new ObservableCollection<string>();
+
         // Object to manipulate the index
         public UbStudyHelp.Classes.Index Index { get; set; }
 
@@ -33,12 +30,38 @@ namespace UbStudyHelp.Controls
             InitializeComponent();
 
             // Events
-            this.KeyDown += IndexBrowserDataEntry_KeyDown;
             this.Loaded += IndexBrowserDataEntry_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
-            TextBoxIndexLetters.KeyDown += TextBoxIndexLetters_KeyDown;
+            ComboWhatToSearchInIndex.KeyDown += ComboWhatToSearchInIndex_KeyDown;
+            ComboWhatToSearchInIndex.DropDownClosed += ComboWhatToSearchInIndex_DropDownClosed;
             ComboBoxIndexSearch.DropDownClosed += ComboBoxIndexSearch_DropDownClosed;
+
+            foreach(string entry in App.ParametersData.IndexLetters)
+            {
+                LocalIndexLettersEntries.Add(entry);
+            }
+            ComboWhatToSearchInIndex.ItemsSource = LocalIndexLettersEntries;
+            if (ComboWhatToSearchInIndex.Items.Count > 0)
+            {
+                ComboWhatToSearchInIndex.SelectedIndex = 0;
+            }
+        }
+
+        private void AddEntry(string indexEntry)
+        {
+            // Just avoid duplicates
+            if (App.ParametersData.IndexLetters.Contains(indexEntry, StringComparer.OrdinalIgnoreCase))
+            {
+                return;
+            }
+            if (App.ParametersData.IndexLetters.Count == App.ParametersData.MaxExpressionsStored)
+            {
+                LocalIndexLettersEntries.RemoveAt(LocalIndexLettersEntries.Count - 1);
+                App.ParametersData.IndexLetters.RemoveAt(App.ParametersData.IndexLetters.Count - 1);
+            }
+            LocalIndexLettersEntries.Insert(0, indexEntry);
+            App.ParametersData.IndexLetters.Insert(0, indexEntry);
         }
 
 
@@ -59,52 +82,56 @@ namespace UbStudyHelp.Controls
             {
                 ComboBoxIndexSearch.Items.Add(list[i]);
             }
-            App.ParametersData.IndexLetters = indexEntry;
-            ComboBoxIndexSearch.SelectedIndex = 0;
-            ComboBoxIndexSearch.IsEnabled = true;
+
+            AddEntry(indexEntry);
+            if (ComboBoxIndexSearch.Items.Count > 0)
+            {
+                ComboBoxIndexSearch.SelectedIndex = 0;
+                ComboBoxIndexSearch.IsEnabled = true;
+            }
+
         }
 
 
         private void SetFontSize()
         {
             App.Appearance.SetFontSize(TextBlockLabelIndex);
-            App.Appearance.SetFontSize(TextBoxIndexLetters);
+            App.Appearance.SetFontSize(ComboWhatToSearchInIndex);
             App.Appearance.SetFontSize(ComboBoxIndexSearch);
             App.Appearance.SetFontSize(TextBlockLabelIndex);
-            App.Appearance.SetHeight(TextBoxIndexLetters);
+            App.Appearance.SetHeight(ComboWhatToSearchInIndex);
         }
 
         private void SetAppearence()
         {
             App.Appearance.SetThemeInfo(TextBlockLabelIndex);
-            App.Appearance.SetThemeInfo(TextBoxIndexLetters);
+            App.Appearance.SetThemeInfo(ComboWhatToSearchInIndex);
             App.Appearance.SetThemeInfo(ComboBoxIndexSearch);
             App.Appearance.SetThemeInfo(TextBlockLabelIndex);
-            App.Appearance.SetThemeInfo(TextBoxIndexLetters);
+            App.Appearance.SetThemeInfo(ComboWhatToSearchInIndex);
         }
 
 
         #region events
-        private void CheckKeyDown(KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                string text = TextBoxIndexLetters.Text.Trim();
-                FillComboBoxIndexEntry(text);
-            }
-        }
 
 
         private void IndexBrowserDataEntry_Loaded(object sender, RoutedEventArgs e)
         {
-            TextBoxIndexLetters.Text = App.ParametersData.IndexLetters;
-            string text = TextBoxIndexLetters.Text.Trim();
+            string text = ComboWhatToSearchInIndex.Text.Trim();
             if (text.Length > 1)
             {
                 FillComboBoxIndexEntry(text);
             }
         }
 
+        private void ComboWhatToSearchInIndex_DropDownClosed(object sender, EventArgs e)
+        {
+            string text = ComboWhatToSearchInIndex.Text.Trim();
+            if (text.Length > 1)
+            {
+                FillComboBoxIndexEntry(text);
+            }
+        }
 
         private void ComboBoxIndexSearch_DropDownClosed(object sender, EventArgs e)
         {
@@ -112,9 +139,13 @@ namespace UbStudyHelp.Controls
             ShowIndexDetails?.Invoke(text);
         }
 
-        private void TextBoxIndexLetters_KeyDown(object sender, KeyEventArgs e)
+        private void ComboWhatToSearchInIndex_KeyDown(object sender, KeyEventArgs e)
         {
-            CheckKeyDown(e);
+            if (e.Key == Key.Enter)
+            {
+                string text = ComboWhatToSearchInIndex.Text.Trim();
+                FillComboBoxIndexEntry(text);
+            }
         }
 
         private void EventsControl_FontChanged(ControlsAppearance appearance)
@@ -125,12 +156,6 @@ namespace UbStudyHelp.Controls
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
         {
             SetAppearence();
-        }
-
-
-        private void IndexBrowserDataEntry_KeyDown(object sender, KeyEventArgs e)
-        {
-            CheckKeyDown(e);
         }
 
         #endregion

@@ -66,7 +66,7 @@ namespace UbStudyHelp.Controls
             lastEntry = new TOC_Entry(entry);
             lastShouldHighlightText = shouldHighlightText;
 
-            EventsControl.FireSendMessage("Paper: " + entry.ToString());
+            EventsControl.FireSendMessage(entry.ToString());
             string htmlPage = commands.Html(entry, shouldHighlightText, Words);
             BrowserText.NavigateToString(htmlPage);
         }

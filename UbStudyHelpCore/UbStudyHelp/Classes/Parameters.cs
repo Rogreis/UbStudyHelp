@@ -27,8 +27,6 @@ namespace UbStudyHelp.Classes
 
         public short LanguageIDRightTranslation { get; set; } = 34;
 
-        public int MaxTrackItems { get; set; } = 60;
-
         public int SearchPageSize { get; set; } = 20;
 
         public string ThemeName { get; set; } = "Light";
@@ -39,10 +37,14 @@ namespace UbStudyHelp.Classes
 
         public bool ShowBilingual { get; set; } = true;
 
-        // Simple Search parameters
+        /// <summary>
+        /// Max items stored for  search and index text
+        /// </summary>
         public int MaxExpressionsStored { get; set; } = 50;
 
         public List<string> SearchStrings { get; set; } = new List<string>();
+
+        public List<string> IndexLetters { get; set; } = new List<string>();
 
         public bool SimpleSearchIncludePartI { get; set; } = true;
 
@@ -63,8 +65,6 @@ namespace UbStudyHelp.Classes
         public List<string> SearchIndexEntries = new List<string>();
 
         public List<TOC_Entry> TrackEntries = new List<TOC_Entry>();
-
-        public string IndexLetters = "";
 
         public string LastTrackFileSaved = "";
 

@@ -73,7 +73,7 @@ namespace UbStudyHelp.Pages
 
         private void AddEntry(TOC_Entry entry)
         {
-            if (LocalTrackEntries.Count == App.ParametersData.MaxTrackItems)
+            if (LocalTrackEntries.Count == App.ParametersData.MaxExpressionsStored)
             {
                 LocalTrackEntries.RemoveAt(LocalTrackEntries.Count - 1);
                 App.ParametersData.TrackEntries.RemoveAt(LocalTrackEntries.Count - 1);

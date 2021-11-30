@@ -17,7 +17,7 @@
         <TextBlock Grid.Column="0" Grid.Row="0" x:Name="TextBlockWhatToSearch" Text="Type to search index:" Height="Auto" Width="Auto" 
                    Margin="5,5,5,5" TextWrapping="Wrap" />
 
-        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearch" IsEditable="True" HorizontalAlignment="Stretch" Height="26" Margin="5,5,5,5" />
+        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearch" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5" />
 
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>

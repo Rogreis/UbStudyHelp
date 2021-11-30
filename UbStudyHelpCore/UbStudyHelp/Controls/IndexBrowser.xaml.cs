@@ -41,6 +41,11 @@ namespace UbStudyHelp.Controls
         /// <param name="indexEntry"></param>
         public void CreateWebIndexPage(TubIndex index)
         {
+            if (index == null)
+            {
+                return;
+            }
+
             FlowDocument document = new FlowDocument();
 
             Section section = new Section();
@@ -61,7 +66,7 @@ namespace UbStudyHelp.Controls
             {
                 bool isSeeAlso = false;
                 string linkText = isSeeAlso ? "See also " : detail.Text + " ";
-                if (detail.DetailType > 100)
+                if (detail.DetailType >= 100)
                 {
                     margin = (detail.DetailType - 100) * 5;
                 }
@@ -95,6 +100,7 @@ namespace UbStudyHelp.Controls
 
             }
             IndexDocumentResults.Document = document;
+            IndexDocumentResults.IsToolBarVisible = false;
             App.Appearance.SetThemeInfo(IndexDocumentResults);
         }
 
