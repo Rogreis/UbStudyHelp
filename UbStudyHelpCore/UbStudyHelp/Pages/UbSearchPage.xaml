@@ -13,14 +13,22 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Controls:LeftMenuTop Grid.Row="0" ImageSourceName="SearchEngineLogo" />
         <Controls:SearchDataEntry Grid.Row="1" x:Name="SearchDataEntry" />
 
-        <ScrollViewer Grid.Row="2">
-            <TextBlock x:Name="TextBlockSearchResults" Grid.Row="1" Margin="10,10,10,10" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <ToolBar Grid.Row="2">
+            <Button x:Name="btFirst" Content="First" Click="btFirst_Click" Visibility="Hidden" />
+            <Button x:Name="btPrevious" Content="Previous" Click="btPrevious_Click"  Visibility="Hidden"/>
+            <Button x:Name="btNext" Content="Next" Click="btNext_Click"  Visibility="Hidden"/>
+            <Button x:Name="btLast" Content="Last" Click="btLast_Click"  Visibility="Hidden"/>
+        </ToolBar>
+
+        <ScrollViewer Grid.Row="3">
+            <Frame x:Name="FrameControl" NavigationUIVisibility="Hidden" Navigating="FrameControl_Navigating"  />
         </ScrollViewer>
     </Grid>
 </Page>

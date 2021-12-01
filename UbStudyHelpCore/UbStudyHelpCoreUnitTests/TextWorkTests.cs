@@ -184,7 +184,7 @@ namespace UbStudyHelpCoreUnitTests
             TextWork work = new TextWork(text);
             string textReduced = work.GetReducedText();
             Assert.IsTrue(textReduced.Length < text.Length);
-            List<UbTextTag> list = work.Tags(true);
+            List<UbTextTag> list = work.Tags(null, true);
             Assert.IsTrue(list.Count == 1);
             Assert.IsTrue(list[0].Tag == TextTag.Normal);
         }

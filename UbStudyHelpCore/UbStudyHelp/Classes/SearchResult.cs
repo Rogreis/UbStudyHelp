@@ -59,7 +59,7 @@ namespace UbStudyHelp.Classes
         {
 
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
-            foreach (UbTextTag textTag in TextWork.Tags(false))
+            foreach (UbTextTag textTag in TextWork.TagsWithHighlightWords(Words, false))
             {
                 switch (textTag.Tag)
                 {
@@ -85,6 +85,13 @@ namespace UbStudyHelp.Classes
                         runSuper.FontSize = App.ParametersData.FontSizeInfo;
                         runSuper.BaselineAlignment = BaselineAlignment.Superscript;
                         Inlines.Add(runSuper);
+                        break;
+                    case TextTag.Highlighted:
+                        Bold bHighlighted = new Bold();
+                        bHighlighted.FontSize = App.ParametersData.FontSizeInfo;
+                        bHighlighted.Foreground = accentBrush;
+                        bHighlighted.Inlines.Add(textTag.Text);
+                        Inlines.Add(bHighlighted);
                         break;
                 }
             }
@@ -114,39 +121,6 @@ namespace UbStudyHelp.Classes
         }
 
     }
-
-    //public static class SearchResults
-    //{
-
-
-    //    public static List<SearchResult> Findings { get; set; } = new List<SearchResult>();
-
-
-    //    private static List<int> AllIndexesOf(string str, string value)
-    //    {
-    //        List<int> indexes = new List<int>();
-    //        for (int index = 0; ; index += value.Length)
-    //        {
-    //            index = str.IndexOf(value, index, StringComparison.CurrentCultureIgnoreCase);
-    //            if (index == -1)
-    //                return indexes;
-    //            indexes.Add(index);
-    //        }
-    //    }
-
-
-
-    //    public static bool WasFound(TOC_Entry entry)
-    //    {
-    //        return Findings.Find(f => f.Entry.Paper == entry.Paper && f.Entry.Section == entry.Section && f.Entry.ParagraphNo == entry.ParagraphNo) != null;
-    //    }
-
-
-
-
-
-
-    //}
 
 
 }

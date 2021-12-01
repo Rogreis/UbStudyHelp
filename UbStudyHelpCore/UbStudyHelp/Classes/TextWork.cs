@@ -5,6 +5,7 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using J2N.Text;
+using UbStudyHelp.Controls;
 using YamlDotNet.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -16,7 +17,8 @@ namespace UbStudyHelp.Classes
         Normal,
         Bold,
         Italic,
-        Superscript
+        Superscript, 
+        Highlighted
     }
 
     public class UbTextTag
@@ -90,7 +92,8 @@ namespace UbStudyHelp.Classes
         {
             new HtmlTag("<b>", "</b>",  TextTag.Bold),
             new HtmlTag("<em>", "</em>",  TextTag.Italic),
-            new HtmlTag("<sup>", "</sup>",  TextTag.Superscript)
+            new HtmlTag("<sup>", "</sup>",  TextTag.Superscript),
+            new HtmlTag("<word>", "</word>", TextTag.Highlighted)
         };
 
 
@@ -265,11 +268,10 @@ namespace UbStudyHelp.Classes
         /// Returns the text split in identifies parts to create a WPF Inline
         /// </summary>
         /// <returns></returns>
-        public List<UbTextTag> Tags(bool useReduced= false)
+        public List<UbTextTag> Tags(string textInput= null, bool useReduced= false)
         {
- 
             List<UbTextTag> list = new List<UbTextTag>();
-            string text = useReduced? GetReducedText(): GetHtml();
+            string text = textInput != null? textInput : (useReduced ? GetReducedText(): GetHtml());
             foreach (HtmlTag tag in HtmlTags)
             {
                 //text = Regex.Replace(text, "\\b" + string.Join("\\b|\\b", tag) + "\\b", highStart + tag + highEnd);
@@ -294,6 +296,26 @@ namespace UbStudyHelp.Classes
             }
             return list;
         }
+
+        public List<UbTextTag> TagsWithHighlightWords(List<string> Words = null, bool useReduced= false)
+        {
+            string text = useReduced ? GetReducedText() : GetHtml();
+            if (Words != null && Words.Count > 0)
+            {
+                foreach (string replace in Words)
+                {
+                    int ind = text.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase);
+                    if (ind >= 0)
+                    {
+                        string wordInText = text.Substring(text.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase), replace.Length);
+                        string replacement = $"<word>{wordInText}</word>";
+                        text = Regex.Replace(text, wordInText, replacement, RegexOptions.IgnoreCase);
+                    }
+                }
+            }
+            return Tags(text, false);
+        }
+
 
 
     }

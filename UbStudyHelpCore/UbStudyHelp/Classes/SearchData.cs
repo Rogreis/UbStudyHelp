@@ -90,9 +90,11 @@ namespace UbStudyHelp.Classes
         /// Generate inlines collection from result list
         /// </summary>
         /// <returns></returns>
-        public void GetInlinesText(InlineCollection Inlines)
+        public void GetInlinesText(InlineCollection Inlines, int nrPage, int pageSize, int totalPages)
         {
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+
+            Inlines.Clear();
 
             Run run = new Run($"({SearchResults.Count}) paragraph(s) found")
             {
@@ -106,11 +108,37 @@ namespace UbStudyHelp.Classes
             {
                 return;
             }
+
+            Inlines.Add(new LineBreak());
+            Run run2 = new Run($"Showing page {nrPage} of {totalPages}")
+            {
+                FontSize = App.ParametersData.FontSizeInfo,
+                Foreground = accentBrush
+            };
+            Inlines.Add(run2);
+
+            if (SearchResults.Count == 0)
+            {
+                return;
+            }
             Inlines.Add(new LineBreak());
             Inlines.Add(new LineBreak());
 
-            foreach (SearchResult result in SearchResults)
+            int fistItem = (nrPage - 1) * pageSize;
+            if (fistItem >= SearchResults.Count)
             {
+                return;
+            }
+            int lastItem = (nrPage) * pageSize - 1;
+            if (lastItem >= SearchResults.Count)
+            {
+                lastItem = SearchResults.Count - 1;
+            }
+
+            for (int i = fistItem; i < lastItem; i++)
+            {
+                SearchResult result = SearchResults[i];
+
                 // Create hyperlink ony with the paragraph identification
                 Run runIdent = new Run(result.Entry.ParagraphID + "  ")
                 {
@@ -127,7 +155,7 @@ namespace UbStudyHelp.Classes
                 hyperlink.Tag = result.Entry;
                 hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
                 hyperlink.MouseEnter += Hyperlink_MouseEnter;
-                hyperlink.MouseLeave += Hyperlink_MouseLeave;        
+                hyperlink.MouseLeave += Hyperlink_MouseLeave;
                 Inlines.Add(hyperlink);
 
                 // Paragraph text is inserted
@@ -135,6 +163,7 @@ namespace UbStudyHelp.Classes
                 Inlines.Add(new LineBreak());
                 Inlines.Add(new LineBreak());
             }
+
         }
 
 
