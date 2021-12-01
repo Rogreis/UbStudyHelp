@@ -25,4 +25,4 @@ jobs:
       - name: Install dependencies
         run: dotnet restore UbStudyHelpCore/UbStudyHelpCore.sln
       - name: Build
-        run: dotnet build --configuration Release --no-restore UbStudyHelpCore/UbStudyHelpCore.sln
+        run: dotnet build --c release UbStudyHelpCore/UbStudyHelpCore.sln
