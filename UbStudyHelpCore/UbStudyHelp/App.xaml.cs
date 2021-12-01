@@ -29,28 +29,39 @@ namespace UbStudyHelp
 
         public static ControlsAppearance Appearance = new ControlsAppearance();
 
+        private static bool LoadData()
+        {
+            GetDataFiles dataFiles = new GetDataFiles();
+            try
+            {
+                if (!dataFiles.CheckFiles(App.BaseTubFilesPath))
+                {
+                    return false;
+                }
+                return Book.Inicialize(App.BaseTubFilesPath);
+            }
+            catch (Exception ex)
+            {
+                EventsControl.FireSendMessage("Loading TOC data", ex);
+                return false;
+            }
+        }
 
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            pathParameters = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.yaml");
+            pathParameters = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.json");
             string exePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             BaseTubFilesPath = System.IO.Path.Combine(exePath, "TUB_Files");
 
-            // When parameters files does not exist, we use the default already created.
-            if (File.Exists(pathParameters))
+            ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
+            ControlzEx.Theming.ThemeManager.Current.SyncTheme();
+
+            ParametersData = Parameters.Deserialize(pathParameters);
+
+            if (!LoadData())
             {
-                try
-                {
-                    Deserializer deserializer = new Deserializer();
-                    string yamlData = File.ReadAllText(pathParameters);
-                    ParametersData = deserializer.Deserialize<Parameters>(yamlData);
-                }
-                catch (Exception ex) 
-                {
-                    // In case of error, use default data, ignoring errors
-                    string message = ex.Message;
-                }
+                throw new Exception("Data not loaded!");
             }
             base.OnStartup(e);
         }
@@ -59,8 +70,7 @@ namespace UbStudyHelp
         protected override void OnExit(ExitEventArgs e)
         {
             // Serialize parameters
-            Serializer serializer = new Serializer();
-            File.WriteAllText(pathParameters, serializer.Serialize(ParametersData));
+            Parameters.Serialize(ParametersData, pathParameters);
             base.OnExit(e);
         }
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Classes
@@ -13,10 +15,16 @@ namespace UbStudyHelp.Classes
     public delegate void dlTOCClicked(TOC_Entry entry);
 
     /// <summary>
+    /// Used to indicate new track selected
+    /// </summary>
+    /// <param name="entry"></param>
+    public delegate void dlTrackSelected(TOC_Entry entry);
+
+    /// <summary>
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlSeachClicked(TOC_Entry entry);
+    public delegate void dlSearchClicked(TOC_Entry entry, List<string> Words);
 
     /// <summary>
     /// Used to fire a click on index
@@ -25,16 +33,37 @@ namespace UbStudyHelp.Classes
     public delegate void dlIndexClicked(TOC_Entry entry);
 
     /// <summary>
+    /// Used to ask for a new index entry
+    /// </summary>
+    /// <param name="indexEntry"></param>
+    public delegate void dlOpenNewIndexEntry(string indexEntry);
+
+
+    /// <summary>
     /// Used to send a message to be shown in the main form
     /// </summary>
     /// <param name="Message"></param>
     public delegate void dlSendMessage(string Message);
 
-    public delegate void dlCurrentBrowserTrack(BrowserPosition track);
+    /// <summary>
+    /// Used to infor about a change in the left column
+    /// </summary>
+    /// <param name="newWidth"></param>
+    public delegate void dlGridSplitter(double newWidth);
 
-    public delegate void dlBrowserTrackAdded(BrowserPosition track);
+    /// <summary>
+    /// Used to communicate a change in he size of main window for objects that do not have a good resize
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    public delegate void dlMainWindowSizeChanged(double width, double height);
 
-    public delegate void dlLeftTranslationChanged(Translation oLeftTranslation);
+    /// <summary>
+    /// Used to ask to a text refresh in the main screen
+    /// </summary>
+    public delegate void dlRefreshText();
+
+    public delegate void dlTranslationsChanged();
 
     public delegate void dlRightTranslationChanged(Translation oRightTranslation);
 
@@ -42,33 +71,46 @@ namespace UbStudyHelp.Classes
 
     public delegate void dlFontChanged(ControlsAppearance appearance);
 
+    public delegate void dlAppearanceChanged(ControlsAppearance appearance);
+
+    /// <summary>
+    /// Used by SearchDataEntry to communicate a search for its parent control
+    /// </summary>
+    /// <param name="data"></param>
+    public delegate void dlShowSearchResults(SearchData data);
 
     public static class EventsControl
     {
-        public static event dlSeachClicked SeachClicked = null;
+        public static event dlSearchClicked SearchClicked = null;
 
         public static event dlIndexClicked IndexClicked = null;
 
+        public static event dlOpenNewIndexEntry OpenNewIndexEntry = null;
+
         public static event dlTOCClicked TOCClicked = null;
+
+        public static event dlTrackSelected TrackSelected = null;
 
         public static event dlSendMessage SendMessage = null;
 
-        public static event dlCurrentBrowserTrack CurrentBrowserTrack = null;
+        public static event dlRefreshText RefreshText = null;
 
-        public static event dlBrowserTrackAdded BrowserTrackAdded = null;
-
-        public static event dlLeftTranslationChanged LeftTranslationChanged = null;
-
-        public static event dlRightTranslationChanged RightTranslationChanged = null;
+        public static event dlTranslationsChanged TranslationsChanged = null;
 
         public static event dlBilingualChanged BilingualChanged = null;
 
         public static event dlFontChanged FontChanged = null;
 
+        public static event dlAppearanceChanged AppearanceChanged = null;
 
-        public static void FireSeachClicked(TOC_Entry entry)
+        public static event dlGridSplitter GridSplitterChanged = null;
+
+        public static event dlMainWindowSizeChanged MainWindowSizeChanged = null;
+
+
+        public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
         {
-            SeachClicked?.Invoke(entry);
+            SearchClicked?.Invoke(entry, Words);
         }
 
         public static void FireIndexClicked(TOC_Entry entry)
@@ -76,22 +118,20 @@ namespace UbStudyHelp.Classes
             IndexClicked?.Invoke(entry);
         }
 
+        public static void FireOpenNewIndexEntry(string indexEntry)
+        {
+            OpenNewIndexEntry?.Invoke(indexEntry);
+        }
+
         public static void FireTOCClicked(TOC_Entry entry)
         {
             TOCClicked?.Invoke(entry);
         }
 
-        public static void FireCurrentBrowserTrack(BrowserPosition track)
+        public static void FireTrackSelected(TOC_Entry entry)
         {
-            CurrentBrowserTrack?.Invoke(track);
+            TrackSelected?.Invoke(entry);
         }
-
-        public static void FireBrowserTrackAdded(BrowserPosition track)
-        {
-            BrowserTrackAdded?.Invoke(track);
-        }
-
-
 
         public static void FireSendMessage(string location, Exception ex)
         {
@@ -105,32 +145,54 @@ namespace UbStudyHelp.Classes
             SendMessage?.Invoke(message);
         }
 
+        public static void FireGridSplitter(double newWidth)
+        {
+            GridSplitterChanged?.Invoke(newWidth);
+        }
+
+        public static void FireMainWindowSizeChanged(double width, double height)
+        {
+            MainWindowSizeChanged?.Invoke(width, height);
+        }
 
         public static void FireSendMessage(string Message)
         {
             SendMessage?.Invoke(Message);
         }
 
-        public static void FireLeftTranslationChanged(Translation oLeftTranslation)
+        public static void FireRefreshText()
         {
-            LeftTranslationChanged?.Invoke(oLeftTranslation);
+            RefreshText?.Invoke();
         }
-        public static void FireRightTranslationChanged(Translation oRightTranslation)
-        {
-            RightTranslationChanged?.Invoke(oRightTranslation);
-        }
+        
 
+        public static void FireTranslationsChanged()
+        {
+            TranslationsChanged?.Invoke();
+        }
 
         public static void FireBilingualChanged(bool ShowBilingual)
         {
             BilingualChanged?.Invoke(ShowBilingual);
         }
         
-        public static void FireFontChanged(ControlsAppearance appearance)
+        public static void FireFontChanged()
         {
-            FontChanged?.Invoke(appearance);
+            // We keep a max and a min size for text
+            if (App.ParametersData.FontSizeInfo <= 18 && App.ParametersData.FontSizeInfo >= 10)
+            {
+                FontChanged?.Invoke(App.Appearance);
+            }
+            else
+            {
+                FireSendMessage("Min/Maz font size reached.");
+            }
         }
 
+        public static void FireAppearanceChanged()
+        {
+            AppearanceChanged?.Invoke(App.Appearance);
+        }
 
 
     }

@@ -1,48 +1,18 @@
-﻿<UserControl xmlns:MdXaml="clr-namespace:MdXaml;assembly=MdXaml"  x:Class="UbStudyHelp.Controls.IndexBrowser"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-
+﻿<UserControl
+    x:Class="UbStudyHelp.Controls.IndexBrowser"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" SizeChanged="UserControl_SizeChanged">
+    
+     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80" />
             <RowDefinition />
         </Grid.RowDefinitions>
-
-        <!-- Left Grid -->
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <!-- Grid for text input  -->
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" x:Name="LabelForIndexLetter" Content="Type to search index:"  Height="Auto" Width="Auto" FontWeight="Bold"  Margin="5,5,5,5" />
-                <TextBox Grid.Row="0" Grid.Column="1" Name="TextBoxIndexLetters" HorizontalAlignment="Stretch" Text="" />
-            </Grid>
-
-            <ComboBox Grid.Row="1" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="26">
-                <ComboBox.Effect>
-                    <DropShadowEffect/>
-                </ComboBox.Effect>
-            </ComboBox>
-            
-        </Grid>
-
-        <TextBlock x:Name="IndexResults" Grid.Row="1" Margin="10,10,10,10" TextWrapping="Wrap"  Visibility="Hidden"  />
-        <MdXaml:MarkdownScrollViewer x:Name="MarkDownDisplay" Grid.Row="1" Margin="10,10,10,10" />
-        
+        <FlowDocumentScrollViewer Name="IndexDocumentResults" IsToolBarVisible="True"
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+        </FlowDocumentScrollViewer>
     </Grid>
-    
 </UserControl>

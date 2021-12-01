@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using YamlDotNet.Serialization;
 
@@ -6,6 +7,8 @@ namespace UbStudyHelp.Classes
 {
     public class TOC_Entry : BaseClass
     {
+        private const int MaxSampleTextSize = 80;
+
         public short Paper { get; set; } = 0;
         public short Section { get; set; } = 1;
         public short ParagraphNo { get; set; } = 1;
@@ -54,6 +57,30 @@ namespace UbStudyHelp.Classes
         }
 
 
+        [YamlIgnore]
+        public string TextSample
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Text))
+                {
+                    return "";
+                }
+                if (Text.Length < MaxSampleTextSize)
+                {
+                    return Text;
+                }
+                // Return MaxSampleTextSize or until first not letter/number character
+                int position = Math.Min(MaxSampleTextSize, Text.Length);
+                position = Text.IndexOf(' ', position);
+                if (position >= 0)
+                {
+                    return Text.Substring(0, position);
+                }
+                return Text.Substring(0, MaxSampleTextSize);
+            }
+        }
+
 
         public TOC_Entry()
         {
@@ -68,6 +95,16 @@ namespace UbStudyHelp.Classes
             IsExpanded = false;
         }
 
+        public TOC_Entry(TOC_Entry entry)
+        {
+            this.Paper = entry.Paper;
+            this.Section = entry.Section;
+            this.ParagraphNo = entry.ParagraphNo;
+            Text = entry.Text;
+            IsExpanded = entry.IsExpanded;
+        }
+
+
         public TOC_Entry(XElement xElemParagraph)
         {
             Paper = GetShort(xElemParagraph.Element("Paper"));
@@ -78,15 +115,6 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public TOC_Entry(BrowserPosition position)
-        {
-            Paper = (short)position.Entry.Paper;
-            Section = (short)position.Entry.Section;
-            this.ParagraphNo = 0;
-            Text = "";
-            IsExpanded = false;
-        }
-
 
         private bool SamePaperSection(TOC_Entry index)
         {
@@ -95,7 +123,7 @@ namespace UbStudyHelp.Classes
 
         public override string ToString()
         {
-            return ParagraphID;
+            return $"{ParagraphID} {TextSample}";
         }
 
 
@@ -109,6 +137,7 @@ namespace UbStudyHelp.Classes
         {
             if (obj == null) return false;
             TOC_Entry entry = obj as TOC_Entry;
+            if (entry == null) return false;
             if (entry.Paper != this.Paper) return false;
             if (entry.Section != Section) return false;
             if (entry.ParagraphNo != ParagraphNo) return false;
@@ -131,20 +160,56 @@ namespace UbStudyHelp.Classes
         {
             if (System.Object.ReferenceEquals(e1, e2)) return false;
             if ((object)e1 == null || (object)e2 == null) return false;
-            if (e1.Paper >= e2.Paper) return false;
-            if (e1.Section >= e2.Section) return false;
-            if (e1.ParagraphNo >= e2.ParagraphNo) return false;
-            return true;
+
+            if (e1.Paper < e2.Paper) return true;
+            if (e1.Paper > e2.Paper) return false;
+
+            if (e1.Section < e2.Section) return true;
+            if (e1.Section > e2.Section) return false;
+
+            if (e1.ParagraphNo < e2.ParagraphNo) return true;
+            return false;
         }
 
         public static bool operator >(TOC_Entry e1, TOC_Entry e2)
         {
             if (System.Object.ReferenceEquals(e1, e2)) return false;
             if ((object)e1 == null || (object)e2 == null) return false;
-            if (e1.Paper <= e2.Paper) return false;
-            if (e1.Section <= e2.Section) return false;
-            if (e1.ParagraphNo <= e2.ParagraphNo) return false;
-            return true;
+
+            if (e1.Paper > e2.Paper) return true;
+            if (e1.Paper < e2.Paper) return false;
+
+            if (e1.Section > e2.Section) return true;
+            if (e1.Section < e2.Section) return false;
+
+            if (e1.ParagraphNo > e2.ParagraphNo) return true;
+            return false;
+        }
+
+        public int CompareTo(TOC_Entry entry)
+        {
+            if (this == entry)
+            {
+                return 0;
+            }
+            if (this < entry)
+            {
+                return -1;
+            }
+            return 1;
+        }
+
+        public int InverseCompareTo(TOC_Entry entry)
+        {
+            if (this == entry)
+            {
+                return 0;
+            }
+            if (this < entry)
+            {
+                return 1;
+            }
+            return -1;
         }
 
 

@@ -10,7 +10,6 @@ using UbStudyHelp;
 
 namespace UbStudyHelp.Classes
 {
-    public delegate void dlNewBook();
 
     public class Translation : BaseClass
     {
@@ -33,6 +32,11 @@ namespace UbStudyHelp.Classes
         public List<TOC_Entry> TableOfContents = null;
 
         private string BaseFilesPath { get; set; }
+
+        public Translation()
+        {
+        }
+
 
         public Translation(XElement record)
         {

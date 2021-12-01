@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using UbStudyHelp;
 using UbStudyHelp.Classes;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace UbStudyHelp.Classes
 {
+
+    [Serializable]
     public class Parameters
     {
 
@@ -20,18 +27,24 @@ namespace UbStudyHelp.Classes
 
         public short LanguageIDRightTranslation { get; set; } = 34;
 
-        public int MaxTrackItems { get; set; } = 30;
-
         public int SearchPageSize { get; set; } = 20;
 
         public string ThemeName { get; set; } = "Light";
 
         public string ThemeColor { get; set; } = "Blue";
 
-        // Simple Search parameters
-        public int MaxExpressionsStored { get; set; } = 20;
+        public bool ShowParagraphIdentification { get; set; } = true;
+
+        public bool ShowBilingual { get; set; } = true;
+
+        /// <summary>
+        /// Max items stored for  search and index text
+        /// </summary>
+        public int MaxExpressionsStored { get; set; } = 50;
 
         public List<string> SearchStrings { get; set; } = new List<string>();
+
+        public List<string> IndexLetters { get; set; } = new List<string>();
 
         public bool SimpleSearchIncludePartI { get; set; } = true;
 
@@ -41,18 +54,54 @@ namespace UbStudyHelp.Classes
 
         public bool SimpleSearchIncludePartIV { get; set; } = true;
 
-        public bool IsPaperIncluded(int PaperNo) => ((App.ParametersData.SimpleSearchIncludePartI && PaperNo < 32) ||
-                                                    (App.ParametersData.SimpleSearchIncludePartII && PaperNo >= 32 && PaperNo <= 56) ||
-                                                    (App.ParametersData.SimpleSearchIncludePartIII && PaperNo >= 57 && PaperNo <= 119) ||
-                                                    (App.ParametersData.SimpleSearchIncludePartIV && PaperNo >= 120));
+        public bool SimpleSearchCurrentPaperOnly { get; set; } = false;
 
+        public string FontFamilyInfo { get; set; } = "Verdana";
 
-        public int SpliterDistance { get; set; } = 360;
+        public double FontSizeInfo { get; set; } = 20.0;    // BUG: Default size needs to be proportional to user screen resolution
 
+        public double SpliterDistance { get; set; } = 550;  // BUG: Default value needs to be proportional to user screen resolution
 
         public List<string> SearchIndexEntries = new List<string>();
 
-        public string IndexLetters = "";
+        public List<TOC_Entry> TrackEntries = new List<TOC_Entry>();
+
+        public string LastTrackFileSaved = "";
+
+        /// <summary>
+        /// Serialize the parameters instance
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="pathParameters"></param>
+        public static void Serialize(Parameters p, string pathParameters)
+        {
+            try
+            {
+                var jsonString = JsonConvert.SerializeObject(p, Formatting.Indented);
+                File.WriteAllText(pathParameters, jsonString);
+            }
+            catch  {    }
+        }
+
+        /// <summary>
+        /// Deserialize the parameters instance
+        /// </summary>
+        /// <param name="pathParameters"></param>
+        /// <returns></returns>
+        public static Parameters Deserialize(string pathParameters)
+        {
+            try
+            {
+                var jsonString = File.ReadAllText(pathParameters);
+                return JsonConvert.DeserializeObject<Parameters>(jsonString);
+            }
+            catch 
+            {
+                return new Parameters();
+            }
+        }
+
+
 
     }
 }

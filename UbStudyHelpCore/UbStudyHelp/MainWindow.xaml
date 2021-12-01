@@ -6,10 +6,14 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                 WindowStartupLocation="CenterScreen"
+                GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                SaveWindowPosition="True" 
                 mc:Ignorable="d"
                 Loaded="formText_Loaded"
-                Title="The Urantia Book Study Help" Height="800" Width="1800" WindowState="Maximized">
+                Title="The Urantia Book Study Help" Height="800" Width="1800" SizeChanged="MetroWindow_SizeChanged" WindowState="Maximized">
 
+    <!--Setting a custom Icon see https://mahapps.com/docs/controls/metrowindow  -->
+    
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <Button Click="LaunchUFSite" ToolTip="Open up the Urantia Foundation Web Site">
@@ -17,6 +21,7 @@
             </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
+    
 
     <!--<mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
@@ -36,105 +41,52 @@
 
     <Grid Name="gridMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60" />
             <RowDefinition />
-            <RowDefinition Height="26" />
+            <RowDefinition Height="46" />
         </Grid.RowDefinitions>
 
-        <ToolBar Height="60" Grid.ColumnSpan="3" Margin="0,0,0,0" BorderBrush="#FFF3F4DD">
 
-            <Button x:Name="BtIncreaseFontSize" Click="BtIncreaseFontSize_Click" Style="{DynamicResource MetroCircleButtonStyle}">
-                <iconPacks:PackIconBootstrapIcons Kind="Fonts" Width="24" Height="24"  />
-            </Button>
-
-            <Button x:Name="BtDecreseFontSize" Click="BtDecreseFontSize_Click" Style="{DynamicResource MetroCircleButtonStyle}">
-                <iconPacks:PackIconBootstrapIcons Kind="Fonts" Width="16" Height="16"  />
-            </Button>
-            
-            <Separator />
-            <Label x:Name="LabelTranslations" Content="2nd Translation:" Margin="0,10,0,0" VerticalAlignment="Center" />
-            <ComboBox x:Name="ComboTranslations" Width="250" BorderBrush="#FFF3F4DD" />
-            
-            <Separator Margin="10,2,2,2" />
-            <Label x:Name="LabelTrack" Content="Track:" Margin="0,10,0,0" VerticalAlignment="Center" />
-            <ComboBox x:Name="ComboTrack" Width="400" />
-
-            <Separator Margin="10,2,2,2" />
-
-            <mah:ToggleSwitch x:Name="ToggleSwitchThemme" />
-            
-            <Label x:Name="LabelThemes" Content="Theme:" Margin="0,10,0,0" VerticalAlignment="Center" />
-            
-            
-            <ComboBox x:Name="ComboTheme"  SelectionChanged="ComboTheme_SelectionChanged" Width="400">
-                <ComboBoxItem>Red</ComboBoxItem>
-                <ComboBoxItem>Green</ComboBoxItem>
-                <ComboBoxItem>Blue</ComboBoxItem>
-                <ComboBoxItem>Purple</ComboBoxItem>
-                <ComboBoxItem>Orange</ComboBoxItem>
-                <ComboBoxItem>Lime</ComboBoxItem>
-                <ComboBoxItem>Emerald</ComboBoxItem>
-                <ComboBoxItem>Teal</ComboBoxItem>
-                <ComboBoxItem>Cyan</ComboBoxItem>
-                <ComboBoxItem>Cobalt</ComboBoxItem>
-                <ComboBoxItem>Indigo</ComboBoxItem>
-                <ComboBoxItem>Violet</ComboBoxItem>
-                <ComboBoxItem>Pink</ComboBoxItem>
-                <ComboBoxItem>Magenta</ComboBoxItem>
-                <ComboBoxItem>Crimson</ComboBoxItem>
-                <ComboBoxItem>Amber</ComboBoxItem>
-                <ComboBoxItem>Yellow</ComboBoxItem>
-                <ComboBoxItem>Brown</ComboBoxItem>
-                <ComboBoxItem>Olive</ComboBoxItem>
-                <ComboBoxItem>Steel</ComboBoxItem>
-                <ComboBoxItem>Mauve</ComboBoxItem>
-                <ComboBoxItem>Taupe</ComboBoxItem>
-                <ComboBoxItem>Sienna</ComboBoxItem>
-            </ComboBox>
-
-        </ToolBar>
-
-        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
+        <Grid x:Name="GridTexts" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400">
-
-                </ColumnDefinition>
-                <ColumnDefinition Width="5"></ColumnDefinition>
-                <ColumnDefinition>
-
-                </ColumnDefinition>
+                <ColumnDefinition Width="550" />
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            
-            <TabControl x:Name="TabLeft">
-                <TabItem x:Name="TabItremTOC" Header="Table of Contents">
-                    <TabControl>
-                        <TabItem Header="English">
-                            <TreeView Name="TOC_Left" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                        </TabItem>
-                        <TabItem Header="Português">
-                            <TreeView Name="TOC_Right" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                        </TabItem>
-                    </TabControl>
 
-                </TabItem>
-                <TabItem x:Name="TabItremIndex" Header="Index">
-                    <Controls:IndexBrowser x:Name="IndexBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                </TabItem>
-                
-                <TabItem x:Name="TabItemSearch" Header="Search">
-                    <Controls:SearchBrowser x:Name="SearchBrowserInstance" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                </TabItem>
-            </TabControl>
+            <Controls:LeftPanel Grid.Column="0" />
 
-
-
-            <GridSplitter Background="DarkGray"  ResizeDirection="Columns"  Grid.Column="1" Grid.RowSpan="2"
+            <GridSplitter x:Name="GridSplitterLeft" Background="DarkGray"  ResizeDirection="Columns"  Grid.Column="1" Grid.RowSpan="2"
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                      ResizeBehavior="PreviousAndNext" Margin="0,4,0,0" />
+                      ResizeBehavior="PreviousAndNext" Margin="0,4,0,0"  DragCompleted="GridSplitterLeft_DragCompleted" />
 
             <Controls:PageBrowser x:Name="BrowserText" Grid.Column="2" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
         </Grid>
+
+        <StatusBar x:Name="StatusBarMainWindow" Grid.Row="1">
+
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0" >
+                <TextBlock Name="StatusBarVersion" Margin="0,10,0,0"  />
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2" >
+                <TextBlock Name="StatusBarMessages" Margin="0,10,0,0" TextTrimming="WordEllipsis" />
+            </StatusBarItem>
+            
+        </StatusBar>
+
 
     </Grid>
 </mah:MetroWindow>

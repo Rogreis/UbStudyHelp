@@ -1,0 +1,62 @@
+﻿<Page xmlns:Controls="clr-namespace:UbStudyHelp.Controls"  x:Class="UbStudyHelp.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:local="clr-namespace:UbStudyHelp.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="OptionsPage">
+
+
+    <Grid>
+        <StackPanel Margin="10, 10, 10, 10" Orientation="Vertical">
+
+            <Controls:LeftMenuTop ImageSourceName="SettingsLogo" VerticalAlignment="Top" />
+
+            <Image x:Name="image" Grid.Row="0" Grid.Column="0"  
+               Height="160" Width="180" Margin="10,10,10,10" ToolTip="{DynamicResource ToolTip}" HorizontalAlignment="Left" />
+
+            <Label x:Name="LabelLeftTranslations" Content="Left Translation:" Margin="0,10,0,0" />
+            <ComboBox x:Name="ComboLeftTranslations" Width="Auto" Margin="0,10,0,0"  DisplayMemberPath="Description" SelectionChanged="ComboLeftTranslations_SelectionChanged"/>
+
+            <Label x:Name="LabelRightTranslations" Content="Right Translation:" Margin="0,10,0,0" />
+            <ComboBox x:Name="ComboRightTranslation" Width="Auto" Margin="0,10,0,0" DisplayMemberPath="Description" SelectionChanged="ComboRightTranslation_SelectionChanged"/>
+            
+            <mah:ToggleSwitch x:Name="ToggleSwitchBilingual" Width="Auto" Height="50"  Content="Show Bilingual"  Margin="0,10,0,0"/>
+
+            <mah:ToggleSwitch x:Name="ToggleSwitchShowParIdent" Width="Auto" Height="50"  Content="Show Paragraph Number"  Margin="0,10,0,0"/>
+
+            <mah:ToggleSwitch x:Name="ToggleSwitchThemme" Width="Auto" Height="50"  Content="Dark Mode"  Margin="0,10,0,0"/>
+
+            <Label x:Name="LabelColorTheme" Content="Theme Color:" Margin="0,10,0,0"/>
+            <ComboBox x:Name="ComboTheme"  SelectionChanged="ComboTheme_SelectionChanged" Width="Auto" Height="Auto" Margin="0,10,0,0">
+                <ComboBoxItem>Red</ComboBoxItem>
+                <ComboBoxItem>Green</ComboBoxItem>
+                <ComboBoxItem>Blue</ComboBoxItem>
+                <ComboBoxItem>Purple</ComboBoxItem>
+                <ComboBoxItem>Orange</ComboBoxItem>
+                <ComboBoxItem>Lime</ComboBoxItem>
+                <ComboBoxItem>Emerald</ComboBoxItem>
+                <ComboBoxItem>Teal</ComboBoxItem>
+                <ComboBoxItem>Cyan</ComboBoxItem>
+                <ComboBoxItem>Cobalt</ComboBoxItem>
+                <ComboBoxItem>Indigo</ComboBoxItem>
+                <ComboBoxItem>Violet</ComboBoxItem>
+                <ComboBoxItem>Pink</ComboBoxItem>
+                <ComboBoxItem>Magenta</ComboBoxItem>
+                <ComboBoxItem>Crimson</ComboBoxItem>
+                <ComboBoxItem>Amber</ComboBoxItem>
+                <ComboBoxItem>Yellow</ComboBoxItem>
+                <ComboBoxItem>Brown</ComboBoxItem>
+                <ComboBoxItem>Olive</ComboBoxItem>
+                <ComboBoxItem>Steel</ComboBoxItem>
+                <ComboBoxItem>Mauve</ComboBoxItem>
+                <ComboBoxItem>Taupe</ComboBoxItem>
+                <ComboBoxItem>Sienna</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+    </Grid>
+</Page>

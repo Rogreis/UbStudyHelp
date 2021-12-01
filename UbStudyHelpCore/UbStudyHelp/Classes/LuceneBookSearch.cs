@@ -10,6 +10,7 @@ using Lucene.Net.Util;
 
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace UbStudyHelp.Classes
@@ -19,6 +20,7 @@ namespace UbStudyHelp.Classes
     /// <summary>
     /// 
     /// Nuget from https://www.nuget.org/packages/Lucene.Net/4.8.0-beta00014
+    /// Install-Package Lucene.Net -Version 4.8.0-beta00014
     /// https://www.byteblocks.com/Post/How-to-use-Lucene-In-Net-Core-project
     /// Packages used:
     /// https://www.nuget.org/packages/Lucene.Net.Analysis.Common/
@@ -51,20 +53,34 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public class LuceneBookSearch
     {
+
+        // Fields for Lucene Index Searc
+        private const string FieldPaper = "Paper";
+        private const string FieldSection = "Section";
+        private const string FieldParagraph = "ParagraphNo";
+        private const string FieldText = "Text";
+
+
         // Note there are many different types of Analyzer that may be used with Lucene, the exact one you use
         // will depend on your requirements
         private Directory luceneIndexDirectory;
         private string indexPath;
         private bool indexAlreadyExist = false;
+        private Translation Translation = null;
         public string ErrorMessage { get; private set; } = "";
 
-        public LuceneBookSearch(Translation translation)
+        public LuceneBookSearch(string basePathForFiles, Translation translation)
         {
-            string exePath= System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            string pathFile = System.IO.Path.Combine(exePath, "L" + translation.LanguageID.ToString("000"));
+            Translation = translation;
+            string pathFile = System.IO.Path.Combine(basePathForFiles, "L" + translation.LanguageID.ToString("000"));
             indexPath = System.IO.Path.Combine(pathFile, "se");
+            if (!System.IO.Directory.Exists(indexPath))
+            {
+                System.IO.Directory.CreateDirectory(indexPath);
+            }
             InitialiseLucene();
         }
+
 
         public void Dispose()
         {
@@ -77,31 +93,33 @@ namespace UbStudyHelp.Classes
             luceneIndexDirectory = FSDirectory.Open(indexPath);
         }
 
-        public bool CreateUBIndex(Translation translation)
+        public bool CreateUBIndex()
         {
-            if (indexAlreadyExist)
+            if (System.IO.Directory.GetFiles(indexPath, "*.*").Length > 0)
+            {
                 return true;
+            }
+
             try
             {
-                //Version parameter is used for backward compatibility. Stop words can also be passed to avoid indexing certain words
                 Analyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
                 IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer);
                 IndexWriter writer = new IndexWriter(luceneIndexDirectory, config);
 
                 for (short paperNo = 0; paperNo <= 196; paperNo++)
                 {
-                    Paper paper = translation.Paper(paperNo);
+                    Paper paper = Translation.Paper(paperNo);
                     foreach (Paragraph paragraph in paper.Paragraphs)
                     {
                         Document doc = new Document();
-                        doc.Add(new StringField(SearchResults.FieldPaper, paragraph.Paper.ToString(), Field.Store.YES));
-                        doc.Add(new StringField(SearchResults.FieldSection, paragraph.Section.ToString(), Field.Store.YES));
-                        doc.Add(new StringField(SearchResults.FieldParagraph, paragraph.ParagraphNo.ToString(), Field.Store.YES));
-                        doc.Add(new StringField(SearchResults.FieldText, paragraph.Text, Field.Store.YES));
+                        doc.Add(new StringField(FieldPaper, paragraph.Paper.ToString(), Field.Store.YES));
+                        doc.Add(new StringField(FieldSection, paragraph.Section.ToString(), Field.Store.YES));
+                        doc.Add(new StringField(FieldParagraph, paragraph.ParagraphNo.ToString(), Field.Store.YES));
+                        doc.Add(new TextField(FieldText, paragraph.Text, Field.Store.YES));
                         writer.AddDocument(doc);
                     }
                 }
-                writer.Commit();
+                writer.Flush(triggerMerge: false, applyAllDeletes: false);
                 writer.Dispose();
                 return true;
             }
@@ -113,7 +131,7 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public bool Execute(string query)
+        public bool Execute(SearchData searchData)
         {
             try
             {
@@ -123,11 +141,13 @@ namespace UbStudyHelp.Classes
                 // http://www.lucenetutorial.com/lucene-query-syntax.html
                 // https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
 
-                SearchResults.Clear();
-                var parser = new QueryParser(LuceneVersion.LUCENE_48, "Text", analyzer);
-                Query searchQuery = parser.Parse(query);
+                List<SearchResult> SearchResults = new List<SearchResult>();
 
-                SearchResults.SetSearchString(searchQuery.ToString());
+                var parser = new QueryParser(LuceneVersion.LUCENE_48, FieldText, analyzer);
+                Query searchQuery = parser.Parse(searchData.QueryString);
+
+                // Store information to highlight searched words
+                searchData.SetSearchString(FieldText + ":", searchQuery.ToString());
 
                 var reader = DirectoryReader.Open(FSDirectory.Open(indexPath));
                 IndexSearcher searcher = new IndexSearcher(reader);
@@ -136,8 +156,27 @@ namespace UbStudyHelp.Classes
                 for (int i = 0; i < results; i++)
                 {
                     Document doc = searcher.Doc(hits.ScoreDocs[i].Doc);
-                    SearchResult searchResult = new SearchResult(doc);
-                    SearchResults.Findings.Add(searchResult);
+                    short paper = Convert.ToInt16(doc.GetField(FieldPaper).GetStringValue());
+                    if (searchData.CurrentPaperOnly)
+                    {
+                        if (paper != searchData.CurrentPaper)
+                        {
+                            continue;
+                        }
+                    }
+                    else if (!searchData.IsPaperIncluded(paper))
+                    {
+                        continue;
+                    }
+                    string x1 = doc.GetField(FieldSection).GetStringValue();
+
+                    short section = Convert.ToInt16(doc.GetField(FieldSection).GetStringValue());
+                    short paragraphNo = Convert.ToInt16(doc.GetField(FieldParagraph).GetStringValue());
+                    TOC_Entry entry = new TOC_Entry(paper, section, paragraphNo);
+                    string text = doc.GetField(FieldText).GetStringValue();
+                    SearchResult searchResult = new SearchResult(entry, text);
+                    searchResult.OriginalPosition = i;  // used to restore relevancy order after a sort by paragraph
+                    searchData.SearchResults.Add(searchResult);
                 }
                 return true;
             }
@@ -150,102 +189,102 @@ namespace UbStudyHelp.Classes
         }
 
 
-        private void TestSearch(string query)
-        {
-            SearchResults.Clear();
-            try
-            {
-                Debug.WriteLine($"Testing query ({query})");
-                if (!Execute(query))
-                {
-                    Debug.WriteLine($"    ***** Error: {ErrorMessage}");
-                }
-                else
-                {
-                    foreach(string word in SearchResults.Words)
-                    {
-                        Debug.WriteLine($"    {word}");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"    ***** Exception: {ex.Message}");
-            }
-            Debug.WriteLine("");
-        }
+        //private void TestSearch(string query)
+        //{
+        //    SearchResults.Clear();
+        //    try
+        //    {
+        //        Debug.WriteLine($"Testing query ({query})");
+        //        if (!Execute(query))
+        //        {
+        //            Debug.WriteLine($"    ***** Error: {ErrorMessage}");
+        //        }
+        //        else
+        //        {
+        //            foreach(string word in SearchResults.Words)
+        //            {
+        //                Debug.WriteLine($"    {word}");
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"    ***** Exception: {ex.Message}");
+        //    }
+        //    Debug.WriteLine("");
+        //}
 
 
-        /// <summary>
-        /// Run some tests for searc
-        /// </summary>
-        public void SearchTest()
-        {
-            // Simple searchs
-            TestSearch("Jesus");
-            TestSearch("\"Christ Michael\"");
-            TestSearch("Jesus and God");
-            TestSearch("\"My master delays his coming\" AND God");
-            TestSearch("Adora???");
-            TestSearch("Adora*");
-
-
-
-            // Wildcards
-            TestSearch("absolut?");
-            TestSearch("absolut*");
-            TestSearch("abso*e");
-
-
-            // Similar Searches The default that is used if the parameter is not given is 0.5.*
-            TestSearch("abso~");
-            TestSearch("roam~0.8");
-
-            // Proximity Searches
-            TestSearch("\"Jesus God\"~10");
-            TestSearch("\"Jesus God\"~2");
-
-            // Boosting a Term By default, the boost factor is 1. Although the boost factor must be positive, it can be less than 1 (e.g. 0.2)
-
-            TestSearch("Jesus^4 God");
-            TestSearch("\"Jesus Christ\"^4 \"apostle Peter\"");
+        ///// <summary>
+        ///// Run some tests for searc
+        ///// </summary>
+        //public void SearchTest()
+        //{
+        //    // Simple searchs
+        //    TestSearch("Jesus");
+        //    TestSearch("\"Christ Michael\"");
+        //    TestSearch("Jesus and God");
+        //    TestSearch("\"My master delays his coming\" AND God");
+        //    TestSearch("Adora???");
+        //    TestSearch("Adora*");
 
 
 
+        //    // Wildcards
+        //    TestSearch("absolut?");
+        //    TestSearch("absolut*");
+        //    TestSearch("abso*e");
 
 
-            // Boolean Operators
-            //# OR
-            TestSearch("\"Christ Michael\" OR Jesus");
-            //# AND
-            TestSearch("\"Christ Michael\" AND \"Jesus of Nazareth\"");
+        //    // Similar Searches The default that is used if the parameter is not given is 0.5.*
+        //    TestSearch("abso~");
+        //    TestSearch("roam~0.8");
 
-            //# +
-            TestSearch("+Christ Nebadon");
+        //    // Proximity Searches
+        //    TestSearch("\"Jesus God\"~10");
+        //    TestSearch("\"Jesus God\"~2");
 
-            //# NOT
-            TestSearch("\"Christ Michael\" NOT \"Jesus of Nazareth\"");
+        //    // Boosting a Term By default, the boost factor is 1. Although the boost factor must be positive, it can be less than 1 (e.g. 0.2)
 
-            //# -
-            TestSearch("\"Christ Michael\" - \"Jesus of Nazareth\"");
-
-
-            // Grouping
-            TestSearch("(Christ OR Nebadon) AND Gabriel");
-
-
-            // Field Grouping
-            TestSearch("(+Buddha+\"Genghis Khan\")");
-
-            // Escaping Special Characters + TestSearch("&& || ! ( ) { } [ ] ^ " ~ * ? : \");
-
-            TestSearch("\\[Revealed");
+        //    TestSearch("Jesus^4 God");
+        //    TestSearch("\"Jesus Christ\"^4 \"apostle Peter\"");
 
 
 
 
 
-        }
+        //    // Boolean Operators
+        //    //# OR
+        //    TestSearch("\"Christ Michael\" OR Jesus");
+        //    //# AND
+        //    TestSearch("\"Christ Michael\" AND \"Jesus of Nazareth\"");
+
+        //    //# +
+        //    TestSearch("+Christ Nebadon");
+
+        //    //# NOT
+        //    TestSearch("\"Christ Michael\" NOT \"Jesus of Nazareth\"");
+
+        //    //# -
+        //    TestSearch("\"Christ Michael\" - \"Jesus of Nazareth\"");
+
+
+        //    // Grouping
+        //    TestSearch("(Christ OR Nebadon) AND Gabriel");
+
+
+        //    // Field Grouping
+        //    TestSearch("(+Buddha+\"Genghis Khan\")");
+
+        //    // Escaping Special Characters + TestSearch("&& || ! ( ) { } [ ] ^ " ~ * ? : \");
+
+        //    TestSearch("\\[Revealed");
+
+
+
+
+
+        //}
 
 
 

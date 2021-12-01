@@ -1,5 +1,6 @@
 ﻿using ControlzEx.Theming;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using UbStudyHelp.Classes;
@@ -15,158 +16,85 @@ namespace UbStudyHelp
         public MainWindow()
         {
             InitializeComponent();
-            ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
-
+            this.Loaded += MainWindow_Loaded;
+            EventsControl.SendMessage += EventsControl_SendMessage;
+            EventsControl.FontChanged += EventsControl_FontChanged;
+            GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
         }
 
+        private void FontChanged()
+        {
+            App.Appearance.SetFontSize(StatusBarVersion);
+            App.Appearance.SetFontSize(StatusBarMessages);
+        }
+
+        private void EventsControl_FontChanged(ControlsAppearance appearance)
+        {
+            FontChanged();
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            GridTexts.ColumnDefinitions[0].Width = new GridLength(App.ParametersData.SpliterDistance);
+            FontChanged();
+        }
+
+        private void GridSplitterLeft_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            App.ParametersData.SpliterDistance = GridTexts.ColumnDefinitions[0].ActualWidth;
+            EventsControl.FireGridSplitter(GridTexts.ColumnDefinitions[0].ActualWidth);
+        }
+
+        private void EventsControl_SendMessage(string message)
+        {
+            ShowMessage(message);
+        }
 
         private void ShowMessage(string message, bool fatalError= false)
         {
-            MessageBox.Show(message);
+            //Debug.WriteLine(message);
+            StatusBarMessages.Text = message;
             if (fatalError)
             {
+                MessageBox.Show(message);
                 System.Windows.Application.Current.Shutdown();
-                // Environment.Exit(0)
             }
         }
 
-        private bool LoadData()
-        {
-            GetDataFiles dataFiles = new GetDataFiles();
-            try
-            {
-                if (!dataFiles.CheckFiles(App.BaseTubFilesPath))
-                {
-                    return false;
-                }
-                return Book.Inicialize(App.BaseTubFilesPath);
-            }
-            catch (Exception ex)
-            {
-                ShowMessage(ex.Message, true);
-                return false;
-            }
-        }
-
-        private void FillTreeView(TreeView tree, bool useLeftTranslation)
-        {
-            Translation translation = useLeftTranslation ? Book.LeftTranslation : Book.RightTranslation;
-
-            TreeViewItem nodePaper = null;
-            foreach (TOC_Entry entry in translation.TableOfContents)
-            {
-                if (entry.Section == 0)
-                {
-                    nodePaper = new TreeViewItemUB(entry);
-                    //if (entry.IsExpanded) nodePaper.Expand();
-                    tree.Items.Add(nodePaper);
-                }
-                else if (entry.ParagraphNo == 0)
-                {
-                    TreeViewItem nodeSection = new TreeViewItemUB(entry);
-                    nodeSection.Tag = entry;
-                    nodePaper.Items.Add(nodeSection);
-                }
-            }
-
-        }
-
-
-        private void SetFontSize()
-        {
-            App.Appearance.SetFontSize(LabelTranslations);
-            App.Appearance.SetFontSize(LabelTrack);
-            App.Appearance.SetFontSize(ComboTrack);
-            App.Appearance.SetFontSize(LabelThemes);
-            App.Appearance.SetFontSize(ComboTheme);
-            App.Appearance.SetFontSize(TOC_Left);
-            App.Appearance.SetFontSize(TOC_Right);
-            EventsControl.FireFontChanged(App.Appearance);
-        }
-
-        private void SetControlsStyles()
-        {
-            App.Appearance.SetAll(TOC_Left);
-            App.Appearance.SetAll(TOC_Right);
-            SetFontSize();
-        }
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
-
-            if (LoadData())
-            {
-                FillTreeView(TOC_Left, true);
-                FillTreeView(TOC_Right, false);
-                TOC_Left.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-                TOC_Right.SelectedItemChanged += TableOfContents_SelectedItemChanged;
-                ComboTheme.Text= App.ParametersData.ThemeColor;
-            }
-            SetTheme();
-            SetFontSize();
+            StatusBarVersion.Text = "v 2.0";
         }
 
-
-
-        #region Tree Events
-        private void TableOfContents_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            TreeView tree = sender as TreeView;
-            TreeViewItemUB item = tree.SelectedItem as TreeViewItemUB;
-            EventsControl.FireTOCClicked(item.Entry);
-        }
-
-        #endregion
 
         private void LaunchUFSite(object sender, RoutedEventArgs e)
         {
             //Process.Start("http://www.urantia.org");
+            TestWindow cw = new TestWindow();
+            cw.ShowInTaskbar = false;
+            cw.Owner = Application.Current.MainWindow;
+            cw.Show();
         }
 
-        private void SetTheme()
+        private void MetroWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            string theme = App.ParametersData.ThemeName + "." + App.ParametersData.ThemeColor;
-            ThemeManager.Current.ChangeTheme(Application.Current, theme);
-        }
-
-        private void ReverseTheme(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void ComboTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBoxItem item = ComboTheme.SelectedItem as ComboBoxItem;
-            App.ParametersData.ThemeColor = (string)item.Content; 
-            SetTheme();
-        }
-
-        private void BtIncreaseFontSize_Click(object sender, RoutedEventArgs e)
-        {
-            App.Appearance.FontSizeInfo++;
-            SetFontSize();
-        }
-
-        private void BtDecreseFontSize_Click(object sender, RoutedEventArgs e)
-        {
-            App.Appearance.FontSizeInfo--;
-            SetFontSize();
-        }
-
-
-        private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)
-        {
-            // Set the application theme to Dark.Green
-            Theme theme = ThemeManager.Current.DetectTheme();
-            if (theme.Name.StartsWith("Dark"))
+            try
             {
-                App.ParametersData.ThemeName = "Light";
+                double width = this.ActualWidth;
+                double height = gridMain.ActualHeight - StatusBarMainWindow.ActualHeight - SystemParameters.CaptionHeight;
+                
+                //Debug.WriteLine($"{this.ActualWidth}   {this.ActualHeight} Splitter= {GridTexts.ColumnDefinitions[0].ActualWidth}");
+                //Debug.WriteLine($"{gridMain.ActualWidth}   {gridMain.ActualHeight}  {StatusBarMainWindow.ActualWidth}  {StatusBarMainWindow.ActualHeight}");
+
+                EventsControl.FireMainWindowSizeChanged(width, height);
             }
-            else
+            catch
             {
-                App.ParametersData.ThemeName = "Dark";
+                Debug.WriteLine("Error");
             }
-            SetTheme();
-            SetFontSize();
+
+
         }
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using UbStudyHelp;
+using System.Collections.ObjectModel;
 
 namespace UbStudyHelp.Classes
 {
@@ -16,13 +17,49 @@ namespace UbStudyHelp.Classes
     public static class Book
     {
 
+        private static Translation GetTranslation(short id)
+        {
+            Translation trans = Translations.Find(o => o.LanguageID == id);
+            if (trans == null)
+            {
+                throw new Exception($"Missing translation number {App.ParametersData.LanguageIDLeftTranslation}. May be you do not have the correct data to use this tool.");
+            }
+            if (!trans.Inicialize(FilesPath))
+            {
+                throw new Exception($"Translation {App.ParametersData.LanguageIDLeftTranslation} not initialized. May be you do not have the correct data to use this tool.");
+            }
+            return trans;
+        }
+
         public static string FilesPath { get; set; }
 
-        public static Translation LeftTranslation { get; private set; }
+        public static Translation LeftTranslation
+        {
+            get
+            {
+                return GetTranslation(App.ParametersData.LanguageIDLeftTranslation);
+            }
+        }
 
-        public static Translation RightTranslation { get; private set; }
+        public static Translation RightTranslation
+        {
+            get
+            {
+                return GetTranslation(App.ParametersData.LanguageIDRightTranslation);
+            }
+        }
 
         public static List<Translation> Translations { get; private set; }
+
+        public static List<Translation> ObservableTranslations
+        {
+            get
+            {
+                List<Translation> list = new List<Translation>();
+                list.AddRange(Translations);
+                return list;
+            }
+        }
 
         public static bool Inicialize(string baseDataPath)
         {
@@ -35,32 +72,7 @@ namespace UbStudyHelp.Classes
 
                     XElement xElem = XElement.Load(pathlistTranslations);
                     Translations = (from lang in xElem.Descendants("Translation")
-                                         select new Translation(lang)).ToList();
-                }
-
-                if (Translations == null || Translations.Count < 2)
-                {
-                    throw new Exception("There is no translation list. May be you do not have the correct data to use this tool.");
-                }
-
-                LeftTranslation = Translations.Find(o => o.LanguageID == App.ParametersData.LanguageIDLeftTranslation);
-                if (LeftTranslation == null)
-                {
-                    throw new Exception($"Missing translation number {App.ParametersData.LanguageIDLeftTranslation}. May be you do not have the correct data to use this tool.");
-                }
-                if (!LeftTranslation.Inicialize(baseDataPath))
-                {
-                    throw new Exception($"Translation {App.ParametersData.LanguageIDLeftTranslation} not initialized. May be you do not have the correct data to use this tool.");
-                }
-
-                RightTranslation = Translations.Find(o => o.LanguageID == App.ParametersData.LanguageIDRightTranslation);
-                if (RightTranslation == null)
-                {
-                    throw new Exception($"Missing translation number {App.ParametersData.LanguageIDRightTranslation}. May be you do not have the correct data to use this tool.");
-                }
-                if (!RightTranslation.Inicialize(baseDataPath))
-                {
-                    throw new Exception($"Translation {App.ParametersData.LanguageIDRightTranslation} not initialized. May be you do not have the correct data to use this tool.");
+                                    select new Translation(lang)).ToList();
                 }
                 return true;
 

@@ -47,7 +47,11 @@ namespace UbStudyHelp.Classes
 
             Paragraph parTitle = Paragraphs.Find(p => p.Section == 0 && p.ParagraphNo == 0);
             Title = parTitle != null? parTitle.Text : "No Title, check your data";
+        }
 
+        public Paragraph GetParagraph(TOC_Entry entry)
+        {
+            return Paragraphs.Find(p => p.Section == entry.Section && p.ParagraphNo == entry.ParagraphNo);
         }
 
     }

@@ -20,7 +20,11 @@ namespace UbStudyHelp.Controls
     public partial class PageBrowser : UserControl
     {
 
-        private HtmlCommandsPage commands = new HtmlCommandsPage();
+        private Html_BaseClass commands = null;
+
+        private TOC_Entry lastEntry = new TOC_Entry(0,1,0);
+
+        private bool lastShouldHighlightText = false;
 
 
         public PageBrowser()
@@ -29,10 +33,16 @@ namespace UbStudyHelp.Controls
 
             this.Loaded += PageBrowser_Loaded;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
+            EventsControl.TrackSelected += EventsControl_TrackSelected;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
-            EventsControl.SeachClicked += EventsControl_SeachClicked;
+            EventsControl.SearchClicked += EventsControl_SeachClicked;
+            EventsControl.RefreshText += EventsControl_RefreshText;
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
+            EventsControl.BilingualChanged += EventsControl_BilingualChanged;
+            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
+
 
 
         /// <summary>
@@ -40,18 +50,31 @@ namespace UbStudyHelp.Controls
         /// </summary>
         /// <param name="entry"></param>
         /// <param name="addToTrack"></param>
-        private void Show(TOC_Entry entry, bool shouldHighlightText= false)
+        private void Show(TOC_Entry entry, bool shouldHighlightText= true, List<string> Words= null)
         {
-            // Keep latest pragraph shown for next program section
-            App.ParametersData.Entry.Paper = entry.Paper;
-            App.ParametersData.Entry.Section = entry.Section;
-            App.ParametersData.Entry.ParagraphNo = entry.ParagraphNo;
+            if (App.ParametersData.ShowBilingual)
+            {
+                commands =  new HtmlBilingual();
+            }
+            else
+            {
+                commands = new HtmlSingle();
+            }
 
-            EventsControl.FireSendMessage(Book.LeftTranslation.PaperTranslation);
-            string htmlPage = commands.HtmlLine(entry, shouldHighlightText);
+            // Keep latest pragraph shown for next program section
+            App.ParametersData.Entry= new TOC_Entry(entry);
+            lastEntry = new TOC_Entry(entry);
+            lastShouldHighlightText = shouldHighlightText;
+
+            EventsControl.FireSendMessage(entry.ToString());
+            string htmlPage = commands.Html(entry, shouldHighlightText, Words);
             BrowserText.NavigateToString(htmlPage);
         }
 
+        private void Refresh()
+        {
+            Show(lastEntry, lastShouldHighlightText);
+        }
 
 
         private void PageBrowser_Loaded(object sender, RoutedEventArgs e)
@@ -65,20 +88,48 @@ namespace UbStudyHelp.Controls
             Show(entry);
         }
 
-        private void EventsControl_SeachClicked(TOC_Entry entry)
+        private void EventsControl_TrackSelected(TOC_Entry entry)
         {
-            Show(entry, true);
+            Show(entry);
+        }
+
+        private void EventsControl_SeachClicked(TOC_Entry entry, List<string> Words)
+        {
+            Show(entry, true, Words);
         }
 
         private void EventsControl_IndexClicked(TOC_Entry entry)
         {
-            Show(entry);
+            Show(entry, true, null);
         }
+
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        {
+            Show(App.ParametersData.Entry);
+        }
+
 
         private void EventsControl_FontChanged(Classes.ControlsAppearance appearance)
         {
             Show(App.ParametersData.Entry);
         }
+
+        private void EventsControl_TranslationsChanged()
+        {
+            Refresh();
+        }
+
+        private void EventsControl_BilingualChanged(bool ShowBilingual)
+        {
+            Refresh();
+        }
+
+        private void EventsControl_RefreshText()
+        {
+            Refresh();
+        }
+
+
 
     }
 }
