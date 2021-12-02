@@ -23,4 +23,4 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Build
-        run: dotnet build --c release UbStudyHelpCore/UbStudyHelpCore.sln
+        run: dotnet build -c release UbStudyHelpCore/UbStudyHelpCore.sln
