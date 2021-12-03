@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Xml.Linq;
-using YamlDotNet.Serialization;
 
 namespace UbStudyHelp.Classes
 {
@@ -15,7 +14,7 @@ namespace UbStudyHelp.Classes
         public string Text { get; set; } = "";
         public bool IsExpanded { get; set; } = false;
 
-        [YamlIgnore]
+        [JsonIgnore]
         public string ParagraphID
         {
             get
@@ -24,7 +23,7 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        [YamlIgnore]
+        [JsonIgnore]
         public string Anchor
         {
             get
@@ -33,7 +32,7 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        [YamlIgnore]
+        [JsonIgnore]
         public string Ident
         {
             get
@@ -47,7 +46,7 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        [YamlIgnore]
+        [JsonIgnore]
         public string Href
         {
             get
@@ -57,29 +56,29 @@ namespace UbStudyHelp.Classes
         }
 
 
-        [YamlIgnore]
-        public string TextSample
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(Text))
-                {
-                    return "";
-                }
-                if (Text.Length < MaxSampleTextSize)
-                {
-                    return Text;
-                }
-                // Return MaxSampleTextSize or until first not letter/number character
-                int position = Math.Min(MaxSampleTextSize, Text.Length);
-                position = Text.IndexOf(' ', position);
-                if (position >= 0)
-                {
-                    return Text.Substring(0, position);
-                }
-                return Text.Substring(0, MaxSampleTextSize);
-            }
-        }
+        //[JsonIgnore]
+        //public string TextSample
+        //{
+        //    get
+        //    {
+        //        if (string.IsNullOrWhiteSpace(Text))
+        //        {
+        //            return "";
+        //        }
+        //        if (Text.Length < MaxSampleTextSize)
+        //        {
+        //            return Text;
+        //        }
+        //        // Return MaxSampleTextSize or until first not letter/number character
+        //        int position = Math.Min(MaxSampleTextSize, Text.Length);
+        //        position = Text.IndexOf(' ', position);
+        //        if (position >= 0)
+        //        {
+        //            return Text.Substring(0, position);
+        //        }
+        //        return Text.Substring(0, MaxSampleTextSize);
+        //    }
+        //}
 
 
         public TOC_Entry()
@@ -123,7 +122,7 @@ namespace UbStudyHelp.Classes
 
         public override string ToString()
         {
-            return $"{ParagraphID} {TextSample}";
+            return $"{ParagraphID} {Text}"; // TextSample
         }
 
 

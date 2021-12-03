@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using UbStudyHelp.Classes;
-using YamlDotNet.Serialization;
+using Newtonsoft.Json;
 
 namespace UbStudyHelp.Pages
 {
@@ -117,8 +117,11 @@ namespace UbStudyHelp.Pages
 
         private void TrackList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TOC_Entry entry = e.AddedItems[0] as TOC_Entry;
-            EventsControl.FireTrackSelected(entry);
+            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                TOC_Entry entry = e.AddedItems[0] as TOC_Entry;
+                EventsControl.FireTrackSelected(entry);
+            }
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -172,11 +175,15 @@ namespace UbStudyHelp.Pages
             saveFileDlg.DefaultExt = ".yaml";
             saveFileDlg.Filter = "Yaml documents (.yaml)|*.yaml";
             Nullable<bool> result = saveFileDlg.ShowDialog();
-            if (result == true)
+            try
             {
-                Serializer serializer = new Serializer();
-                File.WriteAllText(saveFileDlg.FileName, serializer.Serialize(App.ParametersData.TrackEntries));
+                if (result == true)
+                {
+                    var jsonString = JsonConvert.SerializeObject(App.ParametersData.TrackEntries, Formatting.Indented);
+                    File.WriteAllText(saveFileDlg.FileName, jsonString);
+                }
             }
+            catch { }
 
         }
 
@@ -198,9 +205,17 @@ namespace UbStudyHelp.Pages
             Nullable<bool> result = openFileDlg.ShowDialog();
             if (result == true)
             {
-                Deserializer deserializer = new Deserializer();
-                string yamlData = File.ReadAllText(openFileDlg.FileName);
-                App.ParametersData.TrackEntries = deserializer.Deserialize<List<TOC_Entry>>(yamlData);
+                try
+                {
+                    var jsonString = File.ReadAllText(openFileDlg.FileName);
+                    App.ParametersData.TrackEntries = JsonConvert.DeserializeObject<List<TOC_Entry>>(jsonString);
+                }
+                catch
+                {
+                    App.ParametersData.TrackEntries = new List<TOC_Entry>();
+                }
+
+                // Make local copy
                 foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
                 {
                     LocalTrackEntries.Add(entry);

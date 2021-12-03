@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Security;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using J2N.Text;
-using UbStudyHelp.Controls;
-using YamlDotNet.Serialization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UbStudyHelp.Classes
 {
@@ -211,10 +208,9 @@ namespace UbStudyHelp.Classes
             return _ToSimpleCharacters;
         }
 
-        [YamlIgnore]
         private Dictionary<char, string> _lookup;
 
-        [YamlIgnore]
+        [JsonIgnore]
         private Dictionary<char, string> Lookup
         {
             get

@@ -1,16 +1,10 @@
 ﻿using ControlzEx.Theming;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Resources;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using System.Windows.Media;
-using UbStudyHelp.Properties;
-using YamlDotNet.Core.Tokens;
 
 namespace UbStudyHelp.Classes
 {
