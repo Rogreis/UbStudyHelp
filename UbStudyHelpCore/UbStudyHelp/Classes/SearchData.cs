@@ -98,7 +98,7 @@ namespace UbStudyHelp.Classes
 
             Run run = new Run($"({SearchResults.Count}) paragraph(s) found")
             {
-                FontWeight = FontWeights.Bold,
+                //FontWeight = FontWeights.Bold,
                 FontSize = App.ParametersData.FontSizeInfo,
                 Foreground = accentBrush
             };

@@ -58,14 +58,14 @@ namespace UbStudyHelp.Pages
         bool starting = false;
         private void ShowSearchResults(SearchData data, int nextPage)
         {
+            // When starting zero results must be shown
             if (!starting)
             {
                 if (nextPage < 1 || nextPage > noPages)
                     return;
-                else
-                    currentPage = nextPage;
             }
             starting = false;
+            currentPage = nextPage;
             this.data = data;
             searchResults.ShowSearchResults(data, nextPage, pageSize, noPages);
             FrameControl.Navigate(searchResults);

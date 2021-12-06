@@ -1,15 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-using UbStudyHelp;
-using UbStudyHelp.Classes;
-using Newtonsoft.Json;
-using YamlDotNet.Serialization;
 
 namespace UbStudyHelp.Classes
 {

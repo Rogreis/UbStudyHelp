@@ -81,7 +81,9 @@ namespace UbStudyHelp.Classes
         {
             get
             {
-                return TextWork.GetReducedText();
+                // No more using a reduction in the text (December-2021)
+                return NoHtml;
+                //return TextWork.GetReducedText();
             }
         }
 

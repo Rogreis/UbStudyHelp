@@ -1,17 +1,7 @@
-﻿using ControlzEx.Theming;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using UbStudyHelp.Classes;
-using YamlDotNet.Serialization;
 
 namespace UbStudyHelp
 {

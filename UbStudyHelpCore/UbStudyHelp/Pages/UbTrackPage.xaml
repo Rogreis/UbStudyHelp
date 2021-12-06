@@ -94,7 +94,7 @@
                         <GridViewColumn Header="Text">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding TextSample}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Text}" TextTrimming="WordEllipsis" ToolTip="{Binding Text}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
