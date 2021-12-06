@@ -5,11 +5,6 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UbStudyHelp", "UbStudyHelp\UbStudyHelp.csproj", "{032746BB-96FB-4F5D-80FC-1693BEB72CC5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{495194D9-3511-48E7-913C-EBC1B20A75EB}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\Urantia-Translators\Publish.bat = ..\..\Urantia-Translators\Publish.bat
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfAppTest", "..\WpfAppTest\WpfAppTest.csproj", "{BB6C4508-3C69-4FFF-9A3C-0CBED91150B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UbStudyHelpCoreUnitTests", "UbStudyHelpCoreUnitTests\UbStudyHelpCoreUnitTests.csproj", "{5EAA4572-6F78-4561-99A8-D0001DBB8B09}"
