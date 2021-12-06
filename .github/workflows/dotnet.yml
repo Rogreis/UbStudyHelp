@@ -1,4 +1,4 @@
-name: .NET_WIndows
+name: .NET_Windows
 
 on:
   workflow_dispatch:
@@ -27,3 +27,7 @@ jobs:
       # You can test your matrix by printing the current dotnet version
       - name: Display dotnet version
         run: dotnet --version
+      - name: Install dependencies ${{ matrix.dotnet-version }}
+        run: dotnet restore --verbosity d UbStudyHelpCore/UbStudyHelpCore.sln
+      - name: Build ${{ matrix.dotnet-version }}
+        run: dotnet build -c release UbStudyHelpCore/UbStudyHelpCore.sln
