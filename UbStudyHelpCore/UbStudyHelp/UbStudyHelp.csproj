@@ -7,6 +7,7 @@
     <!--<TargetFrameworks>netcoreapp3.1;net5.0-windows</TargetFrameworks>-->
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <!--<RuntimeIdentifier>win10-64;osx.10.12-x64</RuntimeIdentifier>-->
+    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <StartupObject>UbStudyHelp.App</StartupObject>
     <ApplicationIcon>urantia.ico</ApplicationIcon>
   </PropertyGroup>
@@ -29,14 +30,6 @@
     <PackageReference Include="SharpVectors" Version="1.7.6" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls.Core">
-      <HintPath>..\..\..\..\..\..\Users\CTW01001\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls.core\7.0.0\lib\netstandard2.0\Microsoft.Toolkit.Uwp.UI.Controls.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls.Primitives">
-      <HintPath>..\..\..\..\..\..\Users\CTW01001\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls.primitives\7.0.0\lib\netstandard2.0\Microsoft.Toolkit.Uwp.UI.Controls.Primitives.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
