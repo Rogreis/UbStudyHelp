@@ -1,13 +1,19 @@
-# Universal Windows Platform
-# Build a Universal Windows Platform project using Visual Studio.
-# Add steps that test and distribute an app, save build artifacts, and more:
-# https://aka.ms/yaml
 
 trigger:
 - main
 
+strategy:
+  matrix:
+    linux:
+      imageName: "ubuntu-latest"
+    mac:
+      imageName: "macOS-latest"
+    windows:
+      imageName: "windows-latest"
+  maxParallel: 3
+
 pool:
-  vmImage: 'windows-latest'
+  vmImage: $(imageName)
 
 variables:
   solution: '**/*.sln'
@@ -25,3 +31,15 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) UbStudyHelpCore\UbStudyHelpCore.sln
   displayName: 'dotnet build $(buildConfiguration)' 
   
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish $(buildConfiguration) -output $(build.artifactStagingDirectory)' 
+  inputs: 
+    command: publish
+    publishWebProjects: false
+    projects: 'UbStudyHelpCore\UbStudyHelpCore\UbStudyHelp\UbStudyHelp.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
+    zipAfterPublish: true
+
+- task: PublishBuildArtifacts@1
+    displayName: 'publish artifacts'
+    
