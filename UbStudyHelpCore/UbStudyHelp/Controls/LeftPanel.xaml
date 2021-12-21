@@ -45,7 +45,6 @@
 
     </Control.Resources>
 
-
     <Grid x:Name="GridMain">
         <mah:HamburgerMenu Grid.Column="0" x:Name="HamburgerMenuControl" ItemInvoked="HamburgerMenuControl_OnItemInvoked" 
                            OptionsItemTemplate="{StaticResource HamburgerOptionsMenuItem}"
@@ -148,4 +147,5 @@
 
         </mah:HamburgerMenu>
     </Grid>
+    
 </UserControl>

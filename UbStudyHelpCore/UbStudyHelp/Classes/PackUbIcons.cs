@@ -14,12 +14,12 @@ namespace UbStudyHelp.Classes
     {
         [Description("Empty placeholder")] None,
         [Description("Table of Contents Icon")] TableOfContents,
-        [Description("Table of Contents Icon")] BookSearchOutline,
-        [Description("Table of Contents Icon")] HandIndex,
-        [Description("Table of Contents Icon")] TrainTrack,
-        [Description("Table of Contents Icon")] Fonts,
-        [Description("Table of Contents Icon")] Help,
-        [Description("Table of Contents Icon")] HelpSettingsMD
+        [Description("Book Search Icon")] BookSearchOutline,
+        [Description("Index Icon")] HandIndex,
+        [Description("Track con")] TrainTrack,
+        [Description("Font Icon")] Fonts,
+        [Description("Help Icon")] Help,
+        [Description("Settings Icon")] HelpSettingsMD
     }
 
 
