@@ -11,136 +11,72 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Control.Resources>
+        <ResourceDictionary>
 
-        <Style TargetType="MenuItem">
-            <Style.Triggers>
-                <Trigger Property="Header" Value="Close">
-                    <Setter Property="Icon" Value="WHAT TO PUT HERE???"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!--  This is the template for the option menu item  -->
-        <DataTemplate x:Key="HamburgerOptionsMenuItem" DataType="{x:Type mah:HamburgerMenuIconItem}">
-            <DockPanel Height="48" LastChildFill="True">
-                <ContentControl x:Name="IconPart"
-                        Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}"
-                        Content="{Binding Icon}"
-                        DockPanel.Dock="Left"
-                        Focusable="False"
-                        IsTabStop="False" />
-                <TextBlock x:Name="TextPart"
-                   VerticalAlignment="Center"
-                   FontSize="16"
-                   Text="{Binding Label}" ToolTip="{Binding ToolTip}" />
-            </DockPanel>
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=PanePlacement}" Value="Right">
-                    <Setter TargetName="IconPart" Property="DockPanel.Dock" Value="Right" />
-                    <Setter TargetName="TextPart" Property="Margin" Value="8 0 0 0" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
+            <DataTemplate x:Key="HamburgerMenuItem" DataType="{x:Type mah:HamburgerMenuGlyphItem}">
+            <Grid Height="48">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Image Margin="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Source="{Binding Glyph}" />
+                <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding Label}" />
+            </Grid>
         </DataTemplate>
+
+        <!--  This is the template for all option menu items.  -->
+        <DataTemplate x:Key="HamburgerOptionsMenuItem" DataType="{x:Type mah:HamburgerMenuItem}">
+            <Grid Height="48">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                    <Image Margin="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Source="{Binding Glyph}" />
+
+                <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding Label}" />
+            </Grid>
+        </DataTemplate>
+
+        </ResourceDictionary>
 
 
     </Control.Resources>
 
-
     <Grid x:Name="GridMain">
-        <mah:HamburgerMenu Grid.Column="0" x:Name="HamburgerMenuControl" ItemInvoked="HamburgerMenuControl_OnItemInvoked" 
-                           OptionsItemTemplate="{StaticResource HamburgerOptionsMenuItem}"
-                           ItemTemplate="{StaticResource HamburgerOptionsMenuItem}">
+        <mah:HamburgerMenu Grid.Column="0" x:Name="HamburgerMenuControl" ItemInvoked="HamburgerMenuControl_OnItemInvoked"
+                               ItemTemplate="{StaticResource HamburgerMenuItem}"
+                               OptionsItemTemplate="{StaticResource HamburgerOptionsMenuItem}"
+                               SelectedIndex="1">
 
             <mah:HamburgerMenu.ItemsSource>
                 <mah:HamburgerMenuItemCollection>
-
-                    <mah:HamburgerMenuIconItem  Label="Table of Contents"  Tag="UbTocPage" ToolTip="Show the UB Table of Contents">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <classes:PackUbIcons Width="22"
-                                        Height="22"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="TableOfContents" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
-                    <mah:HamburgerMenuIconItem  Label="Index"  Tag="UbIndexPage" ToolTip="Show the Urantia Book Index">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <iconPacks:PackIconBootstrapIcons Width="22"
-                                        Height="22"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="HandIndex" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
-                    <mah:HamburgerMenuIconItem  Label="Search Engine"  Tag="UbSearchPage" ToolTip="Show the Urantia Book Search Engine">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <iconPacks:PackIconMaterial Width="22"
-                                        Height="22"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="BookSearchOutline" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
-                    <mah:HamburgerMenuIconItem  Label="Track History"  Tag="UbTrackPage" ToolTip="Show a list of paragraphs previouly shown">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <iconPacks:PackIconModern Width="22"
-                                        Height="22"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="TrainTrack" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
-                    <mah:HamburgerMenuIconItem  Label="Increase Font Size"  Tag="IncreaseFontSize" ToolTip="Increase the font size">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <iconPacks:PackIconBootstrapIcons Width="22"
-                                        Height="22"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="Fonts" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
-                    <mah:HamburgerMenuIconItem  Label="Decrease Font Size"  Tag="DecreaseFontSize" ToolTip="Decrease the font size">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <iconPacks:PackIconBootstrapIcons Width="16"
-                                        Height="16"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="Fonts" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
+                <mah:HamburgerMenuGlyphItem Glyph="/Images/TOC.png" Label="Table of Contents" Tag="UbTocPage" ToolTip="Show the UB Table of Contents"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png" Label="Index"  Tag="UbIndexPage" ToolTip="Show the Urantia Book Index"/>
+                <mah:HamburgerMenuGlyphItem Glyph="/Images/Search.png" Label="Search Engine"  Tag="UbSearchPage" ToolTip="Show the Urantia Book Search Engine"/>
+                <mah:HamburgerMenuGlyphItem Glyph="/Images/Track .png" Label="Track History"  Tag="UbTrackPage" ToolTip="Show a list of paragraphs previouly shown"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png" Label="Increase Font Size"  Tag="IncreaseFontSize" ToolTip="Increase the font size"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png" Label="Decrease Font Size"  Tag="DecreaseFontSize" ToolTip="Decrease the font size"/>
                 </mah:HamburgerMenuItemCollection>
             </mah:HamburgerMenu.ItemsSource>
 
             <!--  Options  -->
             <mah:HamburgerMenu.OptionsItemsSource>
                 <mah:HamburgerMenuItemCollection>
-
-                    <mah:HamburgerMenuIconItem  Label="Search Help"  Tag="SearchHelpPage" ToolTip="How to use the search engine or index">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <iconPacks:PackIconMaterial Width="22"
-                                        Height="22"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="Help" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
-                    <mah:HamburgerMenuIconItem  Label="Options"  Tag="OptionsPage" ToolTip="Options for text view">
-                        <mah:HamburgerMenuIconItem.Icon>
-                            <iconPacks:PackIconIonicons Width="22"
-                                        Height="22"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Kind="SettingsMD" />
-                        </mah:HamburgerMenuIconItem.Icon>
-                    </mah:HamburgerMenuIconItem>
-
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Help.png" Label="Help"  Tag="SearchHelpPage" ToolTip="How to use the search engine or index"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Settings.png" Label="Settings"  Tag="OptionsPage" ToolTip="Settings for the tool"/>
                 </mah:HamburgerMenuItemCollection>
             </mah:HamburgerMenu.OptionsItemsSource>
             
@@ -148,4 +84,5 @@
 
         </mah:HamburgerMenu>
     </Grid>
+    
 </UserControl>

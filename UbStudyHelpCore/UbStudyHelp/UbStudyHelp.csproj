@@ -12,6 +12,15 @@
     <ApplicationIcon>urantia.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Images\Help.png" />
+    <None Remove="Images\Index.png" />
+    <None Remove="Images\Search.png" />
+    <None Remove="Images\Settings.png" />
+    <None Remove="Images\TOC.png" />
+    <None Remove="Images\Track .png" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\SearchHelp.md" />
@@ -23,11 +32,17 @@
     <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00014" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="SharpVectors" Version="1.7.6" />
+    <PackageReference Include="SharpVectors" Version="1.7.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Help.png" />
+    <Resource Include="Images\Index.png" />
+    <Resource Include="Images\Search.png" />
+    <Resource Include="Images\Settings.png" />
+    <Resource Include="Images\TOC.png" />
+    <Resource Include="Images\Track .png" />
   </ItemGroup>
 
 
@@ -71,6 +86,10 @@
     <None Update="Images\UbStudyHelpIcon.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Classes\Converters\" />
   </ItemGroup>
 
 </Project>
