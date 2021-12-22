@@ -50,21 +50,18 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="ButtonTrackSort" Grid.Column="0" Click="ButtonTrackSort_Click">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconBootstrapIcons Kind="SortAlphaDown" Width="22" Height="22" />
-                    <!--<TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>-->
+                    <TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>
                 </StackPanel>
             </Button>
 
             <Button x:Name="ButtonTrackClear" Grid.Column="1" Click="ButtonTrackClear_Click">
                 <StackPanel Orientation="Horizontal">
-                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
                     <TextBlock x:Name="ButtonTrackClearText">Clear</TextBlock>
                 </StackPanel>
             </Button>
 
             <Button x:Name="ButtonTrackSave" Grid.Column="2" Click="ButtonTrackSave_Click">
                 <StackPanel Orientation="Horizontal">
-                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
                     <TextBlock x:Name="ButtonTrackSaveText">Save</TextBlock>
                 </StackPanel>
             </Button>

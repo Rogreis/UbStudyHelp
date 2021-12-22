@@ -44,21 +44,18 @@
 
             <Button x:Name="ButtonSearchSort" Grid.Row="3" Grid.Column="0" Click="ButtonSearchSort_Click">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconBootstrapIcons Kind="SortAlphaDown" Width="22" Height="22"  />
-                    <!--<TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>-->
+                    <TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>
                 </StackPanel>
             </Button>
 
             <Button x:Name="ButtonSearchLeft" Grid.Row="3" Grid.Column="1" Click="ButtonSearchLeft_Click">
                 <StackPanel Orientation="Horizontal">
-                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
                     <TextBlock x:Name="ButtonSearchLeftText">Search Left</TextBlock>
                 </StackPanel>
             </Button>
             
             <Button x:Name="ButtonSearchRight" Grid.Row="3" Grid.Column="2" Click="ButtonSearchRight_Click">
                 <StackPanel Orientation="Horizontal">
-                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
                     <TextBlock x:Name="ButtonSearchRightText">Search Right</TextBlock>
                 </StackPanel>
             </Button>
