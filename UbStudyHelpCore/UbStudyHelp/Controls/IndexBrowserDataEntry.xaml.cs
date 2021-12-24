@@ -33,11 +33,12 @@ namespace UbStudyHelp.Controls
             this.Loaded += IndexBrowserDataEntry_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+
             ComboWhatToSearchInIndex.KeyDown += ComboWhatToSearchInIndex_KeyDown;
             ComboWhatToSearchInIndex.DropDownClosed += ComboWhatToSearchInIndex_DropDownClosed;
             ComboBoxIndexSearch.DropDownClosed += ComboBoxIndexSearch_DropDownClosed;
 
-            foreach(string entry in App.ParametersData.IndexLetters)
+            foreach (string entry in App.ParametersData.IndexLetters)
             {
                 LocalIndexLettersEntries.Add(entry);
             }
@@ -50,18 +51,7 @@ namespace UbStudyHelp.Controls
 
         private void AddEntry(string indexEntry)
         {
-            // Just avoid duplicates
-            if (App.ParametersData.IndexLetters.Contains(indexEntry, StringComparer.OrdinalIgnoreCase))
-            {
-                return;
-            }
-            if (App.ParametersData.IndexLetters.Count == App.ParametersData.MaxExpressionsStored)
-            {
-                LocalIndexLettersEntries.RemoveAt(LocalIndexLettersEntries.Count - 1);
-                App.ParametersData.IndexLetters.RemoveAt(App.ParametersData.IndexLetters.Count - 1);
-            }
-            LocalIndexLettersEntries.Insert(0, indexEntry);
-            App.ParametersData.IndexLetters.Insert(0, indexEntry);
+            App.ParametersData.AddEntry(App.ParametersData.IndexLetters, LocalIndexLettersEntries, indexEntry);
         }
 
 

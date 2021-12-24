@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +27,8 @@ namespace UbStudyHelp.Controls
 
         public event dlShowSearchResults ShowSearchResults = null;
 
+        private ObservableCollection<string> LocalSearchStringsEntries = new ObservableCollection<string>();
+
         public SearchDataEntry()
         {
             InitializeComponent();
@@ -49,17 +52,33 @@ namespace UbStudyHelp.Controls
             TooglePart4.IsOn = App.ParametersData.SimpleSearchIncludePartIV;
             TooglePartCurrentPaper.IsOn = App.ParametersData.SimpleSearchCurrentPaperOnly;
 
-            foreach(string searchString in App.ParametersData.SearchStrings)
+            foreach (string entry in App.ParametersData.SearchStrings)
             {
-                ComboWhatToSearch.Items.Add(searchString);
+                LocalSearchStringsEntries.Add(entry);
             }
+            ComboWhatToSearch.ItemsSource = LocalSearchStringsEntries;
             if (ComboWhatToSearch.Items.Count > 0)
             {
                 ComboWhatToSearch.SelectedIndex = 0;
             }
 
+
+            //FillComboWhatToSearch();
         }
 
+
+        //private void FillComboWhatToSearch()
+        //{
+        //    ComboWhatToSearch.Items.Clear();
+        //    foreach (string searchString in App.ParametersData.SearchStrings)
+        //    {
+        //        ComboWhatToSearch.Items.Add(searchString);
+        //    }
+        //    if (ComboWhatToSearch.Items.Count > 0)
+        //    {
+        //        ComboWhatToSearch.SelectedIndex = 0;
+        //    }
+        //}
 
         private void SetFontSize()
         {
@@ -111,11 +130,16 @@ namespace UbStudyHelp.Controls
             App.ParametersData.SimpleSearchIncludePartIII = data.Part3Included;
             App.ParametersData.SimpleSearchIncludePartIV = data.Part4Included;
             App.ParametersData.SimpleSearchCurrentPaperOnly = data.CurrentPaperOnly;
-            if (App.ParametersData.SearchStrings.Contains(data.QueryString))
-            {
-                App.ParametersData.SearchStrings.Remove(data.QueryString);
-            }
-            App.ParametersData.SearchStrings.Add(data.QueryString);
+
+            App.ParametersData.AddEntry(App.ParametersData.SearchStrings, LocalSearchStringsEntries, data.QueryString);
+
+
+            //if (App.ParametersData.SearchStrings.Contains(data.QueryString))
+            //{
+            //    App.ParametersData.SearchStrings.Remove(data.QueryString);
+            //}
+            //App.ParametersData.SearchStrings.Add(data.QueryString);
+            //FillComboWhatToSearch();
             return data;
         }
 
