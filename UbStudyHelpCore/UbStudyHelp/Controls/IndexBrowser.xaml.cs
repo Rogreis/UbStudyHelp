@@ -77,9 +77,12 @@ namespace UbStudyHelp.Controls
 
 
                 Run rComma = new Run("");
+                SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+
                 foreach (string link in detail.Links)
                 {
                     Run rHyper = new Run(link);
+                    rHyper.Foreground = accentBrush;
                     Hyperlink hyperlink = new Hyperlink(rHyper);
                     hyperlink.TextDecorations = null;
                     hyperlink.Click += Hyperlink_Click;
@@ -109,12 +112,11 @@ namespace UbStudyHelp.Controls
                 return;
             }
 
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor());
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));
             var run = hyperlink.Inlines.FirstOrDefault() as Run;
             if (run != null)
             {
                 run.Foreground = accentBrush;
-
             }
             hyperlink.Foreground = accentBrush;
 

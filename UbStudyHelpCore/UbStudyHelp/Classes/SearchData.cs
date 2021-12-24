@@ -95,6 +95,15 @@ namespace UbStudyHelp.Classes
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
             Inlines.Clear();
+            if (SearchResults.Count == 0)
+            {
+                EventsControl.FireSendMessage("No paragraph found");
+                return;
+            }
+
+
+            string message = $"Showing page {nrPage} of {totalPages} ({SearchResults.Count} paragraph(s) found)";
+            EventsControl.FireSendMessage(message);
 
             Run run = new Run($"({SearchResults.Count}) paragraph(s) found")
             {
@@ -117,10 +126,6 @@ namespace UbStudyHelp.Classes
             };
             Inlines.Add(run2);
 
-            if (SearchResults.Count == 0)
-            {
-                return;
-            }
             Inlines.Add(new LineBreak());
             Inlines.Add(new LineBreak());
 
@@ -135,12 +140,15 @@ namespace UbStudyHelp.Classes
                 lastItem = SearchResults.Count - 1;
             }
 
+            System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph();
+            
+            Run runSpace = new Run("  ");
             for (int i = fistItem; i < lastItem; i++)
             {
                 SearchResult result = SearchResults[i];
 
                 // Create hyperlink ony with the paragraph identification
-                Run runIdent = new Run(result.Entry.ParagraphID + "  ")
+                Run runIdent = new Run(result.Entry.ParagraphID)
                 {
                     FontWeight = FontWeights.Bold,
                     FontSize = App.ParametersData.FontSizeInfo,
@@ -157,6 +165,8 @@ namespace UbStudyHelp.Classes
                 hyperlink.MouseEnter += Hyperlink_MouseEnter;
                 hyperlink.MouseLeave += Hyperlink_MouseLeave;
                 Inlines.Add(hyperlink);
+                Inlines.Add(new LineBreak());
+                //Inlines.Add(runSpace);
 
                 // Paragraph text is inserted
                 result.GetInlinesText(Inlines, Words);
@@ -213,7 +223,7 @@ namespace UbStudyHelp.Classes
 
             EventsControl.FireSearchClicked(entry, Words);
 
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor());
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));
             var run = hyperlink.Inlines.FirstOrDefault() as Run;
             if (run != null)
             {

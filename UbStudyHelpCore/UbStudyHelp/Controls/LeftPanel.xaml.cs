@@ -44,13 +44,27 @@ namespace UbStudyHelp.Controls
             switch(targetView)
             {
                 case "IncreaseFontSize":
-                    App.ParametersData.FontSizeInfo++;
-                    EventsControl.FireFontChanged();
+                    if (App.ParametersData.FontSizeInfo < 22)
+                    {
+                        App.ParametersData.FontSizeInfo++;
+                        EventsControl.FireFontChanged();
+                    }
+                    else
+                    {
+                        EventsControl.FireSendMessage("Max font size reached.");
+                    }
                     args.Handled = true;
                     break;
                 case "DecreaseFontSize":
-                    App.ParametersData.FontSizeInfo--;
-                    EventsControl.FireFontChanged();
+                    if (App.ParametersData.FontSizeInfo > 10)
+                    {
+                        App.ParametersData.FontSizeInfo--;
+                        EventsControl.FireFontChanged();
+                    }
+                    else
+                    {
+                        EventsControl.FireSendMessage("Min font size reached.");
+                    }
                     args.Handled = true;
                     break;
                 case "UbTocPage":

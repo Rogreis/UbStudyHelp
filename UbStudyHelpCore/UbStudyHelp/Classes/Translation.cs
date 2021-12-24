@@ -99,7 +99,9 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                throw new Exception($"General error initializing translation {LanguageID}: {ex.Message}. May be you do not have the correct data to use this tool.");
+                string message = $"General error initializing translation {LanguageID}: {ex.Message}. May be you do not have the correct data to use this tool.";
+                Log.Logger.Error(message);
+                return false;
             }
         }
 

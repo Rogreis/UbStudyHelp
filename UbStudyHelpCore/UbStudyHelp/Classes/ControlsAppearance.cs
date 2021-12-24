@@ -102,12 +102,17 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public string GetGrayColor()
+        public string GetGrayColor(int grayColorNumber= 1)
         {
             // https://mahapps.com/docs/themes/thememanager
-            //Get a resource from the ResourceDictionary in code
-            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.Gray1"));
+            return Convert.ToString(Application.Current.FindResource($"MahApps.Colors.Gray{grayColorNumber}"));
         }
+
+        public Brush GetGrayColorBrush(int grayColorNumber = 1)
+        {
+            return (SolidColorBrush)Application.Current.FindResource($"MahApps.Colors.Gray{grayColorNumber}");
+        }
+
 
         public Brush GetBackgroundColorBrush()
         {

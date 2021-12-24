@@ -47,6 +47,7 @@ namespace UbStudyHelp.Pages
             {
                 LocalTrackEntries.Add(entry);
             }
+
         }
 
 
@@ -68,6 +69,12 @@ namespace UbStudyHelp.Pages
             App.Appearance.SetThemeInfo(ButtonTrackClear);
             App.Appearance.SetThemeInfo(ButtonTrackSave);
             App.Appearance.SetThemeInfo(ButtonTrackLoad);
+
+            GeometryImages images = new GeometryImages();
+            ButtonTrackSortImage.Source = images.GetImage(GeometryImagesTypes.Sort);
+            ButtonTrackClearImage.Source = images.GetImage(GeometryImagesTypes.Clear);
+            ButtonTrackSaveImage.Source = images.GetImage(GeometryImagesTypes.Save);
+            ButtonTrackLoadImage.Source = images.GetImage(GeometryImagesTypes.Load);
         }
 
         private void AddEntry(TOC_Entry entry)
@@ -183,7 +190,10 @@ namespace UbStudyHelp.Pages
                     File.WriteAllText(saveFileDlg.FileName, jsonString);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Error saving saved track file to {saveFileDlg.FileName}", ex);
+            }
 
         }
 
@@ -193,7 +203,9 @@ namespace UbStudyHelp.Pages
             if (string.IsNullOrEmpty(App.ParametersData.LastTrackFileSaved))
             {
                 openFileDlg.FileName = "";
-                openFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UbStudyHelp");
+                Directory.CreateDirectory(folder);
+                openFileDlg.InitialDirectory = folder;
             }
             else
             {
@@ -207,11 +219,13 @@ namespace UbStudyHelp.Pages
             {
                 try
                 {
+                    LocalTrackEntries.Clear();
                     var jsonString = File.ReadAllText(openFileDlg.FileName);
                     App.ParametersData.TrackEntries = JsonConvert.DeserializeObject<List<TOC_Entry>>(jsonString);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Logger.Error($"Error loading saved track file from {openFileDlg.FileName}", ex);
                     App.ParametersData.TrackEntries = new List<TOC_Entry>();
                 }
 

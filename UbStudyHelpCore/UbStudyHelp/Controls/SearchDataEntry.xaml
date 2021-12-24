@@ -42,21 +42,24 @@
             <mah:ToggleSwitch x:Name="TooglePart4" Grid.Row="1" Grid.Column="2" Header="Part 4" Toggled="TooglePart4_Toggled"/>
 
 
-            <Button x:Name="ButtonSearchSort" Grid.Row="3" Grid.Column="0" Click="ButtonSearchSort_Click">
+            <Button x:Name="ButtonSearchSort" IsEnabled="False" Grid.Row="3" Grid.Column="0" Click="ButtonSearchSort_Click" ToolTip="Reorder the paragraphs by paper/section/paragraph" Width="52" Height="42">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>
+                    <!--<TextBlock x:Name="ButtonSearchSortText">Reorder</TextBlock>-->
+                    <Image x:Name="SortButtonImageIcon"  Margin="5"/>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonSearchLeft" Grid.Row="3" Grid.Column="1" Click="ButtonSearchLeft_Click">
+            <Button x:Name="ButtonSearchLeft" Grid.Row="3" Grid.Column="1" Click="ButtonSearchLeft_Click" ToolTip="Search the left translation" Width="110" Height="42">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonSearchLeftText">Search Left</TextBlock>
+                    <Image x:Name="ButtonSearchLeftImage" Margin="5" Width="16" Height="20"/>
+                    <TextBlock x:Name="ButtonSearchLeftText">Left</TextBlock>
                 </StackPanel>
             </Button>
-            
-            <Button x:Name="ButtonSearchRight" Grid.Row="3" Grid.Column="2" Click="ButtonSearchRight_Click">
+
+            <Button x:Name="ButtonSearchRight" Grid.Row="3" Grid.Column="2" Click="ButtonSearchRight_Click" ToolTip="Search the right translation" Width="110" Height="42">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonSearchRightText">Search Right</TextBlock>
+                    <Image x:Name="ButtonSearchRightImage" Margin="5" Width="16" Height="20"/>
+                    <TextBlock x:Name="ButtonSearchRightText">Right</TextBlock>
                 </StackPanel>
             </Button>
 

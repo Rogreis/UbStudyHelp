@@ -67,21 +67,34 @@ namespace UbStudyHelp.Controls
 
         private void FillComboBoxIndexEntry(string indexEntry)
         {
-            if (!Index.Load() || indexEntry.Length < 2)
-                return;
-
-            List<string> list = Index.Search(indexEntry);
-            if (list == null || list.Count == 0)
+            if (!Index.Load())
             {
+                Log.NonFatalError("Index not lodaded");
                 ComboBoxIndexSearch.IsEnabled = false;
                 return;
             }
+            if (indexEntry.Length < 2)
+            {
+                EventsControl.FireSendMessage("Type at least 3 letters to start searchon index.");
+                return;
+            }
+
+            EventsControl.FireSendMessage("Searching index for " + indexEntry);
+            List<string> list = Index.Search(indexEntry);
+            if (list == null || list.Count == 0)
+            {
+                Log.NonFatalError("Could not do a search");
+                ComboBoxIndexSearch.IsEnabled = false;
+                return;
+            }
+
             int maxItems = Math.Min(list.Count, App.ParametersData.MaxExpressionsStored);
             ComboBoxIndexSearch.Items.Clear();
             for (int i = 0; i < maxItems; i++)
             {
                 ComboBoxIndexSearch.Items.Add(list[i]);
             }
+            EventsControl.FireSendMessage($"{maxItems} index entry(ies) found");
 
             AddEntry(indexEntry);
             if (ComboBoxIndexSearch.Items.Count > 0)
@@ -89,6 +102,7 @@ namespace UbStudyHelp.Controls
                 ComboBoxIndexSearch.SelectedIndex = 0;
                 ComboBoxIndexSearch.IsEnabled = true;
             }
+            EventsControl.FireSendMessage($"{ComboBoxIndexSearch.Items.Count} index entry(ies) found.");
 
         }
 

@@ -72,6 +72,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
+                Log.Logger.Error("Error creating Search Index for UB Index.", ex);
                 EventsControl.FireSendMessage("Creating Search Index for UB Index", ex);
                 return false;
             }
@@ -116,6 +117,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
+                Log.Logger.Error("Error executing Index Search.", ex);
                 EventsControl.FireSendMessage("Executing Index Search", ex);
                 ErrorMessage = ex.Message;
                 return null;

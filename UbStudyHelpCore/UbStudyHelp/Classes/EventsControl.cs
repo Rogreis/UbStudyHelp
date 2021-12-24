@@ -178,15 +178,7 @@ namespace UbStudyHelp.Classes
         
         public static void FireFontChanged()
         {
-            // We keep a max and a min size for text
-            if (App.ParametersData.FontSizeInfo <= 18 && App.ParametersData.FontSizeInfo >= 10)
-            {
-                FontChanged?.Invoke(App.Appearance);
-            }
-            else
-            {
-                FireSendMessage("Min/Maz font size reached.");
-            }
+            FontChanged?.Invoke(App.Appearance);
         }
 
         public static void FireAppearanceChanged()

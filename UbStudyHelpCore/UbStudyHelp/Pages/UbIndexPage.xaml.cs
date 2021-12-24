@@ -22,7 +22,9 @@ namespace UbStudyHelp.Pages
             DataEntry.Index = Index;
             DataEntry.ShowIndexDetails += DataEntry_ShowIndexDetails;
             if (!Index.Load())
-                return;
+            {
+                Log.NonFatalError("Index not lodaded");
+            }
         }
 
 
@@ -37,6 +39,7 @@ namespace UbStudyHelp.Pages
         private void CreateWebIndexPage(string indexEntry)
         {
             TubIndex index = Index.GetIndexEntry(indexEntry);
+            EventsControl.FireSendMessage($"New index entry shown: {indexEntry}");
             IndexBrowserInstance.CreateWebIndexPage(index);
         }
 

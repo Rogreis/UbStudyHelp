@@ -30,18 +30,24 @@ namespace UbStudyHelp.Classes
                 string pathFile = Path.Combine(basePath, "tubIndex_000.json");
                 string json = File.ReadAllText(pathFile);
                 TubIndex = JsonConvert.DeserializeObject<List<TubIndex>>(json);
-                lucene.CreateLuceneIndexForUBIndex(TubIndex);
-                return true;
+                return lucene.CreateLuceneIndexForUBIndex(TubIndex);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Log.Logger.Error("Error loading index.", ex);
+                return false;
             }
         }
 
         public List<string> Search(string startString)
         {
             List<string> wordsFound = lucene.Execute(startString);
+            if (wordsFound == null)
+            {
+                Log.Logger.Warn("Index search returned null for searching: " + startString);
+                return null;
+            }
+
             List<TubIndex> details = new List<TubIndex>();
             foreach (string word in wordsFound)
             {

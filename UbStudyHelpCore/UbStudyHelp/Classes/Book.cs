@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using UbStudyHelp;
 using System.Collections.ObjectModel;
+using System.Windows.Shapes;
 
 namespace UbStudyHelp.Classes
 {
@@ -20,13 +21,16 @@ namespace UbStudyHelp.Classes
         private static Translation GetTranslation(short id)
         {
             Translation trans = Translations.Find(o => o.LanguageID == id);
+            string message = "";
             if (trans == null)
             {
-                throw new Exception($"Missing translation number {App.ParametersData.LanguageIDLeftTranslation}. May be you do not have the correct data to use this tool.");
+                message = $"Missing translation number {App.ParametersData.LanguageIDLeftTranslation}. May be you do not have the correct data to use this tool.";
+                Log.FatalError(message);
             }
             if (!trans.Inicialize(FilesPath))
             {
-                throw new Exception($"Translation {App.ParametersData.LanguageIDLeftTranslation} not initialized. May be you do not have the correct data to use this tool.");
+                message = $"Translation {App.ParametersData.LanguageIDLeftTranslation} not initialized. May be you do not have the correct data to use this tool.";
+                Log.FatalError(message);
             }
             return trans;
         }
@@ -65,10 +69,11 @@ namespace UbStudyHelp.Classes
         {
             try
             {
+                Log.Logger.Info("Inicializing book: " + baseDataPath);
                 FilesPath = baseDataPath;
                 if (Translations == null)
                 {
-                    string pathlistTranslations = Path.Combine(baseDataPath, "Languages.xml");
+                    string pathlistTranslations = System.IO.Path.Combine(baseDataPath, GetDataFiles.ControlFileName);
 
                     XElement xElem = XElement.Load(pathlistTranslations);
                     Translations = (from lang in xElem.Descendants("Translation")
@@ -79,7 +84,9 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                throw new Exception($"General error getting translations: {ex.Message}. May be you do not have the correct data to use this tool.");
+                string message = $"General error getting translations: {ex.Message}. May be you do not have the correct data to use this tool.";
+                Log.Logger.Error(message, ex);
+                return false;
             }
         }
 

@@ -48,28 +48,31 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button x:Name="ButtonTrackSort" Grid.Column="0" Click="ButtonTrackSort_Click">
+            <Button x:Name="ButtonTrackSort" Grid.Column="0" Click="ButtonTrackSort_Click" ToolTip="Reorder the paragraphs by paper/section/paragraph" Width="32" Height="32">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>
+                    <Image x:Name="ButtonTrackSortImage" Margin="5"></Image>
+                    <!--<TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>-->
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonTrackClear" Grid.Column="1" Click="ButtonTrackClear_Click">
+            <Button x:Name="ButtonTrackClear" Grid.Column="1" Click="ButtonTrackClear_Click" ToolTip="Clear the current track list" Width="32" Height="32">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonTrackClearText">Clear</TextBlock>
+                    <Image x:Name="ButtonTrackClearImage" Margin="5"></Image>
+                    <!--<TextBlock x:Name="ButtonTrackClearText">Clear</TextBlock>-->
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonTrackSave" Grid.Column="2" Click="ButtonTrackSave_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonTrackSaveText">Save</TextBlock>
+            <Button x:Name="ButtonTrackSave" Grid.Column="2" Click="ButtonTrackSave_Click" ToolTip="Save a track list" Width="32" Height="32">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <Image x:Name="ButtonTrackSaveImage"></Image>
+                    <!--<TextBlock x:Name="ButtonTrackSaveText">Save</TextBlock>-->
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonTrackLoad" Grid.Column="3" Click="ButtonTrackLoad_Click">
+            <Button x:Name="ButtonTrackLoad" Grid.Column="3" Click="ButtonTrackLoad_Click" ToolTip="Load a saved tgrack list" Width="32" Height="32">
                 <StackPanel Orientation="Horizontal">
-                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
-                    <TextBlock x:Name="ButtonTrackLoadText">Load</TextBlock>
+                    <Image x:Name="ButtonTrackLoadImage" Margin="5"></Image>
+                    <!--<TextBlock x:Name="ButtonTrackLoadText">Load</TextBlock>-->
                 </StackPanel>
             </Button>
 

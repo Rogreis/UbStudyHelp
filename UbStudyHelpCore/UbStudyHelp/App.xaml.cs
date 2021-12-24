@@ -1,7 +1,11 @@
-﻿using System;
+﻿using ControlzEx.Standard;
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
 using UbStudyHelp.Classes;
+using static System.Environment;
 
 namespace UbStudyHelp
 {
@@ -32,26 +36,52 @@ namespace UbStudyHelp
             }
             catch (Exception ex)
             {
-                EventsControl.FireSendMessage("Loading TOC data", ex);
+                Log.Logger.Error("Data not loaded!", ex);
                 return false;
             }
         }
 
 
+        private string MakeProgramDataFolder(string fileName)
+        {
+            string processName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
+            string folder= Path.Combine(commonpath, processName);
+            Directory.CreateDirectory(folder);
+            return Path.Combine(folder, fileName);
+        }
+
+
+
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            pathParameters = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.json");
-            string exePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            BaseTubFilesPath = System.IO.Path.Combine(exePath, "TUB_Files");
+            //string pathLog = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.log");
+            string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
+            Log.Start(pathLog);
+
+            //pathParameters = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.json");
+            pathParameters = MakeProgramDataFolder("UbStudyHelp.json");
+            if (!File.Exists(pathParameters))
+            {
+                Log.Logger.Info("Parameters not found, creating a new one: " + pathParameters);
+            }
+            ParametersData = Parameters.Deserialize(pathParameters);
+
 
             ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();
 
-            ParametersData = Parameters.Deserialize(pathParameters);
 
+            BaseTubFilesPath = MakeProgramDataFolder("TUB_Files");
             if (!LoadData())
             {
-                throw new Exception("Data not loaded!");
+                Log.Logger.Error("Data not loaded!");
+                if(MessageBox.Show("Data not loaded!\n\nOpen log file?", "Ub Study Help", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    Process.Start("notepad.exe", pathLog);
+                }
+                return;
             }
             base.OnStartup(e);
         }

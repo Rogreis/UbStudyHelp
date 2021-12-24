@@ -93,7 +93,7 @@ namespace UbStudyHelp.Classes
             luceneIndexDirectory = FSDirectory.Open(indexPath);
         }
 
-        public bool CreateUBIndex()
+        private bool CreateUBIndex()
         {
             if (System.IO.Directory.GetFiles(indexPath, "*.*").Length > 0)
             {
@@ -125,6 +125,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
+                Log.Logger.Error("Creating Search Index for " + indexPath, ex);
                 EventsControl.FireSendMessage("Creating Search Index", ex);
                 return false;
             }
@@ -135,6 +136,13 @@ namespace UbStudyHelp.Classes
         {
             try
             {
+                if (!CreateUBIndex())
+                {
+                    string message = "Book Index not created for " + indexPath;
+                    Log.NonFatalError(message);
+                    EventsControl.FireSendMessage("Book Index not created.");
+                }
+
                 Analyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
 
                 // How to query
@@ -182,8 +190,8 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
+                Log.Logger.Error("Error executing Search.", ex);
                 EventsControl.FireSendMessage("Executing Search", ex);
-                ErrorMessage = ex.Message;
                 return false;
             }
         }

@@ -11,7 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <FlowDocumentScrollViewer Name="IndexDocumentResults" IsToolBarVisible="True"
+        <FlowDocumentScrollViewer Name="IndexDocumentResults" IsToolBarVisible="False"
                                   ScrollViewer.VerticalScrollBarVisibility="Visible">
         </FlowDocumentScrollViewer>
     </Grid>

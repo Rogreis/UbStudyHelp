@@ -171,7 +171,7 @@ namespace UbStudyHelp.Pages
                 DoEvents();
                 InternalChange = false;
             }
-            catch  {  }
+            catch  { } // Errors are ignored
         }
 
         private void Item_Expanded(object sender, RoutedEventArgs e)
@@ -190,7 +190,7 @@ namespace UbStudyHelp.Pages
                 DoEvents();
                 InternalChange = false;
             }
-            catch { }
+            catch { } // Errors are ignored
         }
 
 

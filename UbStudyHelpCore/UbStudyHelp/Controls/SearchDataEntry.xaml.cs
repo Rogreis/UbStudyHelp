@@ -32,8 +32,9 @@ namespace UbStudyHelp.Controls
             this.Loaded += SearchDataEntry_Loaded;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.FontChanged += EventsControl_FontChanged;
-            // 
+            EventsControl.BilingualChanged += EventsControl_BilingualChanged;
         }
+
 
         public void Initialize()
         {
@@ -56,6 +57,7 @@ namespace UbStudyHelp.Controls
             {
                 ComboWhatToSearch.SelectedIndex = 0;
             }
+
         }
 
 
@@ -63,7 +65,7 @@ namespace UbStudyHelp.Controls
         {
             App.Appearance.SetFontSize(TextBlockWhatToSearch);
             App.Appearance.SetFontSize(TextBlockSearchIn);
-            App.Appearance.SetFontSize(ButtonSearchSort);
+            //App.Appearance.SetFontSize(ButtonSearchSort);
             App.Appearance.SetFontSize(ButtonSearchLeftText);
             App.Appearance.SetFontSize(ButtonSearchRightText);
             App.Appearance.SetFontSize(TooglePart1);
@@ -72,6 +74,12 @@ namespace UbStudyHelp.Controls
             App.Appearance.SetFontSize(TooglePart4);
             App.Appearance.SetFontSize(TooglePartCurrentPaper);
             App.Appearance.SetFontSize(ComboWhatToSearch);
+
+            GeometryImages images = new GeometryImages();
+            SortButtonImageIcon.Source = images.GetImage(GeometryImagesTypes.Sort);
+            ButtonSearchLeftImage.Source = images.GetImage(GeometryImagesTypes.Search);
+            ButtonSearchRightImage.Source = images.GetImage(GeometryImagesTypes.Search);
+
         }
 
         private void SetAppearence()
@@ -171,12 +179,21 @@ namespace UbStudyHelp.Controls
 
         }
 
+        private void EventsControl_BilingualChanged(bool ShowBilingual)
+        {
+            ButtonSearchRight.IsEnabled = ShowBilingual;
+        }
+
+
         private SearchData lastData = null;
 
         private void ButtonSearchSort_Click(object sender, RoutedEventArgs e)
         {
-            lastData.SortResults();
-            ShowSearchResults?.Invoke(lastData);
+            if (lastData != null)
+            {
+                lastData.SortResults();
+                ShowSearchResults?.Invoke(lastData);
+            }
         }
 
         private void ButtonSearchLeft_Click(object sender, RoutedEventArgs e)
@@ -186,9 +203,12 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
-            luceneLeft.Execute(data);
-            lastData = data;
-            ShowSearchResults?.Invoke(data);
+            if (luceneLeft.Execute(data))
+            {
+                lastData = data;
+                ShowSearchResults?.Invoke(data);
+            }
+            ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
 
         private void ButtonSearchRight_Click(object sender, RoutedEventArgs e)
@@ -198,9 +218,12 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
-            luceneRight.Execute(data);
-            lastData = data;
-            ShowSearchResults?.Invoke(data);
+            if (luceneRight.Execute(data))
+            {
+                lastData = data;
+                ShowSearchResults?.Invoke(data);
+            }
+            ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
         #endregion
     }
