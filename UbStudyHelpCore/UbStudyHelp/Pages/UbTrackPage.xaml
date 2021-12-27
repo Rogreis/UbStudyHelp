@@ -69,9 +69,11 @@
             </Button>
 
         </Grid>
+        
 
         <FlowDocumentScrollViewer Name="TrackDataFlowDocument" IsToolBarVisible="False" Grid.Row="2" Margin="5"
                                   ScrollViewer.VerticalScrollBarVisibility="Visible">
+
         </FlowDocumentScrollViewer>
 
     </Grid>
