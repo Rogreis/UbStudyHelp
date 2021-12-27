@@ -24,20 +24,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <!--<Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>-->
             <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
             <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" ImageSourceName="TrackLogo" />
-            <!--<TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
-                        Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>-->
         </Grid>
 
 
@@ -78,34 +72,10 @@
 
         </Grid>
 
+        <FlowDocumentScrollViewer Name="TrackDataFlowDocument" IsToolBarVisible="False" Grid.Row="2" Margin="10"
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible">
+        </FlowDocumentScrollViewer>
 
-        <ScrollViewer Grid.Row="2"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" >
-
-                <ListView.View>
-                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
-                        <GridViewColumn Header="Ref" Width="Auto">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ParagraphID}" Width="Auto" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Text">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Text}" TextTrimming="WordEllipsis">
-                                        <ToolTipService.ToolTip>
-                                            <TextBlock Text="{Binding Text}" Width="200" Height="100" TextWrapping="WrapWithOverflow" TextTrimming="WordEllipsis" />
-                                        </ToolTipService.ToolTip>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </ScrollViewer>
     </Grid>
 
 </Page>

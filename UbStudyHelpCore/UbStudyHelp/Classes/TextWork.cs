@@ -5,6 +5,11 @@ using System.Security;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows;
+using static Lucene.Net.Documents.Field;
+using CommonMark.Syntax;
 
 namespace UbStudyHelp.Classes
 {
@@ -14,7 +19,7 @@ namespace UbStudyHelp.Classes
         Normal,
         Bold,
         Italic,
-        Superscript, 
+        Superscript,
         Highlighted
     }
 
@@ -94,7 +99,7 @@ namespace UbStudyHelp.Classes
         };
 
 
-        public string DecodedText
+        private string DecodedText
         {
             get
             {
@@ -102,7 +107,7 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        public int MaxSize
+        private int MaxSize
         {
             get
             {
@@ -120,31 +125,6 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public void LoadText(string text)
-        {
-            /*
-             Encoded chars
-                  &lt;    <
-                  &gt;    >
-
-             Possible Html tags found in the text
-                  "<span class=\"SCaps\">", "</span>"
-                  "<b>", "</b>"
-                  "<em>", "</em>"
-                  "<br />"
-                  "<sup>", "</sup>"
-                  <span class="Colored">
-                  </span>
-            */
-            sbText = new StringBuilder(SecurityElement.Escape(text));
-            foreach (KeyValuePair<string, string> pair in EncodedCharacters)
-            {
-                sbText.Replace(pair.Key, pair.Value);
-            }
-            sbText.Replace("<span class=\"Colored\">", "");
-            sbText.Replace("<span class=\"SCaps\">", "");
-            sbText.Replace("</span>", "");
-        }
 
 
         private string RemoveAll(string input, string toReplace, string newValue)
@@ -152,22 +132,6 @@ namespace UbStudyHelp.Classes
             return Regex.Replace(input, toReplace, newValue);
         }
 
-        public string GetPlainText()
-        {
-            //string text = SecurityElement.Escape(sbText.ToString());
-            string text = sbText.ToString();
-            return Regex.Replace(text, @"<[^>]*>", string.Empty, RegexOptions.IgnoreCase);
-
-            //text = RemoveAll(text, "<span class=\"Colored\">", "");
-            //text = RemoveAll(text, "<span class=\"SCaps\">", "");
-            //foreach(HtmlTag tag in HtmlTags)
-            //{
-            //    text = RemoveAll(text, tag.Start, "");
-            //    text = RemoveAll(text, tag.End, "");
-            //}
-            //return RemoveAll(text, "</span>", "");
-
-        }
 
 
         #region Eliminate accentued letters
@@ -230,6 +194,149 @@ namespace UbStudyHelp.Classes
         #endregion
 
 
+        private List<UbTextTag> TagsWithHighlightWords(List<string> Words = null, bool useReduced = false)
+        {
+            string text = useReduced ? GetReducedText() : sbText.ToString();
+            if (Words != null && Words.Count > 0)
+            {
+                foreach (string replace in Words)
+                {
+                    int ind = text.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase);
+                    if (ind >= 0)
+                    {
+                        string wordInText = text.Substring(text.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase), replace.Length);
+                        string replacement = $"<word>{wordInText}</word>";
+                        text = Regex.Replace(text, wordInText, replacement, RegexOptions.IgnoreCase);
+                    }
+                }
+            }
+            return Tags(text, false);
+        }
+
+
+        /// <summary>
+        /// Returns the text split in identifies parts to create a WPF Inline
+        /// </summary>
+        /// <returns></returns>
+        private List<UbTextTag> Tags(string textInput = null, bool useReduced = false)
+        {
+            List<UbTextTag> list = new List<UbTextTag>();
+            string text = textInput != null ? textInput : (useReduced ? GetReducedText() : GetHtml());
+            foreach (HtmlTag tag in HtmlTags)
+            {
+                //text = Regex.Replace(text, "\\b" + string.Join("\\b|\\b", tag) + "\\b", highStart + tag + highEnd);
+                text = Regex.Replace(text, tag.Start, tag.MarkStart);
+                text = Regex.Replace(text, tag.End, tag.MarkEnd);
+            }
+            string[] parts = text.Split(HtmlTag.Separators, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string part in parts)
+            {
+                text = part;
+                if (text.StartsWith(HtmlTag.indicatorTag))
+                {
+                    text = text.Replace(HtmlTag.indicatorTag, "");
+                    TextTag textTag = (TextTag)Convert.ToInt32(text.Substring(0, 2));
+                    list.Add(new UbTextTag(textTag, text.Remove(0, 2)));
+                }
+                else
+                {
+                    list.Add(new UbTextTag(TextTag.Normal, text));
+                }
+            }
+            return list;
+        }
+
+
+        private void FormatTextDocument(InlineCollection Inlines, List<string> Words, bool useReducedText = false)
+        {
+
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+            foreach (UbTextTag textTag in TagsWithHighlightWords(Words, useReducedText))
+            {
+                switch (textTag.Tag)
+                {
+                    case TextTag.Normal:
+                        Run runNormal = new Run(textTag.Text);
+                        runNormal.FontSize = App.ParametersData.FontSizeInfo;
+                        Inlines.Add(runNormal);
+                        break;
+                    case TextTag.Italic:
+                        var i = new Italic();
+                        i.FontSize = App.ParametersData.FontSizeInfo;
+                        i.Inlines.Add(textTag.Text);
+                        Inlines.Add(i);
+                        break;
+                    case TextTag.Bold:
+                        var b = new Bold();
+                        b.FontSize = App.ParametersData.FontSizeInfo;
+                        b.Inlines.Add(textTag.Text);
+                        Inlines.Add(b);
+                        break;
+                    case TextTag.Superscript:
+                        Run runSuper = new Run(textTag.Text);
+                        runSuper.FontSize = App.ParametersData.FontSizeInfo;
+                        runSuper.BaselineAlignment = BaselineAlignment.Superscript;
+                        Inlines.Add(runSuper);
+                        break;
+                    case TextTag.Highlighted:
+                        Bold bHighlighted = new Bold();
+                        bHighlighted.FontSize = App.ParametersData.FontSizeInfo;
+                        bHighlighted.Foreground = accentBrush;
+                        bHighlighted.Inlines.Add(textTag.Text);
+                        Inlines.Add(bHighlighted);
+                        break;
+                }
+            }
+
+        }
+
+
+
+        public void LoadText(string text)
+        {
+            /*
+             Encoded chars
+                  &lt;    <
+                  &gt;    >
+
+             Possible Html tags found in the text
+                  "<span class=\"SCaps\">", "</span>"
+                  "<b>", "</b>"
+                  "<em>", "</em>"
+                  "<br />"
+                  "<sup>", "</sup>"
+                  <span class="Colored">
+                  </span>
+            */
+            sbText = new StringBuilder(SecurityElement.Escape(text));
+            foreach (KeyValuePair<string, string> pair in EncodedCharacters)
+            {
+                sbText.Replace(pair.Key, pair.Value);
+            }
+            sbText.Replace("<span class=\"Colored\">", "");
+            sbText.Replace("<span class=\"SCaps\">", "");
+            sbText.Replace("</span>", "");
+        }
+
+
+        public string GetPlainText()
+        {
+            //string text = SecurityElement.Escape(sbText.ToString());
+            string text = sbText.ToString();
+            return Regex.Replace(text, @"<[^>]*>", string.Empty, RegexOptions.IgnoreCase);
+
+            //text = RemoveAll(text, "<span class=\"Colored\">", "");
+            //text = RemoveAll(text, "<span class=\"SCaps\">", "");
+            //foreach(HtmlTag tag in HtmlTags)
+            //{
+            //    text = RemoveAll(text, tag.Start, "");
+            //    text = RemoveAll(text, tag.End, "");
+            //}
+            //return RemoveAll(text, "</span>", "");
+
+        }
+
         public string GetReducedText()
         {
             string text = GetPlainText();
@@ -250,6 +357,8 @@ namespace UbStudyHelp.Classes
             return GetPlainText().Substring(0, size);
         }
 
+
+
         /// <summary>
         /// Returns the html fro the current paragraph
         /// </summary>
@@ -261,57 +370,25 @@ namespace UbStudyHelp.Classes
 
 
         /// <summary>
-        /// Returns the text split in identifies parts to create a WPF Inline
+        /// Generate inlines collection from result text, highlighting found words
         /// </summary>
         /// <returns></returns>
-        public List<UbTextTag> Tags(string textInput= null, bool useReduced= false)
+        public void GetInlinesText(InlineCollection Inlines, List<string> Words, bool useReducedText = false)
         {
-            List<UbTextTag> list = new List<UbTextTag>();
-            string text = textInput != null? textInput : (useReduced ? GetReducedText(): GetHtml());
-            foreach (HtmlTag tag in HtmlTags)
-            {
-                //text = Regex.Replace(text, "\\b" + string.Join("\\b|\\b", tag) + "\\b", highStart + tag + highEnd);
-                text = Regex.Replace(text, tag.Start, tag.MarkStart);
-                text = Regex.Replace(text, tag.End, tag.MarkEnd);
-            }
-            string[] parts= text.Split(HtmlTag.Separators, StringSplitOptions.RemoveEmptyEntries);
-            
-            foreach(string part in parts)
-            {
-                text = part;
-                if (text.StartsWith(HtmlTag.indicatorTag))
-                {
-                    text = text.Replace(HtmlTag.indicatorTag, "");
-                    TextTag textTag = (TextTag)Convert.ToInt32(text.Substring(0, 2));
-                    list.Add(new UbTextTag(textTag, text.Remove(0, 2)));
-                }
-                else
-                {
-                    list.Add(new UbTextTag(TextTag.Normal, text));
-                }
-            }
-            return list;
+            //if (Words == null || Words.Count == 0)
+            //{
+            //    SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+            //    string text = useReducedText ? GetReducedText() : sbText.ToString();
+            //    Run run = new Run(text)
+            //    {
+            //        FontSize = App.ParametersData.FontSizeInfo,
+            //        Foreground = accentBrush
+            //    };
+            //    Inlines.Add(run);
+            //    return;
+            //}
+            FormatTextDocument(Inlines, Words);
         }
-
-        public List<UbTextTag> TagsWithHighlightWords(List<string> Words = null, bool useReduced= false)
-        {
-            string text = useReduced ? GetReducedText() : GetHtml();
-            if (Words != null && Words.Count > 0)
-            {
-                foreach (string replace in Words)
-                {
-                    int ind = text.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase);
-                    if (ind >= 0)
-                    {
-                        string wordInText = text.Substring(text.IndexOf(replace, StringComparison.CurrentCultureIgnoreCase), replace.Length);
-                        string replacement = $"<word>{wordInText}</word>";
-                        text = Regex.Replace(text, wordInText, replacement, RegexOptions.IgnoreCase);
-                    }
-                }
-            }
-            return Tags(text, false);
-        }
-
 
 
     }

@@ -140,7 +140,6 @@ namespace UbStudyHelp.Classes
                 lastItem = SearchResults.Count - 1;
             }
 
-            System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph();
             
             Run runSpace = new Run("  ");
             for (int i = fistItem; i < lastItem; i++)

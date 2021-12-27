@@ -54,70 +54,13 @@ namespace UbStudyHelp.Classes
 
 
 
-
-        private void Convert(InlineCollection Inlines, List<string> Words)
-        {
-
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
-            foreach (UbTextTag textTag in TextWork.TagsWithHighlightWords(Words, false))
-            {
-                switch (textTag.Tag)
-                {
-                    case TextTag.Normal:
-                        Run runNormal = new Run(textTag.Text);
-                        runNormal.FontSize = App.ParametersData.FontSizeInfo;
-                        Inlines.Add(runNormal);
-                        break;
-                    case TextTag.Italic:
-                        var i = new Italic();
-                        i.FontSize = App.ParametersData.FontSizeInfo;
-                        i.Inlines.Add(textTag.Text);
-                        Inlines.Add(i);
-                        break;
-                    case TextTag.Bold:
-                        var b = new Bold();
-                        b.FontSize = App.ParametersData.FontSizeInfo;
-                        b.Inlines.Add(textTag.Text);
-                        Inlines.Add(b);
-                        break;
-                    case TextTag.Superscript:
-                        Run runSuper = new Run(textTag.Text);
-                        runSuper.FontSize = App.ParametersData.FontSizeInfo;
-                        runSuper.BaselineAlignment = BaselineAlignment.Superscript;
-                        Inlines.Add(runSuper);
-                        break;
-                    case TextTag.Highlighted:
-                        Bold bHighlighted = new Bold();
-                        bHighlighted.FontSize = App.ParametersData.FontSizeInfo;
-                        bHighlighted.Foreground = accentBrush;
-                        bHighlighted.Inlines.Add(textTag.Text);
-                        Inlines.Add(bHighlighted);
-                        break;
-                }
-            }
-
-        }
-
         /// <summary>
         /// Generate inlines collection from result text, highlighting found words
         /// </summary>
         /// <returns></returns>
-        public void GetInlinesText(InlineCollection Inlines, List<string> Words)
+        public void GetInlinesText(InlineCollection Inlines, List<string> Words, bool useReducedText= false)
         {
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
-
-            if (Words == null || Words.Count == 0)
-            {
-                Run run = new Run(TextStart)
-                {
-                    FontSize = App.ParametersData.FontSizeInfo,
-                    Foreground = accentBrush
-                };
-                Inlines.Add(run);
-                return;
-            }
-
-            Convert(Inlines, Words);
+            TextWork.GetInlinesText(Inlines, Words);
         }
 
     }

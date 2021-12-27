@@ -65,7 +65,7 @@ namespace UbStudyHelp.Controls
             }
             if (indexEntry.Length < 2)
             {
-                EventsControl.FireSendMessage("Type at least 3 letters to start searchon index.");
+                EventsControl.FireSendMessage("Type at least 3 letters to start search on index.");
                 return;
             }
 

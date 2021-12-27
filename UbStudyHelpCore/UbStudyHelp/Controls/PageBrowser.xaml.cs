@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,6 +33,8 @@ namespace UbStudyHelp.Controls
             InitializeComponent();
 
             this.Loaded += PageBrowser_Loaded;
+
+
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
@@ -60,6 +63,8 @@ namespace UbStudyHelp.Controls
             {
                 commands = new HtmlSingle();
             }
+
+ 
 
             // Keep latest pragraph shown for next program section
             App.ParametersData.Entry= new TOC_Entry(entry);
