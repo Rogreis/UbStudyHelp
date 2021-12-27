@@ -322,19 +322,8 @@ namespace UbStudyHelp.Classes
 
         public string GetPlainText()
         {
-            //string text = SecurityElement.Escape(sbText.ToString());
             string text = sbText.ToString();
             return Regex.Replace(text, @"<[^>]*>", string.Empty, RegexOptions.IgnoreCase);
-
-            //text = RemoveAll(text, "<span class=\"Colored\">", "");
-            //text = RemoveAll(text, "<span class=\"SCaps\">", "");
-            //foreach(HtmlTag tag in HtmlTags)
-            //{
-            //    text = RemoveAll(text, tag.Start, "");
-            //    text = RemoveAll(text, tag.End, "");
-            //}
-            //return RemoveAll(text, "</span>", "");
-
         }
 
         public string GetReducedText()
@@ -373,21 +362,9 @@ namespace UbStudyHelp.Classes
         /// Generate inlines collection from result text, highlighting found words
         /// </summary>
         /// <returns></returns>
-        public void GetInlinesText(InlineCollection Inlines, List<string> Words, bool useReducedText = false)
+        public void GetInlinesText(InlineCollection Inlines, List<string> Words = null, bool useReducedText = false)
         {
-            //if (Words == null || Words.Count == 0)
-            //{
-            //    SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
-            //    string text = useReducedText ? GetReducedText() : sbText.ToString();
-            //    Run run = new Run(text)
-            //    {
-            //        FontSize = App.ParametersData.FontSizeInfo,
-            //        Foreground = accentBrush
-            //    };
-            //    Inlines.Add(run);
-            //    return;
-            //}
-            FormatTextDocument(Inlines, Words);
+            FormatTextDocument(Inlines, Words, useReducedText);
         }
 
 

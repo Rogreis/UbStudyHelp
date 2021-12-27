@@ -168,12 +168,12 @@ namespace UbStudyHelp.Pages
         {
         }
 
-        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer scv = (ScrollViewer)sender;
-            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
-            e.Handled = true;
-        }
+        //private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        //{
+        //    ScrollViewer scv = (ScrollViewer)sender;
+        //    scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+        //    e.Handled = true;
+        //}
 
         private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {

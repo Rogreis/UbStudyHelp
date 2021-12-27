@@ -71,8 +71,6 @@ namespace UbStudyHelp.Pages
         {
             SetAppearence();
             SetFontSize();
-            IndexBrowserInstance.HeaderHeight = LeftMenuTopControl.ActualHeight + DataEntry.ActualHeight;
-            IndexBrowserInstance.HeaderWidth = LeftMenuTopControl.ActualWidth + DataEntry.ActualWidth;
         }
     }
 }
