@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using UbStudyHelp.Classes;
+using static Lucene.Net.Documents.Field;
 using Hyperlink = System.Windows.Documents.Hyperlink;
 using Paragraph = System.Windows.Documents.Paragraph;
 
@@ -17,6 +18,8 @@ namespace UbStudyHelp.Controls
     public partial class IndexBrowser : UserControl
     {
 
+        private TubIndex currentIndexShown = null;
+
         public double HeaderHeight { get; set; } = 0;
 
         public double HeaderWidth { get; set; } = 0;
@@ -26,8 +29,6 @@ namespace UbStudyHelp.Controls
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
-            EventsControl.GridSplitterChanged += EventsControl_GridSplitterChanged;
-            EventsControl.MainWindowSizeChanged += EventsControl_MainWindowSizeChanged;
         }
 
 
@@ -41,10 +42,12 @@ namespace UbStudyHelp.Controls
             {
                 return;
             }
+            currentIndexShown = index;
 
             FlowDocument document = new FlowDocument();
 
             Section section = new Section();
+            section.Style= App.Appearance.ForegroundStyle;
             document.Blocks.Add(section);
 
             Span spanTitle = new Span();
@@ -157,17 +160,15 @@ namespace UbStudyHelp.Controls
 
         private void SetFontSize()
         {
-            //App.Appearance.SetFontSize(ListViewIndexResult);
             App.Appearance.SetFontSize(IndexDocumentResults);
-
+            CreateWebIndexPage(currentIndexShown);
         }
 
         private void SetAppearence()
         {
-            //App.Appearance.SetThemeInfo(ListViewIndexResult);
             App.Appearance.SetThemeInfo(IndexDocumentResults);
+            CreateWebIndexPage(currentIndexShown);
         }
-
 
 
         #region Events
@@ -195,23 +196,6 @@ namespace UbStudyHelp.Controls
 
 
         }
-
-        private void EventsControl_GridSplitterChanged(double newWidth)
-        {
-            //IndexResults.Width= newWidth - 20;
-        }
-
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //DockPanelIndexResult.Width = this.ActualWidth - 30;
-            //DockPanelIndexResult.Height = this.ActualHeight - 30;
-        }
-
-        private void EventsControl_MainWindowSizeChanged(double width, double height)
-        {
-            // DockPanelIndexResult.Height = height - HeaderHeight;
-        }
-
 
         #endregion
 

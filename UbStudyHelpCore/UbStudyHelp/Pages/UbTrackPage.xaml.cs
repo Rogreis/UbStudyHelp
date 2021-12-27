@@ -50,22 +50,6 @@ namespace UbStudyHelp.Pages
             ShowTrackData();
         }
 
-        private Style ForegroundStyle
-        {
-            get
-            {
-                Style style = new Style
-                {
-                    TargetType = typeof(System.Windows.Documents.Block)
-                };
-
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, App.ParametersData.FontSizeInfo));
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.ForegroundProperty, App.Appearance.GetForegroundColorBrush()));
-                return style;
-            }
-        }
-
 
         /// <summary>
         /// Show track data
@@ -73,14 +57,17 @@ namespace UbStudyHelp.Pages
         private void ShowTrackData()
         {
             FlowDocument document = new FlowDocument();
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+
             foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
             {
                 System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph();
 
-                paragraph.Style = ForegroundStyle;
+                paragraph.Style = App.Appearance.ForegroundStyle;
 
                 Bold link = new Bold();
                 link.FontSize = App.ParametersData.FontSizeInfo;
+                link.Foreground = accentBrush;
                 link.Inlines.Add(entry.ParagraphID);
 
                 Hyperlink hyperlink = new Hyperlink(link)
@@ -216,13 +203,11 @@ namespace UbStudyHelp.Pages
             EventsControl.FireTrackSelected(entry);
 
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));
-            var run = hyperlink.Inlines.FirstOrDefault() as Run;
+            var run = hyperlink.Inlines.FirstOrDefault() as Bold;
             if (run != null)
             {
                 run.Foreground = accentBrush;
-
             }
-            hyperlink.Foreground = accentBrush;
         }
 
 
