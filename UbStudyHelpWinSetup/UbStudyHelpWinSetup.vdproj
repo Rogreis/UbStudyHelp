@@ -31,6 +31,12 @@
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_E7199DC3ACCE4055A5C094D10B03A066"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -199,7 +205,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UB Study Help"
         "ProductCode" = "8:{F2B6AA9E-A209-410D-AF05-66D76837085F}"
-        "PackageCode" = "8:{4596AE1D-23CA-4F43-8776-59D5FED8494D}"
+        "PackageCode" = "8:{35483998-5334-44AC-A7B7-27BA63FA1A22}"
         "UpgradeCode" = "8:{2B748AC2-9930-4C10-B5F9-8DFAFBEA85F1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -341,7 +347,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_59FA1678DC2C464A9571B08F751DBC0C"
+            "Target" = "8:_E7199DC3ACCE4055A5C094D10B03A066"
             "Folder" = "8:_9D1C5EBECEBE4223A530F6DB21439E30"
             "WorkingFolder" = "8:_C16BC643BCF74443999BE73EDD78159A"
             "Icon" = "8:_3AFE1E460DDF424FAA323CA50A27A8E5"
@@ -908,6 +914,34 @@
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputProjectGuid" = "8:{032746BB-96FB-4F5D-80FC-1693BEB72CC5}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E7199DC3ACCE4055A5C094D10B03A066"
+            {
+            "SourcePath" = "8:..\\UbStudyHelpCore\\UbStudyHelp\\obj\\Debug\\netcoreapp3.1\\UbStudyHelp.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C16BC643BCF74443999BE73EDD78159A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{032746BB-96FB-4F5D-80FC-1693BEB72CC5}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"

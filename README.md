@@ -1,31 +1,59 @@
 # UbStudyHelp - The Urantia Book Study Help
 
-This is a tool to help readers to learn and teach about The Urantia Book. The original English translation and some other, as shown below
 
-For now it is a Work In Progress.
+
+[TOC]
+
+
+
+## Description:
+
+
+
+This is a tool to help readers to learn and teach about The Urantia Book. The original English translation and some other, as shown below.
+
+The tool is now in his Alfa-Test, given only for some users to do a general testing in the several functionality. 
+
+
 
 For the version 1.0 we have:
 
-- Table of contents (click on any paper or section jumps to the equivalent text)
-
-- Index (type at least 3 letters and a you will see the index entries starting with those letters)
-
-- Search Engine (the use of  [Lucene.net](https://lucenenet.apache.org/)  tool give us several search options, as you can see  [here](UbStudyHelpCore/UbStudyHelp/Pages/help.md))
-
-
-
-  
+- **Table of contents**: click on any paper or section jumps to the equivalent text.
+- **Index**: (type at least 3 letters and a you will see the index entries starting with those letters)
+- **Search Engine**: (the use of  [Lucene.net](https://lucenenet.apache.org/)  tool give us several search options, as you can see  [here](UbStudyHelpCore/UbStudyHelp/Pages/help.md)).
+  Used also index, accepts several commands described [here](UbStudyHelpCore/UbStudyHelp/Resources/SearchHelp.md).
+- **Track**: keep a record from the last 50 paragraphs 
 
 
 
-![image](https://user-images.githubusercontent.com/4200810/136822887-56e9738b-c311-41b6-9f98-4c93bf4f36cb.png)
-
-Also has an Index:
-
-![image](https://user-images.githubusercontent.com/4200810/136823200-cb132db4-ae1a-4aa4-a37c-a8f0482bba60.png)
+## Contents:
 
 
-And a Search Engine:
 
-![image](https://user-images.githubusercontent.com/4200810/136823377-bef41ecf-8d1f-45d5-9eda-ebad6d5a2652.png)
+### Table of contents:
 
+![show_toc](Images/show_toc.png)
+
+
+
+### Index:
+
+![show_index](Images/show_index.png)
+
+
+
+### Search Engine:
+
+![show_search](Images/show_search.png)
+
+
+
+### Track:
+
+![show_track](Images/show_track.png)
+
+
+
+### Settings:
+
+![show_settings](Images/show_settings.png)
