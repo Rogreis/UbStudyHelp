@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows;
+using System.Windows.Annotations;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -15,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UbStudyHelp.Classes;
 using static Lucene.Net.Documents.Field;
+using static Lucene.Net.Search.FieldValueHitQueue;
 using static Lucene.Net.Util.Fst.Util;
 using Paragraph = UbStudyHelp.Classes.Paragraph;
 
@@ -158,15 +160,14 @@ namespace UbStudyHelp.Controls
         }
 
 
-        private void HtmlSingleBilingualLine(Table table, TOC_Entry entry, string LeftText, string RightText,
+        private void HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entry, string LeftText, string RightText,
                                              enHtmlType enHtmlType = enHtmlType.NormalParagraph,
                                              bool highlighted = false,
                                              List<string> words = null)
         {
             TableRow row = new TableRow();
-            TableRowGroup tableRowGroup = new TableRowGroup();
             tableRowGroup.Rows.Add(row);
-            table.RowGroups.Add(tableRowGroup);
+            row.Tag = entry;
             TableCell cellLeft = new TableCell();
             TableCell cellRight = new TableCell();
             row.Cells.Add(cellLeft);
@@ -205,11 +206,13 @@ namespace UbStudyHelp.Controls
 
             Table table = new Table();
             document.Blocks.Add(table);
+            TableRowGroup tableRowGroup = new TableRowGroup();
+            table.RowGroups.Add(tableRowGroup);
 
             Paper paperLeft = Book.LeftTranslation.Paper(entry.Paper);
             Paper paperRight = Book.RightTranslation.Paper(entry.Paper);
 
-            HtmlSingleBilingualLine(table, null, Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString(),
+            HtmlSingleBilingualLine(tableRowGroup, null, Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString(),
                                            Book.RightTranslation.PaperTranslation + " " + entry.Paper.ToString(),
                                            enHtmlType.PaperTitle);
 
@@ -219,12 +222,42 @@ namespace UbStudyHelp.Controls
                 Paragraph parRight = paperRight.Paragraphs[indParagraph];
                 indParagraph++;
                 bool highlighted = shouldHighlightText && (parLeft.Entry == entry);
-                HtmlSingleBilingualLine(table, parLeft.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
+                HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
             }
+            TextFlowDocument.Tag = entry;
             TextFlowDocument.Document = document;
-            table.RowGroups[20].Rows[0].Cells[0].Blocks.FirstBlock.BringIntoView();
+
+            if (entry != null && tableRowGroup != null)
+            {
+                //Paragraph pragraph1 = Annotation / Textrange / Paragraph, etc...  
+                //paragraph1.BringIntoView();
+                TableRow row = tableRowGroup.Rows.ToList().Find(r => (r.Tag as TOC_Entry) == entry);
+                
+                if (row != null)
+                {
+                    if (row.IsLoaded)
+                    {
+                        row.BringIntoView();
+                    }
+                    else
+                    {
+                        row.Loaded += Row_Loaded;
+                    }
+                }
+            }
+
+
         }
 
+        private void Row_Loaded(object sender, RoutedEventArgs e)
+        {
+            TableRow row = (sender as TableRow);
+            System.Windows.Documents.Paragraph paragraph = row.Cells[0].Blocks.FirstBlock as System.Windows.Documents.Paragraph;
+            if (paragraph != null)
+            {
+                paragraph.BringIntoView();
+            }
+        }
 
         private void Refresh()
         {
@@ -284,7 +317,8 @@ namespace UbStudyHelp.Controls
             Refresh();
         }
 
-
-
+        private void TextFlowDocument_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

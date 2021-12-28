@@ -63,12 +63,10 @@ namespace UbStudyHelp.Pages
             {
                 System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
                 {
-                    BorderThickness = new Thickness(1),
-                    BorderBrush = App.Appearance.GetHighlightColorBrush(),
+                    //BorderThickness = new Thickness(1),
+                    //BorderBrush = App.Appearance.GetHighlightColorBrush(),
                     Padding= new Thickness(5),
                 };
-
-                
     
 
                 paragraph.Style = App.Appearance.ForegroundStyle;
