@@ -1,11 +1,6 @@
 # UbStudyHelp - The Urantia Book Study Help
 
 
-
-[TOC]
-
-
-
 ## Description:
 
 
