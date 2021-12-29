@@ -33,11 +33,12 @@ namespace UbStudyHelp.Controls
             this.Loaded += IndexBrowserDataEntry_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+
             ComboWhatToSearchInIndex.KeyDown += ComboWhatToSearchInIndex_KeyDown;
             ComboWhatToSearchInIndex.DropDownClosed += ComboWhatToSearchInIndex_DropDownClosed;
             ComboBoxIndexSearch.DropDownClosed += ComboBoxIndexSearch_DropDownClosed;
 
-            foreach(string entry in App.ParametersData.IndexLetters)
+            foreach (string entry in App.ParametersData.IndexLetters)
             {
                 LocalIndexLettersEntries.Add(entry);
             }
@@ -50,38 +51,40 @@ namespace UbStudyHelp.Controls
 
         private void AddEntry(string indexEntry)
         {
-            // Just avoid duplicates
-            if (App.ParametersData.IndexLetters.Contains(indexEntry, StringComparer.OrdinalIgnoreCase))
-            {
-                return;
-            }
-            if (App.ParametersData.IndexLetters.Count == App.ParametersData.MaxExpressionsStored)
-            {
-                LocalIndexLettersEntries.RemoveAt(LocalIndexLettersEntries.Count - 1);
-                App.ParametersData.IndexLetters.RemoveAt(App.ParametersData.IndexLetters.Count - 1);
-            }
-            LocalIndexLettersEntries.Insert(0, indexEntry);
-            App.ParametersData.IndexLetters.Insert(0, indexEntry);
+            App.ParametersData.AddEntry(App.ParametersData.IndexLetters, LocalIndexLettersEntries, indexEntry);
         }
 
 
         private void FillComboBoxIndexEntry(string indexEntry)
         {
-            if (!Index.Load() || indexEntry.Length < 2)
-                return;
-
-            List<string> list = Index.Search(indexEntry);
-            if (list == null || list.Count == 0)
+            if (!Index.Load())
             {
+                Log.NonFatalError("Index not lodaded");
                 ComboBoxIndexSearch.IsEnabled = false;
                 return;
             }
+            if (indexEntry.Length < 2)
+            {
+                EventsControl.FireSendMessage("Type at least 3 letters to start search on index.");
+                return;
+            }
+
+            EventsControl.FireSendMessage("Searching index for " + indexEntry);
+            List<string> list = Index.Search(indexEntry);
+            if (list == null || list.Count == 0)
+            {
+                Log.NonFatalError("Could not do a search");
+                ComboBoxIndexSearch.IsEnabled = false;
+                return;
+            }
+
             int maxItems = Math.Min(list.Count, App.ParametersData.MaxExpressionsStored);
             ComboBoxIndexSearch.Items.Clear();
             for (int i = 0; i < maxItems; i++)
             {
                 ComboBoxIndexSearch.Items.Add(list[i]);
             }
+            EventsControl.FireSendMessage($"{maxItems} index entry(ies) found");
 
             AddEntry(indexEntry);
             if (ComboBoxIndexSearch.Items.Count > 0)
@@ -89,6 +92,7 @@ namespace UbStudyHelp.Controls
                 ComboBoxIndexSearch.SelectedIndex = 0;
                 ComboBoxIndexSearch.IsEnabled = true;
             }
+            EventsControl.FireSendMessage($"{ComboBoxIndexSearch.Items.Count} index entry(ies) found.");
 
         }
 

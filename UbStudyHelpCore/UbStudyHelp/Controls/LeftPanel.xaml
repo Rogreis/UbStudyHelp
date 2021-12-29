@@ -59,24 +59,24 @@
         <mah:HamburgerMenu Grid.Column="0" x:Name="HamburgerMenuControl" ItemInvoked="HamburgerMenuControl_OnItemInvoked"
                                ItemTemplate="{StaticResource HamburgerMenuItem}"
                                OptionsItemTemplate="{StaticResource HamburgerOptionsMenuItem}"
-                               SelectedIndex="1">
+                               SelectedIndex="0">
 
             <mah:HamburgerMenu.ItemsSource>
                 <mah:HamburgerMenuItemCollection>
-                <mah:HamburgerMenuGlyphItem Glyph="/Images/TOC.png" Label="Table of Contents" Tag="UbTocPage" ToolTip="Show the UB Table of Contents"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/TOC.png" Label="Table of Contents" Tag="UbTocPage" ToolTip="Show the UB Table of Contents"/>
                     <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png" Label="Index"  Tag="UbIndexPage" ToolTip="Show the Urantia Book Index"/>
-                <mah:HamburgerMenuGlyphItem Glyph="/Images/Search.png" Label="Search Engine"  Tag="UbSearchPage" ToolTip="Show the Urantia Book Search Engine"/>
-                <mah:HamburgerMenuGlyphItem Glyph="/Images/Track .png" Label="Track History"  Tag="UbTrackPage" ToolTip="Show a list of paragraphs previouly shown"/>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png" Label="Increase Font Size"  Tag="IncreaseFontSize" ToolTip="Increase the font size"/>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png" Label="Decrease Font Size"  Tag="DecreaseFontSize" ToolTip="Decrease the font size"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Search.png" Label="Search Engine"  Tag="UbSearchPage" ToolTip="Show the Urantia Book Search Engine"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Track .png" Label="Track History"  Tag="UbTrackPage" ToolTip="Show a list of paragraphs previouly shown"/>
                 </mah:HamburgerMenuItemCollection>
             </mah:HamburgerMenu.ItemsSource>
 
             <!--  Options  -->
             <mah:HamburgerMenu.OptionsItemsSource>
                 <mah:HamburgerMenuItemCollection>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Help.png" Label="Help"  Tag="SearchHelpPage" ToolTip="How to use the search engine or index"/>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Settings.png" Label="Settings"  Tag="OptionsPage" ToolTip="Settings for the tool"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/FontSizeIncrease.png" Label="Increase Font Size"  Tag="IncreaseFontSize" ToolTip="Increase the font size" />
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/FontSizeDecrease.png" Label="Decrease Font Size"  Tag="DecreaseFontSize" ToolTip="Decrease the font size"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Help.png"             Label="Help"                Tag="SearchHelpPage"   ToolTip="How to use the search engine or index"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Settings.png"         Label="Settings"            Tag="OptionsPage"      ToolTip="Settings for the tool"/>
                 </mah:HamburgerMenuItemCollection>
             </mah:HamburgerMenu.OptionsItemsSource>
             

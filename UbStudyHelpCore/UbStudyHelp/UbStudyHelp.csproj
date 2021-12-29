@@ -13,6 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\FontSizeDecrease.png" />
+    <None Remove="Images\FontSizeIncrease.png" />
     <None Remove="Images\Help.png" />
     <None Remove="Images\Index.png" />
     <None Remove="Images\Search.png" />
@@ -28,6 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommonMark.NET" Version="0.15.1" />
+    <PackageReference Include="log4net" Version="2.0.13" />
     <PackageReference Include="Lucene.Net" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00014" />
@@ -37,6 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\FontSizeDecrease.png" />
+    <Resource Include="Images\FontSizeIncrease.png" />
     <Resource Include="Images\Help.png" />
     <Resource Include="Images\Index.png" />
     <Resource Include="Images\Search.png" />

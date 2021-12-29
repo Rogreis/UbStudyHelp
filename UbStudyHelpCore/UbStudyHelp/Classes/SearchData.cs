@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Media;
-using System.Linq;
-
-
-
+﻿using System.Collections.Generic;
 
 namespace UbStudyHelp.Classes
 {
@@ -38,7 +29,7 @@ namespace UbStudyHelp.Classes
 
         public List<SearchResult> SearchResults { get; set; } = new List<SearchResult>();
 
-        private List<string> Words { get; set; } = new List<string>();
+        public List<string> Words { get; set; } = new List<string>();
 
         public bool IsPaperIncluded(int PaperNo) => (
                     (Part1Included && PaperNo < 32) ||
@@ -86,87 +77,6 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        /// <summary>
-        /// Generate inlines collection from result list
-        /// </summary>
-        /// <returns></returns>
-        public void GetInlinesText(InlineCollection Inlines, int nrPage, int pageSize, int totalPages)
-        {
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
-
-            Inlines.Clear();
-
-            Run run = new Run($"({SearchResults.Count}) paragraph(s) found")
-            {
-                //FontWeight = FontWeights.Bold,
-                FontSize = App.ParametersData.FontSizeInfo,
-                Foreground = accentBrush
-            };
-            Inlines.Add(run);
-
-            if (SearchResults.Count == 0)
-            {
-                return;
-            }
-
-            Inlines.Add(new LineBreak());
-            Run run2 = new Run($"Showing page {nrPage} of {totalPages}")
-            {
-                FontSize = App.ParametersData.FontSizeInfo,
-                Foreground = accentBrush
-            };
-            Inlines.Add(run2);
-
-            if (SearchResults.Count == 0)
-            {
-                return;
-            }
-            Inlines.Add(new LineBreak());
-            Inlines.Add(new LineBreak());
-
-            int fistItem = (nrPage - 1) * pageSize;
-            if (fistItem >= SearchResults.Count)
-            {
-                return;
-            }
-            int lastItem = (nrPage) * pageSize - 1;
-            if (lastItem >= SearchResults.Count)
-            {
-                lastItem = SearchResults.Count - 1;
-            }
-
-            for (int i = fistItem; i < lastItem; i++)
-            {
-                SearchResult result = SearchResults[i];
-
-                // Create hyperlink ony with the paragraph identification
-                Run runIdent = new Run(result.Entry.ParagraphID + "  ")
-                {
-                    FontWeight = FontWeights.Bold,
-                    FontSize = App.ParametersData.FontSizeInfo,
-                    Foreground = accentBrush
-                };
-
-                Hyperlink hyperlink = new Hyperlink(runIdent)
-                {
-                    NavigateUri = new Uri("about:blank"),
-                    TextDecorations = null
-                };
-                hyperlink.Tag = result.Entry;
-                hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
-                hyperlink.MouseEnter += Hyperlink_MouseEnter;
-                hyperlink.MouseLeave += Hyperlink_MouseLeave;
-                Inlines.Add(hyperlink);
-
-                // Paragraph text is inserted
-                result.GetInlinesText(Inlines, Words);
-                Inlines.Add(new LineBreak());
-                Inlines.Add(new LineBreak());
-            }
-
-        }
-
-
         public void SortResults()
         {
             if (SearchResults.Count == 0)
@@ -185,43 +95,6 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            Hyperlink hyperlink = sender as Hyperlink;
-            hyperlink.TextDecorations = null;
-        }
-
-        private void Hyperlink_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            Hyperlink hyperlink = sender as Hyperlink;
-            hyperlink.TextDecorations = TextDecorations.Underline;
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            Hyperlink hyperlink = sender as Hyperlink;
-            e.Handled = true;
-            if (hyperlink.Tag == null)
-            {
-                return;
-            }
-            TOC_Entry entry = hyperlink.Tag as TOC_Entry;
-            if (entry == null)
-            {
-                return;
-            }
-
-            EventsControl.FireSearchClicked(entry, Words);
-
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor());
-            var run = hyperlink.Inlines.FirstOrDefault() as Run;
-            if (run != null)
-            {
-                run.Foreground = accentBrush;
-
-            }
-            hyperlink.Foreground = accentBrush;
-        }
 
 
 

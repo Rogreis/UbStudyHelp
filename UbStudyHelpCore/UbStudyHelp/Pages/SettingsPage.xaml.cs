@@ -1,4 +1,5 @@
 ﻿using ControlzEx.Theming;
+using Microsoft.Windows.Themes;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,8 @@ namespace UbStudyHelp.Pages
     /// </summary>
     public partial class SettingsPage : Page
     {
+        List<string> ThemmeColors = new List<string>();
+
         public SettingsPage()
         {
             InitializeComponent();
@@ -19,6 +22,33 @@ namespace UbStudyHelp.Pages
             ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
             ToggleSwitchShowParIdent.Toggled += ToggleSwitchShowParIdent_Toggled;
             ToggleSwitchBilingual.Toggled += ToggleSwitchBilingual_Toggled;
+
+            ThemmeColors.Add("Green");
+            ThemmeColors.Add("Blue");
+            ThemmeColors.Add("Purple");
+            ThemmeColors.Add("Orange");
+            ThemmeColors.Add("Lime");
+            ThemmeColors.Add("Emerald");
+            ThemmeColors.Add("Teal");
+            ThemmeColors.Add("Cyan");
+            ThemmeColors.Add("Cobalt");
+            ThemmeColors.Add("Indigo");
+            ThemmeColors.Add("Violet");
+            ThemmeColors.Add("Pink");
+            ThemmeColors.Add("Red");
+            ThemmeColors.Add("Magenta");
+            ThemmeColors.Add("Crimson");
+            ThemmeColors.Add("Amber");
+            ThemmeColors.Add("Yellow");
+            ThemmeColors.Add("Brown");
+            ThemmeColors.Add("Olive");
+            ThemmeColors.Add("Steel");
+            ThemmeColors.Add("Mauve");
+            ThemmeColors.Add("Taupe");
+            ThemmeColors.Add("Sienna");
+            ThemmeColors.Sort();
+            ComboTheme.ItemsSource = ThemmeColors;
+            ComboTheme.SelectedItem = App.ParametersData.ThemeColor;
         }
 
 
@@ -62,8 +92,14 @@ namespace UbStudyHelp.Pages
 
         private void ComboTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItem item = ComboTheme.SelectedItem as ComboBoxItem;
-            App.ParametersData.ThemeColor = (string)item.Content;
+            //ComboBoxItem item = ComboTheme.SelectedItem as ComboBoxItem;
+            string item = ComboTheme.SelectedItem as string;
+            if (item == null)
+            {
+                return;
+            }
+            //App.ParametersData.ThemeColor = (string)item.Content;
+            App.ParametersData.ThemeColor = item;
             SetTheme();
             EventsControl.FireAppearanceChanged();
         }
@@ -103,9 +139,9 @@ namespace UbStudyHelp.Pages
 
         private void SelectComboCurrentTranslation(ComboBox comboBox, short id)
         {
-            Translation trans= Book.Translations.Find(t => t.LanguageID == id);
+            Translation trans = Book.Translations.Find(t => t.LanguageID == id);
             List<Translation> list = comboBox.ItemsSource as List<Translation>;
-            comboBox.SelectedIndex= list.FindIndex(t => t.LanguageID == id);
+            comboBox.SelectedIndex = list.FindIndex(t => t.LanguageID == id);
         }
 
         public void Initialize()
@@ -128,7 +164,7 @@ namespace UbStudyHelp.Pages
             ComboTheme.Text = App.ParametersData.ThemeColor;
             ToggleSwitchThemme.IsOn = App.Appearance.Theme == "Dark";
             ToggleSwitchShowParIdent.IsOn = App.ParametersData.ShowParagraphIdentification;
-            ToggleSwitchBilingual.IsOn= App.ParametersData.ShowBilingual;
+            ToggleSwitchBilingual.IsOn = App.ParametersData.ShowBilingual;
         }
 
     }

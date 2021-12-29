@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using CommonMark.Syntax;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Windows.Documents;
 using System.Xml.Linq;
 
 namespace UbStudyHelp.Classes
@@ -56,31 +58,6 @@ namespace UbStudyHelp.Classes
         }
 
 
-        //[JsonIgnore]
-        //public string TextSample
-        //{
-        //    get
-        //    {
-        //        if (string.IsNullOrWhiteSpace(Text))
-        //        {
-        //            return "";
-        //        }
-        //        if (Text.Length < MaxSampleTextSize)
-        //        {
-        //            return Text;
-        //        }
-        //        // Return MaxSampleTextSize or until first not letter/number character
-        //        int position = Math.Min(MaxSampleTextSize, Text.Length);
-        //        position = Text.IndexOf(' ', position);
-        //        if (position >= 0)
-        //        {
-        //            return Text.Substring(0, position);
-        //        }
-        //        return Text.Substring(0, MaxSampleTextSize);
-        //    }
-        //}
-
-
         public TOC_Entry()
         {
         }
@@ -120,18 +97,25 @@ namespace UbStudyHelp.Classes
             return index.Paper == Paper && index.Section == Section && index.IsExpanded;
         }
 
-        public override string ToString()
-        {
-            return $"{ParagraphID} {Text}"; // TextSample
-        }
-
-
 
         public void CheckOldExpanded(List<TOC_Entry> listOldExpanded)
         {
             IsExpanded = listOldExpanded.Exists(SamePaperSection);
         }
 
+
+        /// <summary>
+        /// Generate inlines collection from result text, highlighting found words
+        /// </summary>
+        /// <returns></returns>
+        public void GetInlinesText(InlineCollection Inlines, bool useReducedText = false)
+        {
+            TextWork textWork = new TextWork(Text);
+            textWork.GetInlinesText(Inlines, null, useReducedText);
+        }
+
+
+        #region Operators
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
@@ -216,6 +200,13 @@ namespace UbStudyHelp.Classes
         {
             return Paper * 100000 + Section * 1000 + ParagraphNo;
         }
+        #endregion
+
+        public override string ToString()
+        {
+            return $"{ParagraphID} {Text}";
+        }
+
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,14 +27,17 @@ namespace UbStudyHelp.Controls
 
         public event dlShowSearchResults ShowSearchResults = null;
 
+        private ObservableCollection<string> LocalSearchStringsEntries = new ObservableCollection<string>();
+
         public SearchDataEntry()
         {
             InitializeComponent();
             this.Loaded += SearchDataEntry_Loaded;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.FontChanged += EventsControl_FontChanged;
-            // 
+            EventsControl.BilingualChanged += EventsControl_BilingualChanged;
         }
+
 
         public void Initialize()
         {
@@ -48,22 +52,39 @@ namespace UbStudyHelp.Controls
             TooglePart4.IsOn = App.ParametersData.SimpleSearchIncludePartIV;
             TooglePartCurrentPaper.IsOn = App.ParametersData.SimpleSearchCurrentPaperOnly;
 
-            foreach(string searchString in App.ParametersData.SearchStrings)
+            foreach (string entry in App.ParametersData.SearchStrings)
             {
-                ComboWhatToSearch.Items.Add(searchString);
+                LocalSearchStringsEntries.Add(entry);
             }
+            ComboWhatToSearch.ItemsSource = LocalSearchStringsEntries;
             if (ComboWhatToSearch.Items.Count > 0)
             {
                 ComboWhatToSearch.SelectedIndex = 0;
             }
+
+
+            //FillComboWhatToSearch();
         }
 
+
+        //private void FillComboWhatToSearch()
+        //{
+        //    ComboWhatToSearch.Items.Clear();
+        //    foreach (string searchString in App.ParametersData.SearchStrings)
+        //    {
+        //        ComboWhatToSearch.Items.Add(searchString);
+        //    }
+        //    if (ComboWhatToSearch.Items.Count > 0)
+        //    {
+        //        ComboWhatToSearch.SelectedIndex = 0;
+        //    }
+        //}
 
         private void SetFontSize()
         {
             App.Appearance.SetFontSize(TextBlockWhatToSearch);
             App.Appearance.SetFontSize(TextBlockSearchIn);
-            App.Appearance.SetFontSize(ButtonSearchSort);
+            //App.Appearance.SetFontSize(ButtonSearchSort);
             App.Appearance.SetFontSize(ButtonSearchLeftText);
             App.Appearance.SetFontSize(ButtonSearchRightText);
             App.Appearance.SetFontSize(TooglePart1);
@@ -72,6 +93,12 @@ namespace UbStudyHelp.Controls
             App.Appearance.SetFontSize(TooglePart4);
             App.Appearance.SetFontSize(TooglePartCurrentPaper);
             App.Appearance.SetFontSize(ComboWhatToSearch);
+
+            GeometryImages images = new GeometryImages();
+            SortButtonImageIcon.Source = images.GetImage(GeometryImagesTypes.Sort);
+            ButtonSearchLeftImage.Source = images.GetImage(GeometryImagesTypes.Search);
+            ButtonSearchRightImage.Source = images.GetImage(GeometryImagesTypes.Search);
+
         }
 
         private void SetAppearence()
@@ -103,11 +130,16 @@ namespace UbStudyHelp.Controls
             App.ParametersData.SimpleSearchIncludePartIII = data.Part3Included;
             App.ParametersData.SimpleSearchIncludePartIV = data.Part4Included;
             App.ParametersData.SimpleSearchCurrentPaperOnly = data.CurrentPaperOnly;
-            if (App.ParametersData.SearchStrings.Contains(data.QueryString))
-            {
-                App.ParametersData.SearchStrings.Remove(data.QueryString);
-            }
-            App.ParametersData.SearchStrings.Add(data.QueryString);
+
+            App.ParametersData.AddEntry(App.ParametersData.SearchStrings, LocalSearchStringsEntries, data.QueryString);
+
+
+            //if (App.ParametersData.SearchStrings.Contains(data.QueryString))
+            //{
+            //    App.ParametersData.SearchStrings.Remove(data.QueryString);
+            //}
+            //App.ParametersData.SearchStrings.Add(data.QueryString);
+            //FillComboWhatToSearch();
             return data;
         }
 
@@ -171,12 +203,21 @@ namespace UbStudyHelp.Controls
 
         }
 
+        private void EventsControl_BilingualChanged(bool ShowBilingual)
+        {
+            ButtonSearchRight.IsEnabled = ShowBilingual;
+        }
+
+
         private SearchData lastData = null;
 
         private void ButtonSearchSort_Click(object sender, RoutedEventArgs e)
         {
-            lastData.SortResults();
-            ShowSearchResults?.Invoke(lastData);
+            if (lastData != null)
+            {
+                lastData.SortResults();
+                ShowSearchResults?.Invoke(lastData);
+            }
         }
 
         private void ButtonSearchLeft_Click(object sender, RoutedEventArgs e)
@@ -186,9 +227,12 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
-            luceneLeft.Execute(data);
-            lastData = data;
-            ShowSearchResults?.Invoke(data);
+            if (luceneLeft.Execute(data))
+            {
+                lastData = data;
+                ShowSearchResults?.Invoke(data);
+            }
+            ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
 
         private void ButtonSearchRight_Click(object sender, RoutedEventArgs e)
@@ -198,9 +242,12 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
-            luceneRight.Execute(data);
-            lastData = data;
-            ShowSearchResults?.Invoke(data);
+            if (luceneRight.Execute(data))
+            {
+                lastData = data;
+                ShowSearchResults?.Invoke(data);
+            }
+            ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
         #endregion
     }

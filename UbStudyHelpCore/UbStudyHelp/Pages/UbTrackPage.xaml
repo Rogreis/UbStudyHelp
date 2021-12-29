@@ -1,10 +1,8 @@
 ﻿<Page x:Class="UbStudyHelp.Pages.UbTrackPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-      xmlns:local="clr-namespace:UbStudyHelp.Pages"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:Controls="clr-namespace:UbStudyHelp.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -24,20 +22,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <!--<Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>-->
             <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8-->
             <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" ImageSourceName="TrackLogo" />
-            <!--<TextBlock Grid.Row="0" Grid.Column="1"  x:Name="LabelTrackList" Margin="10,10,10,10"
-                        Text="Here are shown the last paragraphs you browsed:" TextWrapping="Wrap"/>-->
         </Grid>
 
 
@@ -48,57 +40,42 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button x:Name="ButtonTrackSort" Grid.Column="0" Click="ButtonTrackSort_Click">
+            <Button x:Name="ButtonTrackSort" Grid.Column="0" Click="ButtonTrackSort_Click" ToolTip="Reorder the paragraphs by paper/section/paragraph" Width="32" Height="32">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>
+                    <Image x:Name="ButtonTrackSortImage" Margin="5"></Image>
+                    <!--<TextBlock x:Name="ButtonSearchSortText">Sort Reorder</TextBlock>-->
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonTrackClear" Grid.Column="1" Click="ButtonTrackClear_Click">
+            <Button x:Name="ButtonTrackClear" Grid.Column="1" Click="ButtonTrackClear_Click" ToolTip="Clear the current track list" Width="32" Height="32">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonTrackClearText">Clear</TextBlock>
+                    <Image x:Name="ButtonTrackClearImage" Margin="5"></Image>
+                    <!--<TextBlock x:Name="ButtonTrackClearText">Clear</TextBlock>-->
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonTrackSave" Grid.Column="2" Click="ButtonTrackSave_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="ButtonTrackSaveText">Save</TextBlock>
+            <Button x:Name="ButtonTrackSave" Grid.Column="2" Click="ButtonTrackSave_Click" ToolTip="Save a track list" Width="32" Height="32">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <Image x:Name="ButtonTrackSaveImage"></Image>
+                    <!--<TextBlock x:Name="ButtonTrackSaveText">Save</TextBlock>-->
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonTrackLoad" Grid.Column="3" Click="ButtonTrackLoad_Click">
+            <Button x:Name="ButtonTrackLoad" Grid.Column="3" Click="ButtonTrackLoad_Click" ToolTip="Load a saved tgrack list" Width="32" Height="32">
                 <StackPanel Orientation="Horizontal">
-                    <!--<iconPacks:PackIconMaterial Kind="BookSearchOutline" Width="12" Height="12" />-->
-                    <TextBlock x:Name="ButtonTrackLoadText">Load</TextBlock>
+                    <Image x:Name="ButtonTrackLoadImage" Margin="5"></Image>
+                    <!--<TextBlock x:Name="ButtonTrackLoadText">Load</TextBlock>-->
                 </StackPanel>
             </Button>
 
         </Grid>
+        
 
+        <FlowDocumentScrollViewer Name="TrackDataFlowDocument" IsToolBarVisible="False" Grid.Row="2" Margin="5"
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible">
 
-        <ScrollViewer Grid.Row="2"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <ListView x:Name="TrackList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" >
+        </FlowDocumentScrollViewer>
 
-                <ListView.View>
-                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Last paragraphs seen">
-                        <GridViewColumn Header="Ref" Width="Auto">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ParagraphID}" Width="Auto" TextAlignment="Right"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Text">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Text}" TextTrimming="WordEllipsis" ToolTip="{Binding Text}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </ScrollViewer>
     </Grid>
 
 </Page>

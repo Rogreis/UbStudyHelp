@@ -7,6 +7,15 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using UbStudyHelp.Classes;
 using Newtonsoft.Json;
+using Lucene.Net.Util;
+using System.Windows.Documents;
+using Paragraph = UbStudyHelp.Classes.Paragraph;
+using CommonMark.Syntax;
+using static Lucene.Net.Documents.Field;
+using static System.Collections.Specialized.BitVector32;
+using static Lucene.Net.Util.Fst.Util;
+using System.Linq;
+using System.Windows.Media;
 
 namespace UbStudyHelp.Pages
 {
@@ -15,8 +24,6 @@ namespace UbStudyHelp.Pages
     /// </summary>
     public partial class UbTrackPage : Page
     {
-
-        private ObservableCollection<TOC_Entry> LocalTrackEntries = new ObservableCollection<TOC_Entry>();
 
         private enum TrachSortOrder
         {
@@ -34,48 +41,96 @@ namespace UbStudyHelp.Pages
             EventsControl.SearchClicked += EventsControl_SeachClicked;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
-            TrackList.SelectionChanged += TrackList_SelectionChanged;
         }
 
         public void Initialize()
         {
             SetFontSize();
             SetAppearence();
-            TrackList.Items.Clear();
-            TrackList.ItemsSource = LocalTrackEntries;
+            ShowTrackData();
+        }
+
+
+        /// <summary>
+        /// Show track data
+        /// </summary>
+        private void ShowTrackData()
+        {
+            FlowDocument document = new FlowDocument();
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
+
             foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
             {
-                LocalTrackEntries.Add(entry);
+                System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
+                {
+                    //BorderThickness = new Thickness(1),
+                    //BorderBrush = App.Appearance.GetHighlightColorBrush(),
+                    Padding= new Thickness(5),
+                };
+    
+
+                paragraph.Style = App.Appearance.ForegroundStyle;
+
+                Bold link = new Bold();
+                link.FontSize = App.ParametersData.FontSizeInfo;
+                link.Foreground = accentBrush;
+                link.Inlines.Add(entry.ParagraphID);
+
+                Hyperlink hyperlink = new Hyperlink(link)
+                {
+                    NavigateUri = new Uri("about:blank"),
+                    TextDecorations = null
+                };
+                hyperlink.Tag = entry;
+                hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
+                hyperlink.MouseEnter += Hyperlink_MouseEnter;
+                hyperlink.MouseLeave += Hyperlink_MouseLeave;
+                paragraph.Inlines.Add(hyperlink);
+                paragraph.Inlines.Add(new Run("  "));
+                document.Blocks.Add(paragraph);
+                entry.GetInlinesText(paragraph.Inlines);
             }
+            TrackDataFlowDocument.Document = document;
+            App.Appearance.SetFontSize(TrackDataFlowDocument);
+            App.Appearance.SetThemeInfo(TrackDataFlowDocument);
         }
 
 
         private void SetFontSize()
         {
-            //App.Appearance.SetFontSize(LabelTrackList);
-            App.Appearance.SetFontSize(TrackList);
+            //App.Appearance.SetFontSize(TrackDataFlowDocument);
+            ShowTrackData();
             App.Appearance.SetFontSize(ButtonTrackSort);
             App.Appearance.SetFontSize(ButtonTrackClear);
             App.Appearance.SetFontSize(ButtonTrackSave);
             App.Appearance.SetFontSize(ButtonTrackLoad);
-        }
-
-        private void SetAppearence()
-        {
-            //App.Appearance.SetThemeInfo(LabelTrackList);
-            App.Appearance.SetThemeInfo(TrackList);
             App.Appearance.SetThemeInfo(ButtonTrackSort);
             App.Appearance.SetThemeInfo(ButtonTrackClear);
             App.Appearance.SetThemeInfo(ButtonTrackSave);
             App.Appearance.SetThemeInfo(ButtonTrackLoad);
         }
 
+        private void SetAppearence()
+        {
+            //App.Appearance.SetThemeInfo(TrackDataFlowDocument);
+            ShowTrackData();
+            App.Appearance.SetThemeInfo(ButtonTrackSort);
+            App.Appearance.SetThemeInfo(ButtonTrackClear);
+            App.Appearance.SetThemeInfo(ButtonTrackSave);
+            App.Appearance.SetThemeInfo(ButtonTrackLoad);
+
+            GeometryImages images = new GeometryImages();
+            ButtonTrackSortImage.Source = images.GetImage(GeometryImagesTypes.Sort);
+            ButtonTrackClearImage.Source = images.GetImage(GeometryImagesTypes.Clear);
+            ButtonTrackSaveImage.Source = images.GetImage(GeometryImagesTypes.Save);
+            ButtonTrackLoadImage.Source = images.GetImage(GeometryImagesTypes.Load);
+        }
+
         private void AddEntry(TOC_Entry entry)
         {
-            if (LocalTrackEntries.Count == App.ParametersData.MaxExpressionsStored)
+            if (App.ParametersData.TrackEntries.Count == App.ParametersData.MaxExpressionsStored)
             {
-                LocalTrackEntries.RemoveAt(LocalTrackEntries.Count - 1);
-                App.ParametersData.TrackEntries.RemoveAt(LocalTrackEntries.Count - 1);
+                App.ParametersData.TrackEntries.RemoveAt(App.ParametersData.TrackEntries.Count - 1);
             }
 
             if (string.IsNullOrEmpty(entry.Text))
@@ -85,8 +140,8 @@ namespace UbStudyHelp.Pages
                 entry.Text = par.ReducedText;
             }
 
-            LocalTrackEntries.Insert(0, entry);
             App.ParametersData.TrackEntries.Insert(0, entry);
+            ShowTrackData();
         }
 
         #region events
@@ -117,19 +172,50 @@ namespace UbStudyHelp.Pages
 
         private void TrackList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems != null && e.AddedItems.Count > 0)
+        }
+
+        //private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        //{
+        //    ScrollViewer scv = (ScrollViewer)sender;
+        //    scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+        //    e.Handled = true;
+        //}
+
+        private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = null;
+        }
+
+        private void Hyperlink_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = TextDecorations.Underline;
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            e.Handled = true;
+            if (hyperlink.Tag == null)
             {
-                TOC_Entry entry = e.AddedItems[0] as TOC_Entry;
-                EventsControl.FireTrackSelected(entry);
+                return;
+            }
+            TOC_Entry entry = hyperlink.Tag as TOC_Entry;
+            if (entry == null)
+            {
+                return;
+            }
+            EventsControl.FireTrackSelected(entry);
+
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));
+            var run = hyperlink.Inlines.FirstOrDefault() as Bold;
+            if (run != null)
+            {
+                run.Foreground = accentBrush;
             }
         }
 
-        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer scv = (ScrollViewer)sender;
-            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
-            e.Handled = true;
-        }
 
 
         #endregion
@@ -137,27 +223,28 @@ namespace UbStudyHelp.Pages
 
         private void ButtonTrackSort_Click(object sender, RoutedEventArgs e)
         {
-            switch(sortOrder)
+            switch (sortOrder)
             {
                 case TrachSortOrder.None:
-                    LocalTrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
+                    App.ParametersData.TrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
                     sortOrder = TrachSortOrder.Ascending;
                     break;
                 case TrachSortOrder.Ascending:
-                    LocalTrackEntries.Sort<TOC_Entry>((a, b) => a.InverseCompareTo(b));
+                    App.ParametersData.TrackEntries.Sort<TOC_Entry>((a, b) => a.InverseCompareTo(b));
                     sortOrder = TrachSortOrder.Descending;
                     break;
                 case TrachSortOrder.Descending:
-                    LocalTrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
+                    App.ParametersData.TrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
                     sortOrder = TrachSortOrder.Ascending;
                     break;
             }
+            ShowTrackData();
         }
 
         private void ButtonTrackClear_Click(object sender, RoutedEventArgs e)
         {
-            LocalTrackEntries.Clear();
             App.ParametersData.TrackEntries.Clear();
+            ShowTrackData();
         }
 
         private void ButtonTrackSave_Click(object sender, RoutedEventArgs e)
@@ -172,8 +259,8 @@ namespace UbStudyHelp.Pages
             {
                 saveFileDlg.FileName = App.ParametersData.LastTrackFileSaved;
             }
-            saveFileDlg.DefaultExt = ".yaml";
-            saveFileDlg.Filter = "Yaml documents (.yaml)|*.yaml";
+            saveFileDlg.DefaultExt = ".ubsht";
+            saveFileDlg.Filter = "Ub Study Help Track files (.ubsht)|*.ubsht";
             Nullable<bool> result = saveFileDlg.ShowDialog();
             try
             {
@@ -183,7 +270,10 @@ namespace UbStudyHelp.Pages
                     File.WriteAllText(saveFileDlg.FileName, jsonString);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Error saving saved track file to {saveFileDlg.FileName}", ex);
+            }
 
         }
 
@@ -193,15 +283,17 @@ namespace UbStudyHelp.Pages
             if (string.IsNullOrEmpty(App.ParametersData.LastTrackFileSaved))
             {
                 openFileDlg.FileName = "";
-                openFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UbStudyHelp");
+                Directory.CreateDirectory(folder);
+                openFileDlg.InitialDirectory = folder;
             }
             else
             {
                 openFileDlg.FileName = App.ParametersData.LastTrackFileSaved;
             }
 
-            openFileDlg.DefaultExt = ".yaml";
-            openFileDlg.Filter = "Yaml documents (.yaml)|*.yaml";
+            openFileDlg.DefaultExt = ".ubsht";
+            openFileDlg.Filter = "Ub Study Help Track files (.ubsht)|*.ubsht";
             Nullable<bool> result = openFileDlg.ShowDialog();
             if (result == true)
             {
@@ -210,16 +302,12 @@ namespace UbStudyHelp.Pages
                     var jsonString = File.ReadAllText(openFileDlg.FileName);
                     App.ParametersData.TrackEntries = JsonConvert.DeserializeObject<List<TOC_Entry>>(jsonString);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Logger.Error($"Error loading saved track file from {openFileDlg.FileName}", ex);
                     App.ParametersData.TrackEntries = new List<TOC_Entry>();
                 }
-
-                // Make local copy
-                foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
-                {
-                    LocalTrackEntries.Add(entry);
-                }
+                ShowTrackData();
             }
 
         }

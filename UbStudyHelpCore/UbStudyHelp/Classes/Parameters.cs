@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 namespace UbStudyHelp.Classes
 {
@@ -59,6 +61,31 @@ namespace UbStudyHelp.Classes
         public List<TOC_Entry> TrackEntries = new List<TOC_Entry>();
 
         public string LastTrackFileSaved = "";
+
+        /// <summary>
+        /// Add a string to list to be saved with parameters
+        /// Keep a control local string updated
+        /// Remove duplicates
+        /// </summary>
+        /// <param name="paramStringList"></param>
+        /// <param name="controlStringList"></param>
+        /// <param name="indexEntry"></param>
+        public void AddEntry(List<string> paramStringList, ObservableCollection<string> controlStringList, string indexEntry)
+        {
+            // Just avoid duplicates
+            if (paramStringList.Contains(indexEntry, StringComparer.OrdinalIgnoreCase))
+            {
+                return;
+            }
+            if (paramStringList.Count == MaxExpressionsStored)
+            {
+                controlStringList.RemoveAt(controlStringList.Count - 1);
+                paramStringList.RemoveAt(paramStringList.Count - 1);
+            }
+            controlStringList.Insert(0, indexEntry);
+            paramStringList.Insert(0, indexEntry);
+        }
+
 
         /// <summary>
         /// Serialize the parameters instance

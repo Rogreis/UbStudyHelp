@@ -112,7 +112,7 @@ namespace UbStudyHelp.Classes
             TOC_Entry entry = new TOC_Entry(Paper, Section, Paragraph);
             EventsControl.FireIndexClicked(entry);
 
-            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor());
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));
             var run = hyperlink.Inlines.FirstOrDefault() as Run;
             if (run != null)
             {

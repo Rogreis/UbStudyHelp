@@ -52,12 +52,16 @@ namespace UbStudyHelp
 
         private void ShowMessage(string message, bool fatalError= false)
         {
-            //Debug.WriteLine(message);
             StatusBarMessages.Text = message;
             if (fatalError)
             {
+                Log.Logger.Error("Fatal error: " + message);
                 MessageBox.Show(message);
                 System.Windows.Application.Current.Shutdown();
+            }
+            else
+            {
+                Log.Logger.Warn(message);
             }
         }
 
@@ -89,9 +93,9 @@ namespace UbStudyHelp
 
                 EventsControl.FireMainWindowSizeChanged(width, height);
             }
-            catch
+            catch // Ignore errors
             {
-                Debug.WriteLine("Error");
+                //Debug.WriteLine("Error");
             }
 
 

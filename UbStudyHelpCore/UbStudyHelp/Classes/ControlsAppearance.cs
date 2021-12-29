@@ -37,6 +37,25 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public class ControlsAppearance
     {
+        /// <summary>
+        /// Returns font for a block object (family, size and foregroung
+        /// </summary>
+        public Style ForegroundStyle
+        {
+            get
+            {
+                Style style = new Style
+                {
+                    TargetType = typeof(System.Windows.Documents.Block)
+                };
+
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, App.ParametersData.FontSizeInfo));
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.ForegroundProperty, App.Appearance.GetForegroundColorBrush()));
+                return style;
+            }
+        }
+
 
         public ControlsAppearance()
         {
@@ -60,6 +79,9 @@ namespace UbStudyHelp.Classes
             //Get a resource from the ResourceDictionary in code
             return Convert.ToString(Application.Current.FindResource("MahApps.Colors.Highlight"));
         }
+
+
+
 
 
         public enum MahColorNames
@@ -102,12 +124,17 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public string GetGrayColor()
+        public string GetGrayColor(int grayColorNumber= 1)
         {
             // https://mahapps.com/docs/themes/thememanager
-            //Get a resource from the ResourceDictionary in code
-            return Convert.ToString(Application.Current.FindResource("MahApps.Colors.Gray1"));
+            return Convert.ToString(Application.Current.FindResource($"MahApps.Colors.Gray{grayColorNumber}"));
         }
+
+        public Brush GetGrayColorBrush(int grayColorNumber = 1)
+        {
+            return (SolidColorBrush)Application.Current.FindResource($"MahApps.Colors.Gray{grayColorNumber}");
+        }
+
 
         public Brush GetBackgroundColorBrush()
         {
