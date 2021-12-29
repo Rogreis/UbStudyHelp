@@ -17,8 +17,8 @@ For the version 1.0 we have:
 
 - **Table of contents**: click on any paper or section jumps to the equivalent text.
 - **Index**: (type at least 3 letters and a you will see the index entries starting with those letters)
-- **Search Engine**: (the use of  [Lucene.net](https://lucenenet.apache.org/)  tool give us several search options, as you can see  [here](UbStudyHelpCore/UbStudyHelp/Pages/help.md)).
-  Used also index, accepts several commands described [here](UbStudyHelpCore/UbStudyHelp/Resources/SearchHelp.md).
+- **Search Engine**: (the use of <a href="https://lucenenet.apache.org/" target="_blank">Lucene.net</a> tool give us several search options, as you can see [here](UbStudyHelpCore/UbStudyHelp/Pages/help.md)).
+  It is used also index, with the same command set.
 - **Track**: keep a record from the last 50 paragraphs 
 
 
