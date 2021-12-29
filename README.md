@@ -5,10 +5,12 @@
 
 
 
-This is a tool to help readers to learn and teach about The Urantia Book. The original English translation and some other, as shown below.
+This is a tool to help readers to learn and teach about The Urantia Book. Available translations:
 
-The tool is now in his Alfa-Test, given only for some users to do a general testing in the several functionality. 
+English (original).
+Portuguese 2007.
 
+The tool is now in his first Alpha-Test, given only for some users to do a general testing in the several functionality. 
 
 
 For the version 1.0 we have:
