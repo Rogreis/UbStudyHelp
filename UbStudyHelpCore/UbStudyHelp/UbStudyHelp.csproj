@@ -97,4 +97,9 @@
     <Folder Include="Classes\Converters\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <SplashScreen Include="Images\SplashScreenFbUbPt.png" />
+  </ItemGroup>
+
+
 </Project>
