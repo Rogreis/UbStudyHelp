@@ -38,7 +38,6 @@ For the version 1.0 we have:
 ![show_index](Images/show_index.png)
 
 
-
 ### Search Engine:
 
 ![show_search](Images/show_search.png)

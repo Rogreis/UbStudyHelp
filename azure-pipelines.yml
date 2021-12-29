@@ -1,0 +1,43 @@
+
+trigger:
+- main
+
+strategy:
+  matrix:
+    linux:
+      imageName: "ubuntu-latest"
+    mac:
+      imageName: "macOS-latest"
+    windows:
+      imageName: "windows-latest"
+  maxParallel: 3
+
+pool:
+  vmImage: $(imageName)
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'x86|x64|ARM'
+  buildConfiguration: 'Release'
+  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- script: dotnet build --configuration $(buildConfiguration) UbStudyHelpCore\UbStudyHelpCore.sln
+  displayName: 'dotnet build $(buildConfiguration)' 
+  
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish $(buildConfiguration) -output $(build.artifactStagingDirectory)' 
+  inputs: 
+    command: publish
+    publishWebProjects: false
+    projects: 'UbStudyHelpCore\UbStudyHelpCore\UbStudyHelp\UbStudyHelp.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
+    zipAfterPublish: true
+
+    
