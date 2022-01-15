@@ -1,5 +1,6 @@
 ﻿using ControlzEx.Standard;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
@@ -25,6 +26,7 @@ namespace UbStudyHelp
 
         private static bool LoadData()
         {
+
             GetDataFiles dataFiles = new GetDataFiles();
             try
             {
@@ -32,6 +34,7 @@ namespace UbStudyHelp
                 {
                     return false;
                 }
+                dataFiles.BackGroundChecking();
                 return Book.Inicialize(App.BaseTubFilesPath);
             }
             catch (Exception ex)
@@ -56,11 +59,11 @@ namespace UbStudyHelp
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //string pathLog = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.log");
+            // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
             Log.Start(pathLog);
 
-            //pathParameters = Path.Combine(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName), "UbStudyHelp.json");
+            // Parameters for the application
             pathParameters = MakeProgramDataFolder("UbStudyHelp.json");
             if (!File.Exists(pathParameters))
             {
@@ -83,6 +86,12 @@ namespace UbStudyHelp
                 }
                 return;
             }
+
+            //frmNewVersion frm = new frmNewVersion();
+            //frm.ShowDialog();
+            //return;
+
+
             base.OnStartup(e);
         }
 

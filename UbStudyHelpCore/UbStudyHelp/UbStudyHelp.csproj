@@ -9,8 +9,15 @@
     <!--<RuntimeIdentifier>win10-64;osx.10.12-x64</RuntimeIdentifier>-->
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <StartupObject>UbStudyHelp.App</StartupObject>
-    <ApplicationIcon>urantia.ico</ApplicationIcon>
+    <ApplicationIcon>UbStudyHelp.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Classes\Converters\**" />
+    <EmbeddedResource Remove="Classes\Converters\**" />
+    <None Remove="Classes\Converters\**" />
+    <Page Remove="Classes\Converters\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Images\FontSizeDecrease.png" />
@@ -91,10 +98,6 @@
     <None Update="Images\UbStudyHelpIcon.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Classes\Converters\" />
   </ItemGroup>
 
   <ItemGroup>

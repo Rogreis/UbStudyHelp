@@ -15,19 +15,37 @@ namespace UbStudyHelp.Classes
     {
         public short LanguageID { get; set; }
         public string Description { get; set; }
-        public string TIN { get; set; }
         public string TUB { get; set; }
-        public string LanguageCode { get; set; }
-        public string TextButton { get; set; }
-        public int CultureID { get; set; }
+        public string TIN { get; set; }
+        public string PaperTranslation { get; set; }
         public bool UseBold { get; set; }
         public bool RightToLeft { get; set; }
+        public int CultureID { get; set; }
+        public string UbVersion { get; set; }
 
-        public int StartingYear { get; set; }
-        public int EndingYear { get; set; }
-        public string ExternalName { get; set; }
+        /// <summary>
+        /// Return ant int version number
+        /// </summary>
+        public int VersionNumber
+        {
+            get
+            {
+                try
+                {
+                    char[] sep = { '.' };
+                    string[] parts = UbVersion.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+                    int version = Convert.ToInt32(parts[0]) * 1000000;
+                    version += Convert.ToInt32(parts[1]) * 1000;
+                    version += Convert.ToInt32(parts[2]);
+                    return version;
+                }
+                catch (Exception)
+                {
 
-        public string PaperTranslation { get; set; }
+                    return 100000000;
+                }
+            }
+        }
 
         public List<TOC_Entry> TableOfContents = null;
 
@@ -40,19 +58,15 @@ namespace UbStudyHelp.Classes
 
         public Translation(XElement record)
         {
-            // LanguageID, Description, TUB, TIN, UseBold, RightToLeft, TextButton, CultureID, StartingYear, EndingYear
             LanguageID = GetShort(record.Element("LanguageID"));
             Description = GetString(record.Element("Description"));
             TUB = GetString(record.Element("TUB"));
             TIN = GetString(record.Element("TIN"));
+            PaperTranslation = GetString(record.Element("PaperTranslation"));
             UseBold = GetBool(record.Element("UseBold"));
             RightToLeft = GetBool(record.Element("RightToLeft"));
-            TextButton = GetString(record.Element("TextButton"));
             CultureID = GetShort(record.Element("CultureID"));
-            StartingYear = GetShort(record.Element("StartingYear"));
-            EndingYear = GetShort(record.Element("EndingYear"));
-            ExternalName = GetString(record.Element("ExternalName"));
-            PaperTranslation = GetString(record.Element("PaperTranslation"));
+            UbVersion = GetString(record.Element("UbVersion"));
         }
 
 
@@ -60,8 +74,7 @@ namespace UbStudyHelp.Classes
         {
             get
             {
-                string year = (StartingYear == EndingYear) ? EndingYear.ToString() : StartingYear.ToString() + "," + EndingYear.ToString();
-                return "Copyright ©  " + year + " Urantia Foundation. All rights reserved.";
+                return "Copyright ©Urantia Foundation. All rights reserved.";
             }
         }
 

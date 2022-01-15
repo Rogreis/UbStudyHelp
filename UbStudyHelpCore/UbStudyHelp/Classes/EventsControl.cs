@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -63,6 +64,12 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public delegate void dlRefreshText();
 
+    /// <summary>
+    /// Used to indicate that there are updates for translations and/application available 
+    /// </summary>
+    /// <param name="updateList"></param>
+    public delegate void dlUpdateAvailable(ConcurrentDictionary<UpdateElementType, Translation> updateList);
+
     public delegate void dlTranslationsChanged();
 
     public delegate void dlRightTranslationChanged(Translation oRightTranslation);
@@ -94,6 +101,8 @@ namespace UbStudyHelp.Classes
         public static event dlSendMessage SendMessage = null;
 
         public static event dlRefreshText RefreshText = null;
+
+        public static event dlUpdateAvailable UpdateAvailable = null;
 
         public static event dlTranslationsChanged TranslationsChanged = null;
 
@@ -164,7 +173,11 @@ namespace UbStudyHelp.Classes
         {
             RefreshText?.Invoke();
         }
-        
+
+        public static void FireUpdateAvailable(ConcurrentDictionary<UpdateElementType, Translation> updateList)
+        {
+            UpdateAvailable?.Invoke(updateList);
+        }
 
         public static void FireTranslationsChanged()
         {

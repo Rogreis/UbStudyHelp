@@ -3,6 +3,8 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
+using System.Windows.Threading;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp
@@ -13,6 +15,9 @@ namespace UbStudyHelp
     /// </summary>
     public partial class MainWindow
     {
+
+        DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
+
         public MainWindow()
         {
             InitializeComponent();
@@ -20,7 +25,44 @@ namespace UbStudyHelp
             EventsControl.SendMessage += EventsControl_SendMessage;
             EventsControl.FontChanged += EventsControl_FontChanged;
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
+
+            timer.Interval = TimeSpan.FromMinutes(3);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+
+
         }
+
+
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+
+            System.Windows.Threading.Dispatcher.CurrentDispatcher.Hooks.DispatcherInactive += Hooks_DispatcherInactive;
+
+        }
+
+        private bool InactiveFired = false;
+        private void Hooks_DispatcherInactive(object sender, EventArgs e)
+        {
+            if (InactiveFired)
+            {
+                System.Windows.Threading.Dispatcher.CurrentDispatcher.Hooks.DispatcherInactive -= Hooks_DispatcherInactive;
+                return;
+            }
+            InactiveFired = true;
+            frmNewVersion frm = new frmNewVersion();
+            frm.ShowDialog();
+        }
+
+        //int count= 0;
+        //private void ComponentDispatcher_ThreadIdle(object sender, EventArgs e)
+        //{
+        //    count++;
+        //    Debug.WriteLine($"{count,8} componentDispatcher_ThreadIdle");
+        //    timer.Stop();
+        //    timer.Start();
+        //}
 
         private void FontChanged()
         {
@@ -68,7 +110,7 @@ namespace UbStudyHelp
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
-            StatusBarVersion.Text = "v 2.0";
+            StatusBarVersion.Text = "v 2.0.1";
         }
 
 

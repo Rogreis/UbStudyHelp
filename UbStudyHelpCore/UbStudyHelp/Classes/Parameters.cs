@@ -11,6 +11,9 @@ namespace UbStudyHelp.Classes
     [Serializable]
     public class Parameters
     {
+        // Verify the possibility to change to microsoft Json
+        // https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/
+
 
         /// <summary>
         /// Last position in the text, default for first paragraph

@@ -8,14 +8,31 @@ using System.Net;
 using System.Xml.Linq;
 using UbStudyHelp.Classes;
 using System.Runtime.InteropServices.ComTypes;
+using System.ComponentModel;
+using System.Collections.Concurrent;
 
 namespace UbStudyHelp.Classes
 {
+    /// <summary>
+    /// Used to indicate what type of update is available
+    /// </summary>
+    public enum UpdateElementType
+    {
+        UpdateTranslation,
+        NewTranslation,
+        UbStudyHelp
+    }
+
+
     public class GetDataFiles
     {
         public const string ControlFileName = "UbHelpTextControl.xml";
         private const string indexFileName = "Index.zip";
 
+        /// <summary>
+        /// Store the list of translations or the application itself that needs to be updated.
+        /// </summary>
+        private ConcurrentDictionary<UpdateElementType, Translation> UpdateList = new ConcurrentDictionary<UpdateElementType, Translation>();
 
         //private bool GetPrivate(string destinationFolder, string fileName, bool isZip = true)
         //{
@@ -163,6 +180,63 @@ namespace UbStudyHelp.Classes
                 return false;
             }
         }
+
+        public void BackGroundChecking()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += new DoWorkEventHandler(BackgroundWorker_DoWork);
+            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            backgroundWorker.RunWorkerAsync();
+        }
+
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.Sleep(5000);
+            try
+            {
+                // https://raw.githubusercontent.com/Rogreis/TUB_Files/main/UbHelpTextControl.xml
+
+                string url = $"https://raw.githubusercontent.com/Rogreis/TUB_Files/main/{GetDataFiles.ControlFileName}";
+
+                Log.Logger.Info("Background worker downloading files from github.");
+                Log.Logger.Info("Url: " + url);
+
+                string ControlFileNameStr = "";
+                using (WebClient wc = new WebClient())
+                {
+                    wc.Headers.Add("a", "a");
+                    ControlFileNameStr = wc.DownloadString(url);
+                }
+
+                XElement xElem = XElement.Parse(ControlFileNameStr);
+                List<Translation> serverTranslations = (from lang in xElem.Descendants("Translation")
+                                                  select new Translation(lang)).ToList();
+
+                // Make a list of translations that are new or have new versions
+                foreach(Translation translation in Book.Translations)
+                {
+                    Translation transServer = serverTranslations.Find(t => t.LanguageID == translation.LanguageID);
+                    if (transServer == null)
+                    {
+                        UpdateList.TryAdd(UpdateElementType.NewTranslation, translation);
+                    } else if (translation.VersionNumber < transServer.VersionNumber)
+                    {
+                        UpdateList.TryAdd(UpdateElementType.UpdateTranslation, translation);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error("BackgroundWorker_DoWork error", ex);
+            }
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+        }
+
+
 
     }
 

@@ -19,9 +19,13 @@ namespace UbStudyHelp.Pages
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            EventsControl.UpdateAvailable += EventsControl_UpdateAvailable;
+
             ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
             ToggleSwitchShowParIdent.Toggled += ToggleSwitchShowParIdent_Toggled;
             ToggleSwitchBilingual.Toggled += ToggleSwitchBilingual_Toggled;
+
+
 
             ThemmeColors.Add("Green");
             ThemmeColors.Add("Blue");
@@ -135,6 +139,16 @@ namespace UbStudyHelp.Pages
             EventsControl.FireBilingualChanged(ToggleSwitchBilingual.IsOn);
         }
 
+        /// <summary>
+        /// New updates available
+        /// </summary>
+        /// <param name="updateList"></param>
+        private void EventsControl_UpdateAvailable(System.Collections.Concurrent.ConcurrentDictionary<UpdateElementType, Translation> updateList)
+        {
+            
+        }
+
+
         #endregion
 
         private void SelectComboCurrentTranslation(ComboBox comboBox, short id)
@@ -165,6 +179,9 @@ namespace UbStudyHelp.Pages
             ToggleSwitchThemme.IsOn = App.Appearance.Theme == "Dark";
             ToggleSwitchShowParIdent.IsOn = App.ParametersData.ShowParagraphIdentification;
             ToggleSwitchBilingual.IsOn = App.ParametersData.ShowBilingual;
+
+            GeometryImages images = new GeometryImages();
+            ButtonUpdateAvailableImage.Source = images.GetImage(GeometryImagesTypes.Update);
         }
 
     }
