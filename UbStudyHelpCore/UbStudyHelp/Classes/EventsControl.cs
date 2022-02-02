@@ -68,7 +68,7 @@ namespace UbStudyHelp.Classes
     /// Used to indicate that there are updates for translations and/application available 
     /// </summary>
     /// <param name="updateList"></param>
-    public delegate void dlUpdateAvailable(ConcurrentDictionary<UpdateElementType, Translation> updateList);
+    public delegate void dlUpdateAvailable();
 
     public delegate void dlTranslationsChanged();
 
@@ -174,9 +174,9 @@ namespace UbStudyHelp.Classes
             RefreshText?.Invoke();
         }
 
-        public static void FireUpdateAvailable(ConcurrentDictionary<UpdateElementType, Translation> updateList)
+        public static void FireUpdateAvailable()
         {
-            UpdateAvailable?.Invoke(updateList);
+            UpdateAvailable?.Invoke();
         }
 
         public static void FireTranslationsChanged()

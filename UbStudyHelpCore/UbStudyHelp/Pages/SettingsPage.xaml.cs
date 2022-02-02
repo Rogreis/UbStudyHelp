@@ -1,4 +1,6 @@
 ﻿using ControlzEx.Theming;
+using log4net.Core;
+using log4net;
 using Microsoft.Windows.Themes;
 using System.Collections.Generic;
 using System.Windows;
@@ -53,6 +55,11 @@ namespace UbStudyHelp.Pages
             ThemmeColors.Sort();
             ComboTheme.ItemsSource = ThemmeColors;
             ComboTheme.SelectedItem = App.ParametersData.ThemeColor;
+
+#if !DEBUG
+            ButtonShowLog.Visibility = Visibility.Hidden;
+#endif
+
         }
 
 
@@ -143,11 +150,21 @@ namespace UbStudyHelp.Pages
         /// New updates available
         /// </summary>
         /// <param name="updateList"></param>
-        private void EventsControl_UpdateAvailable(System.Collections.Concurrent.ConcurrentDictionary<UpdateElementType, Translation> updateList)
+        private void EventsControl_UpdateAvailable()
         {
-            
+            ButtonUpdateAvailable.Visibility = Visibility.Visible;
         }
 
+        private void ButtonUpdateAvailable_Click(object sender, RoutedEventArgs e)
+        {
+            frmNewVersion frm = new frmNewVersion();
+            frm.ShowDialog();
+        }
+
+        private void ButtonShowLog_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Show();
+        }
 
         #endregion
 

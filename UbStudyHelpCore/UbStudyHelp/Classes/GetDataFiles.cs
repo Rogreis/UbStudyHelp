@@ -16,12 +16,6 @@ namespace UbStudyHelp.Classes
     /// <summary>
     /// Used to indicate what type of update is available
     /// </summary>
-    public enum UpdateElementType
-    {
-        UpdateTranslation,
-        NewTranslation,
-        UbStudyHelp
-    }
 
 
     public class GetDataFiles
@@ -32,7 +26,8 @@ namespace UbStudyHelp.Classes
         /// <summary>
         /// Store the list of translations or the application itself that needs to be updated.
         /// </summary>
-        private ConcurrentDictionary<UpdateElementType, Translation> UpdateList = new ConcurrentDictionary<UpdateElementType, Translation>();
+        public static ConcurrentDictionary<int, Translation> UpdateList = new ConcurrentDictionary<int, Translation>();
+        public static bool IsToUpdateApp = false;
 
         //private bool GetPrivate(string destinationFolder, string fileName, bool isZip = true)
         //{
@@ -213,18 +208,35 @@ namespace UbStudyHelp.Classes
                 List<Translation> serverTranslations = (from lang in xElem.Descendants("Translation")
                                                   select new Translation(lang)).ToList();
 
+                int count = 0;
                 // Make a list of translations that are new or have new versions
-                foreach(Translation translation in Book.Translations)
+                foreach(Translation serverTranslation in serverTranslations)
                 {
-                    Translation transServer = serverTranslations.Find(t => t.LanguageID == translation.LanguageID);
-                    if (transServer == null)
+                    Translation localTranslation = Book.Translations.Find(t => t.LanguageID == serverTranslation.LanguageID);
+                    if (localTranslation == null)
                     {
-                        UpdateList.TryAdd(UpdateElementType.NewTranslation, translation);
-                    } else if (translation.VersionNumber < transServer.VersionNumber)
+                        count++;
+                        UpdateList.TryAdd(count, serverTranslation);
+                        Log.Logger.Info($"New translation {serverTranslation}");
+                    }
+                    else if (localTranslation.VersionNumber < serverTranslation.VersionNumber)
                     {
-                        UpdateList.TryAdd(UpdateElementType.UpdateTranslation, translation);
+                        count++;
+                        UpdateList.TryAdd(count, serverTranslation);
+                        Log.Logger.Info($"Update translation {serverTranslation}");
                     }
                 }
+
+                // REMOVER ESTAS LINHAS
+                foreach (Translation serverTranslation in serverTranslations)
+                {
+                    count++;
+                    UpdateList.TryAdd(count, serverTranslation);
+                    Log.Logger.Info($"Update translation {serverTranslation}");
+                }
+
+
+
             }
             catch (Exception ex)
             {
@@ -234,6 +246,10 @@ namespace UbStudyHelp.Classes
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (UpdateList.Count > 0)
+            {
+                EventsControl.FireUpdateAvailable();
+            }
         }
 
 

@@ -8,7 +8,7 @@
                  xmlns:classes="clr-namespace:UbStudyHelp.Classes" 
                  
                  mc:Ignorable="d"
-        Title="UbStudyHelp - New Version(s) Available" Height="450" Width="800" 
+        Title="UbStudyHelp - New Version(s) Available" Height="450" Width="800" Loaded="MetroWindow_Loaded"
                  WindowStartupLocation="CenterOwner" 
                  WindowStyle="ToolWindow"  
                  UseLayoutRounding="True"

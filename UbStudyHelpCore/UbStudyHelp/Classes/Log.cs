@@ -6,7 +6,9 @@ using log4net.Repository.Hierarchy;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows;
+using System.Windows.Shapes;
 
 namespace UbStudyHelp.Classes
 {
@@ -18,7 +20,7 @@ namespace UbStudyHelp.Classes
 
         public static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static void Start(string pathLog, bool append = false)
+        public static void Start(string pathLog, bool append = false, bool reStart = false)
         {
             if (!append)
             {
@@ -28,11 +30,11 @@ namespace UbStudyHelp.Classes
                 }
             }
             PathLog = pathLog;
-            SetupLof4Net();
+            SetupLof4Net(append, reStart);
             Enable();
         }
 
-        private static void SetupLof4Net()
+        private static void SetupLof4Net(bool append, bool reStart= false)
         {
             if (_logIniciado)
                 return;
@@ -45,7 +47,7 @@ namespace UbStudyHelp.Classes
             patternLayout.ActivateOptions();
 
             RollingFileAppender roller = new RollingFileAppender();
-            roller.AppendToFile = true;
+            roller.AppendToFile = append;
             roller.File = PathLog;
             roller.Layout = patternLayout;
             roller.MaxSizeRollBackups = 5;
@@ -67,6 +69,14 @@ namespace UbStudyHelp.Classes
             {
                 LogManager.GetRepository().Threshold = Level.All;
                 _logIniciado = true;
+                if (reStart)
+                {
+                    Logger.Info("UbStudyHelp log re-started");
+                }
+                else
+                {
+                    Logger.Info("UbStudyHelp log Started");
+                }
             }
 #else
             LogManager.GetRepository().Threshold = Level.Off;
@@ -74,13 +84,32 @@ namespace UbStudyHelp.Classes
 
         }
 
+        public static void Close()
+        {
+            LogManager.GetRepository().Shutdown();
+            _logIniciado = false;
+        }
+
+        private static void ShowLog()
+        {
+            Close();
+            Process.Start("notepad.exe", PathLog);
+
+            //using (var fs = new FileStream(PathLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            //using (var sr = new StreamReader(fs, Encoding.Default))
+            //{
+            //    string text = sr.ReadToEnd();
+            //}
+
+        }
+
+
         public static void Enable()
         {
-            SetupLof4Net();
+            //SetupLof4Net(true);
             LogManager.GetRepository().Threshold = Level.All;
             //((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root.Level = Level.All;
             //((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).RaiseConfigurationChanged(EventArgs.Empty);
-            Logger.Info("Log Started at " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
         }
 
         public static void Disable()
@@ -90,30 +119,34 @@ namespace UbStudyHelp.Classes
             //((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).RaiseConfigurationChanged(EventArgs.Empty);
         }
 
-        public static void Close()
-        {
-            LogManager.GetRepository().Shutdown();
-        }
 
         public static void NonFatalError(string message)
         {
             Log.Logger.Error(message);
             if (MessageBox.Show(message + ".\n\nOpen log file?", "Ub Study Help", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                Process.Start("notepad.exe", PathLog);
+                ShowLog();
             }
         }
 
         public static void FatalError(string message)
         {
             Log.Logger.Error(message);
-            if (MessageBox.Show(message + ".\n\nWe are sorry, but Ub Study Help needs to be closed.\n\nOpen log file?", "Ub Study Help", 
+            if (MessageBox.Show(message + ".\n\nWe are sorry, but Ub Study Help needs to be closed.\n\nOpen log file?", "Ub Study Help",
                 MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
             {
-                Process.Start("notepad.exe", PathLog);
+                ShowLog();
             }
             Environment.Exit(1);
         }
+
+        public static void Show()
+        {
+            ShowLog();
+            Start(PathLog, true, true);
+        }
+
+
 
     }
 }

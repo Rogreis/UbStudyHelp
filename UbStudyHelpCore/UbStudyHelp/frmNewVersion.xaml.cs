@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using UbStudyHelp.Classes;
 
 namespace UbStudyHelp
 {
@@ -40,6 +41,45 @@ namespace UbStudyHelp
         private void ButtonApplication_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void ReStartApp()
+        {
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            System.Windows.Application.Current.Shutdown();
+        }
+
+
+
+        private class UpdateElement
+        {
+            public Translation Translation { get; set; }
+
+            public string Name
+            {
+                get
+                {
+                    if (Translation != null)
+                    {
+                        return Translation.Description;
+                    }
+                    return "";
+                }
+            }
+
+        }
+
+        private List<UpdateElement> UpdateElements = new List<UpdateElement>();
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach (KeyValuePair<int, Translation> pair in GetDataFiles.UpdateList)
+            {
+                UpdateElements.Add(new UpdateElement() { Translation = pair.Value });
+            }
+            ListViewUpdatesAvailable.Items.Clear();
+            ListViewUpdatesAvailable.ItemsSource = UpdateElements;
+            ListViewUpdatesAvailable.DisplayMemberPath = "Name";
         }
     }
 }
