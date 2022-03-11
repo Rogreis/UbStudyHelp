@@ -31,6 +31,12 @@ namespace UbStudyHelp.Controls
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
 
+        public void Clear()
+        {
+            FlowDocument document = new FlowDocument();
+            IndexDocumentResults.Document = document;
+        }
+
 
         /// <summary>
         /// Show the details for some index entry

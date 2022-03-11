@@ -15,15 +15,18 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TextBlockLabelIndex" Height="Auto" Width="Auto" Grid.Row="0" Margin="5,5,5,5" TextWrapping="Wrap" Text="Type to search index:" />
+        <TextBlock x:Name="TextBlockLabelIndex" Height="Auto" Width="Auto" Grid.Row="0" Margin="5,5,5,5" TextWrapping="Wrap" 
+                   Text="Type to search index:"/>
 
-        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearchInIndex" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5">
+        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearchInIndex" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5"
+                  TextBoxBase.TextChanged="ComboWhatToSearchInIndex_TextChanged">
             <ComboBox.Effect>
                 <DropShadowEffect/>
             </ComboBox.Effect>
         </ComboBox>
 
-        <ComboBox Grid.Row="2" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5">
+        <ComboBox Grid.Row="2" x:Name="ComboBoxIndexSearch" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5"
+                  SelectionChanged="ComboBoxIndexSearch_SelectionChanged">
             <ComboBox.Effect>
                 <DropShadowEffect/>
             </ComboBox.Effect>

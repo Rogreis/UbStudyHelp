@@ -58,6 +58,9 @@ namespace UbStudyHelp.Pages
             {
                 paragraphTop.Inlines.Add(new Run("No paragraph found"));
                 EventsControl.FireSendMessage("No paragraph found");
+                SearchResultsFlowDocument.Document = document;
+                App.Appearance.SetFontSize(SearchResultsFlowDocument);
+                App.Appearance.SetThemeInfo(SearchResultsFlowDocument);
                 return;
             }
             string message = $"Showing page {nrPage} of {totalPages} ({data.SearchResults.Count} paragraph(s) found)";

@@ -32,6 +32,21 @@ namespace UbStudyHelp.Text
 			}
 		}
 
+		public void SetNewTranslation(Translation translation, bool isLeft= true)
+        {
+			if (isLeft)
+            {
+				StaticObjects.Parameters.LanguageIDLeftTranslation = translation.LanguageID;
+				LeftTranslation = dataFiles.GetTranslation(translation.LanguageID);
+			}
+			else
+            {
+				StaticObjects.Parameters.LanguageIDRightTranslation = translation.LanguageID;
+				RightTranslation = dataFiles.GetTranslation(translation.LanguageID);
+			}
+			EventsControl.FireTranslationsChanged();
+		}
+
 
 	}
 }

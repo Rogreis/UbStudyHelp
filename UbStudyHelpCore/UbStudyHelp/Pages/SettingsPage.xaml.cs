@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Text;
 
 namespace UbStudyHelp.Pages
 {
@@ -108,15 +109,13 @@ namespace UbStudyHelp.Pages
         private void ComboLeftTranslations_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
-            StaticObjects.Parameters.LanguageIDLeftTranslation = trans.LanguageID;
-            EventsControl.FireTranslationsChanged();
+            ((BookCore)StaticObjects.Book).SetNewTranslation(trans, true);
         }
 
         private void ComboRightTranslation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
-            StaticObjects.Parameters.LanguageIDRightTranslation = trans.LanguageID;
-            EventsControl.FireTranslationsChanged();
+            ((BookCore)StaticObjects.Book).SetNewTranslation(trans, false);
         }
 
         private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)

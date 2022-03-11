@@ -25,7 +25,6 @@ namespace UbStudyHelp.Controls
         // Object to manipulate the index
         public UbStudyHelp.Classes.Index Index { get; set; }
 
-
         public IndexBrowserDataEntry()
         {
             InitializeComponent();
@@ -58,6 +57,7 @@ namespace UbStudyHelp.Controls
 
         private void FillComboBoxIndexEntry(string indexEntry)
         {
+            ShowIndexDetails?.Invoke(null);
             if (!Index.Load())
             {
                 StaticObjects.Logger.NonFatalError("Index not lodaded");
@@ -92,6 +92,7 @@ namespace UbStudyHelp.Controls
             {
                 ComboBoxIndexSearch.SelectedIndex = 0;
                 ComboBoxIndexSearch.IsEnabled = true;
+                //ShowIndexDetails?.Invoke(indexEntry);
             }
             EventsControl.FireSendMessage($"{ComboBoxIndexSearch.Items.Count} index entry(ies) found.");
 
@@ -143,7 +144,6 @@ namespace UbStudyHelp.Controls
             string text = ComboBoxIndexSearch.Text.Trim();
             ShowIndexDetails?.Invoke(text);
         }
-
         private void ComboWhatToSearchInIndex_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -162,6 +162,23 @@ namespace UbStudyHelp.Controls
         {
             SetAppearence();
         }
+
+
+        private void ComboWhatToSearchInIndex_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string text = ComboWhatToSearchInIndex.Text.Trim();
+            if (text.Length > 2)
+            {
+                FillComboBoxIndexEntry(text);
+            }
+        }
+
+        private void ComboBoxIndexSearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string text = ComboBoxIndexSearch.Text.Trim();
+            ShowIndexDetails?.Invoke(text);
+        }
+
 
         #endregion
 

@@ -39,6 +39,11 @@ namespace UbStudyHelp.Pages
 
         private void CreateWebIndexPage(string indexEntry)
         {
+            if (indexEntry == null)
+            {
+                IndexBrowserInstance.Clear();
+                return;
+            }
             TubIndex index = Index.GetIndexEntry(indexEntry);
             EventsControl.FireSendMessage($"New index entry shown: {indexEntry}");
             IndexBrowserInstance.CreateWebIndexPage(index);

@@ -57,7 +57,7 @@ namespace UbStudyHelp.Controls
             {
                 commands = new HtmlSingle();
             }
-
+            StaticObjects.Parameters.Entry = entry;
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
 
 
