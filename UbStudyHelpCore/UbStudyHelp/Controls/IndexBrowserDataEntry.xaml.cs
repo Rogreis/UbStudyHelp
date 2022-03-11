@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
@@ -38,7 +39,7 @@ namespace UbStudyHelp.Controls
             ComboWhatToSearchInIndex.DropDownClosed += ComboWhatToSearchInIndex_DropDownClosed;
             ComboBoxIndexSearch.DropDownClosed += ComboBoxIndexSearch_DropDownClosed;
 
-            foreach (string entry in App.ParametersData.IndexLetters)
+            foreach (string entry in StaticObjects.Parameters.IndexLetters)
             {
                 LocalIndexLettersEntries.Add(entry);
             }
@@ -51,7 +52,7 @@ namespace UbStudyHelp.Controls
 
         private void AddEntry(string indexEntry)
         {
-            App.ParametersData.AddEntry(App.ParametersData.IndexLetters, LocalIndexLettersEntries, indexEntry);
+            ((ParametersCore)StaticObjects.Parameters).AddEntry(StaticObjects.Parameters.IndexLetters, LocalIndexLettersEntries, indexEntry);
         }
 
 
@@ -59,7 +60,7 @@ namespace UbStudyHelp.Controls
         {
             if (!Index.Load())
             {
-                Log.NonFatalError("Index not lodaded");
+                StaticObjects.Logger.NonFatalError("Index not lodaded");
                 ComboBoxIndexSearch.IsEnabled = false;
                 return;
             }
@@ -73,12 +74,12 @@ namespace UbStudyHelp.Controls
             List<string> list = Index.Search(indexEntry);
             if (list == null || list.Count == 0)
             {
-                Log.NonFatalError("Could not do a search");
+                StaticObjects.Logger.NonFatalError("Could not do a search");
                 ComboBoxIndexSearch.IsEnabled = false;
                 return;
             }
 
-            int maxItems = Math.Min(list.Count, App.ParametersData.MaxExpressionsStored);
+            int maxItems = Math.Min(list.Count, StaticObjects.Parameters.MaxExpressionsStored);
             ComboBoxIndexSearch.Items.Clear();
             for (int i = 0; i < maxItems; i++)
             {

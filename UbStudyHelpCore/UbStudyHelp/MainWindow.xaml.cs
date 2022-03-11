@@ -1,8 +1,5 @@
-﻿using ControlzEx.Theming;
-using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp
@@ -35,13 +32,13 @@ namespace UbStudyHelp
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            GridTexts.ColumnDefinitions[0].Width = new GridLength(App.ParametersData.SpliterDistance);
+            GridTexts.ColumnDefinitions[0].Width = new GridLength(StaticObjects.Parameters.SpliterDistance);
             FontChanged();
         }
 
         private void GridSplitterLeft_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            App.ParametersData.SpliterDistance = GridTexts.ColumnDefinitions[0].ActualWidth;
+            StaticObjects.Parameters.SpliterDistance = GridTexts.ColumnDefinitions[0].ActualWidth;
             EventsControl.FireGridSplitter(GridTexts.ColumnDefinitions[0].ActualWidth);
         }
 
@@ -55,13 +52,13 @@ namespace UbStudyHelp
             StatusBarMessages.Text = message;
             if (fatalError)
             {
-                Log.Logger.Error("Fatal error: " + message);
+                StaticObjects.Logger.Error("Fatal error: " + message);
                 MessageBox.Show(message);
                 System.Windows.Application.Current.Shutdown();
             }
             else
             {
-                Log.Logger.Warn(message);
+                StaticObjects.Logger.Warn(message);
             }
         }
 

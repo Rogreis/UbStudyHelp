@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using UbStudyHelp.Classes;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Controls
 {
@@ -27,16 +27,16 @@ namespace UbStudyHelp.Controls
 
         public override string Html(TOC_Entry entry, bool shouldHighlightText, List<string> Words = null)
         {
-            Paper paperLeft = Book.LeftTranslation.Paper(entry.Paper);
+            Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
             StringBuilder sb = new StringBuilder();
 
             PageHeader(sb, entry, paperLeft.Title);
 
-            HtmlSingleLine(sb, "<h1>" + Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString() + "</h1>", "<h1>" + Book.RightTranslation.PaperTranslation +
+            HtmlSingleLine(sb, "<h1>" + StaticObjects.Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString() + "</h1>", "<h1>" + StaticObjects.Book.RightTranslation.PaperTranslation +
                 " " + entry.Paper.ToString() + "</h1>");
 
             int indParagraph = 0;
-            foreach (Paragraph parLeft in paperLeft.Paragraphs)
+            foreach (UbStandardObjects.Objects.Paragraph parLeft in paperLeft.Paragraphs)
             {
                 indParagraph++;
 
@@ -68,14 +68,14 @@ namespace UbStudyHelp.Controls
                         sb.AppendLine("</td>");
                         break;
                     case enHtmlType.NormalParagraph:
-                        if (App.ParametersData.ShowParagraphIdentification)
+                        if (StaticObjects.Parameters.ShowParagraphIdentification)
                         {
                             TextLeft = $"<p{cssClass}><a name=\"{parLeft.AName}\"><sup>{parLeft.Identification}</sup></a> {TextLeft}</p>";
                         }
                         HtmlSingleLine(sb, TextLeft, null);
                         break;
                     case enHtmlType.IdentedParagraph:
-                        if (App.ParametersData.ShowParagraphIdentification)
+                        if (StaticObjects.Parameters.ShowParagraphIdentification)
                         {
                             TextLeft = $"<p{cssClass}><a name=\"{parLeft.AName}\"><sup>{parLeft.Identification}</sup></a> {TextLeft}</p>";
                         }

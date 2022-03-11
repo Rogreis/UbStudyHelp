@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
+using UbStudyHelp.Classes;
+
+namespace UbStudyHelp.Text
+{
+    public class BookCore : Book
+    {
+		private GetDataFilesCore dataFiles = null;
+
+
+		public override bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID)
+		{
+			try
+			{
+				StaticObjects.Logger.Info("Initializing book: " + baseDataPath);
+				FilesPath = baseDataPath;
+				dataFiles = new GetDataFilesCore(baseDataPath);
+				Translations = dataFiles.GetTranslations();
+				LeftTranslation= dataFiles.GetTranslation(leftTranslationId);
+				RightTranslation= dataFiles.GetTranslation(rightTranslationID);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				string message = $"General error getting translations: {ex.Message}. May be you do not have the correct data to use this tool.";
+				StaticObjects.Logger.Error(message, ex);
+				return false;
+			}
+		}
+
+
+	}
+}

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Classes

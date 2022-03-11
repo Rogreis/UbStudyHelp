@@ -7,11 +7,10 @@ using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 
-
-
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {
@@ -125,7 +124,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Creating Search Index for " + indexPath, ex);
+                StaticObjects.Logger.Error("Creating Search Index for " + indexPath, ex);
                 EventsControl.FireSendMessage("Creating Search Index", ex);
                 return false;
             }
@@ -139,7 +138,7 @@ namespace UbStudyHelp.Classes
                 if (!CreateUBIndex())
                 {
                     string message = "Book Index not created for " + indexPath;
-                    Log.NonFatalError(message);
+                    StaticObjects.Logger.NonFatalError(message);
                     EventsControl.FireSendMessage("Book Index not created.");
                 }
 
@@ -190,7 +189,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Error executing Search.", ex);
+                StaticObjects.Logger.Error("Error executing Search.", ex);
                 EventsControl.FireSendMessage("Executing Search", ex);
                 return false;
             }

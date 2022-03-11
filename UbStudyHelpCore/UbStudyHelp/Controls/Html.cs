@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using static UbStudyHelp.Classes.ControlsAppearance;
 
@@ -31,7 +33,7 @@ namespace UbStudyHelp.Controls
         {
             get
             {
-                if (App.ParametersData.ThemeName == "Dark")
+                if (((ParametersCore)StaticObjects.Parameters).ThemeName == "Dark")
                 {
                     return colorTableDark;
                 }
@@ -43,14 +45,14 @@ namespace UbStudyHelp.Controls
         {
             get
             {
-                return App.ParametersData.FontFamilyInfo;
+                return StaticObjects.Parameters.FontFamilyInfo;
             }
         }
 
 
         protected string FontSize(int AddToSize)
         {
-            return (Convert.ToInt16(App.ParametersData.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
+            return (Convert.ToInt16(StaticObjects.Parameters.FontSizeInfo) + 4 + AddToSize).ToString() + "px";
         }
 
         protected string UbFontColor(FontColorType colorType)
@@ -204,7 +206,7 @@ namespace UbStudyHelp.Controls
 
         protected virtual void Copyright(StringBuilder sb)
         {
-            HtmlSingleLine(sb, Book.LeftTranslation.Copyright, Book.RightTranslation.Copyright);
+            HtmlSingleLine(sb, StaticObjects.Book.LeftTranslation.Copyright, StaticObjects.Book.RightTranslation.Copyright);
         }
 
         #region Protected Interface

@@ -97,4 +97,8 @@
     <Folder Include="Classes\Converters\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\UbStandardObjects\UbStandardObjects.csproj" />
+  </ItemGroup>
+
 </Project>

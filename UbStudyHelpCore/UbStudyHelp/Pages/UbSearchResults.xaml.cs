@@ -1,11 +1,11 @@
-﻿using CommonMark.Syntax;
-using System;
-using System.DirectoryServices;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using SearchResult = UbStudyHelp.Classes.SearchResult;
 
@@ -66,7 +66,7 @@ namespace UbStudyHelp.Pages
             Run runTop = new Run($"({data.SearchResults.Count}) paragraph(s) found")
             {
                 //FontWeight = FontWeights.Bold,
-                FontSize = App.ParametersData.FontSizeInfo,
+                FontSize = StaticObjects.Parameters.FontSizeInfo,
                 Foreground = accentBrush
             };
             paragraphTop.Inlines.Add(runTop);
@@ -74,7 +74,7 @@ namespace UbStudyHelp.Pages
             paragraphTop.Inlines.Add(new LineBreak());
             Run runPageShown = new Run($"Showing page {nrPage} of {totalPages}")
             {
-                FontSize = App.ParametersData.FontSizeInfo,
+                FontSize = StaticObjects.Parameters.FontSizeInfo,
                 Foreground = accentBrush
             };
             paragraphTop.Inlines.Add(runPageShown);
@@ -104,7 +104,7 @@ namespace UbStudyHelp.Pages
                 Run runIdent = new Run(result.Entry.ParagraphID)
                 {
                     FontWeight = FontWeights.Bold,
-                    FontSize = App.ParametersData.FontSizeInfo,
+                    FontSize = StaticObjects.Parameters.FontSizeInfo,
                     Foreground = accentBrush
                 };
 

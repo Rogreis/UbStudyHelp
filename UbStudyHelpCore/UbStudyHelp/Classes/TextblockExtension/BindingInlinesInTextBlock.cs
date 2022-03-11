@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
+using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {

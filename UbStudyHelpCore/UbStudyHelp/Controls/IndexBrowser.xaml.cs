@@ -5,8 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
-using static Lucene.Net.Documents.Field;
 using Hyperlink = System.Windows.Documents.Hyperlink;
 using Paragraph = System.Windows.Documents.Paragraph;
 

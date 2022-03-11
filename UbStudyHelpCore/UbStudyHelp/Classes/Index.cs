@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
+using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
@@ -34,7 +31,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Error loading index.", ex);
+                StaticObjects.Logger.Error("Error loading index.", ex);
                 return false;
             }
         }
@@ -44,7 +41,7 @@ namespace UbStudyHelp.Classes
             List<string> wordsFound = lucene.Execute(startString);
             if (wordsFound == null)
             {
-                Log.Logger.Warn("Index search returned null for searching: " + startString);
+                StaticObjects.Logger.Warn("Index search returned null for searching: " + startString);
                 return null;
             }
 

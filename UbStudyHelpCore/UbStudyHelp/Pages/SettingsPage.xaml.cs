@@ -1,8 +1,9 @@
 ﻿using ControlzEx.Theming;
-using Microsoft.Windows.Themes;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Pages
@@ -48,7 +49,7 @@ namespace UbStudyHelp.Pages
             ThemmeColors.Add("Sienna");
             ThemmeColors.Sort();
             ComboTheme.ItemsSource = ThemmeColors;
-            ComboTheme.SelectedItem = App.ParametersData.ThemeColor;
+            ComboTheme.SelectedItem = ((ParametersCore)StaticObjects.Parameters).ThemeColor;
         }
 
 
@@ -75,7 +76,7 @@ namespace UbStudyHelp.Pages
 
         private void SetTheme()
         {
-            string theme = App.ParametersData.ThemeName + "." + App.ParametersData.ThemeColor;
+            string theme = ((ParametersCore)StaticObjects.Parameters).ThemeName + "." + ((ParametersCore)StaticObjects.Parameters).ThemeColor;
             ThemeManager.Current.ChangeTheme(Application.Current, theme);
         }
 
@@ -98,8 +99,8 @@ namespace UbStudyHelp.Pages
             {
                 return;
             }
-            //App.ParametersData.ThemeColor = (string)item.Content;
-            App.ParametersData.ThemeColor = item;
+            //StaticObjects.Parameters.ThemeColor = (string)item.Content;
+            ((ParametersCore)StaticObjects.Parameters).ThemeColor = item;
             SetTheme();
             EventsControl.FireAppearanceChanged();
         }
@@ -107,14 +108,14 @@ namespace UbStudyHelp.Pages
         private void ComboLeftTranslations_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
-            App.ParametersData.LanguageIDLeftTranslation = trans.LanguageID;
+            StaticObjects.Parameters.LanguageIDLeftTranslation = trans.LanguageID;
             EventsControl.FireTranslationsChanged();
         }
 
         private void ComboRightTranslation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
-            App.ParametersData.LanguageIDRightTranslation = trans.LanguageID;
+            StaticObjects.Parameters.LanguageIDRightTranslation = trans.LanguageID;
             EventsControl.FireTranslationsChanged();
         }
 
@@ -125,13 +126,13 @@ namespace UbStudyHelp.Pages
 
         private void ToggleSwitchShowParIdent_Toggled(object sender, RoutedEventArgs e)
         {
-            App.ParametersData.ShowParagraphIdentification = ToggleSwitchShowParIdent.IsOn;
+            StaticObjects.Parameters.ShowParagraphIdentification = ToggleSwitchShowParIdent.IsOn;
             EventsControl.FireRefreshText();
         }
 
         private void ToggleSwitchBilingual_Toggled(object sender, RoutedEventArgs e)
         {
-            App.ParametersData.ShowBilingual = ToggleSwitchBilingual.IsOn;
+            StaticObjects.Parameters.ShowBilingual = ToggleSwitchBilingual.IsOn;
             EventsControl.FireBilingualChanged(ToggleSwitchBilingual.IsOn);
         }
 
@@ -139,7 +140,7 @@ namespace UbStudyHelp.Pages
 
         private void SelectComboCurrentTranslation(ComboBox comboBox, short id)
         {
-            Translation trans = Book.Translations.Find(t => t.LanguageID == id);
+            Translation trans = StaticObjects.Book.Translations.Find(t => t.LanguageID == id);
             List<Translation> list = comboBox.ItemsSource as List<Translation>;
             comboBox.SelectedIndex = list.FindIndex(t => t.LanguageID == id);
         }
@@ -156,15 +157,15 @@ namespace UbStudyHelp.Pages
             //                                       Kind = "SettingsMD" />
 
 
-            ComboLeftTranslations.ItemsSource = Book.ObservableTranslations;
-            ComboRightTranslation.ItemsSource = Book.ObservableTranslations;
-            SelectComboCurrentTranslation(ComboLeftTranslations, App.ParametersData.LanguageIDLeftTranslation);
-            SelectComboCurrentTranslation(ComboRightTranslation, App.ParametersData.LanguageIDRightTranslation);
+            ComboLeftTranslations.ItemsSource = StaticObjects.Book.ObservableTranslations;
+            ComboRightTranslation.ItemsSource = StaticObjects.Book.ObservableTranslations;
+            SelectComboCurrentTranslation(ComboLeftTranslations, StaticObjects.Parameters.LanguageIDLeftTranslation);
+            SelectComboCurrentTranslation(ComboRightTranslation, StaticObjects.Parameters.LanguageIDRightTranslation);
 
-            ComboTheme.Text = App.ParametersData.ThemeColor;
+            ComboTheme.Text = ((ParametersCore)StaticObjects.Parameters).ThemeColor;
             ToggleSwitchThemme.IsOn = App.Appearance.Theme == "Dark";
-            ToggleSwitchShowParIdent.IsOn = App.ParametersData.ShowParagraphIdentification;
-            ToggleSwitchBilingual.IsOn = App.ParametersData.ShowBilingual;
+            ToggleSwitchShowParIdent.IsOn = StaticObjects.Parameters.ShowParagraphIdentification;
+            ToggleSwitchBilingual.IsOn = StaticObjects.Parameters.ShowBilingual;
         }
 
     }

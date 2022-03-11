@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using System.Windows;
 using System.Windows.Controls;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Pages;
 
@@ -44,9 +45,9 @@ namespace UbStudyHelp.Controls
             switch(targetView)
             {
                 case "IncreaseFontSize":
-                    if (App.ParametersData.FontSizeInfo < 22)
+                    if (StaticObjects.Parameters.FontSizeInfo < 22)
                     {
-                        App.ParametersData.FontSizeInfo++;
+                        StaticObjects.Parameters.FontSizeInfo++;
                         EventsControl.FireFontChanged();
                     }
                     else
@@ -56,9 +57,9 @@ namespace UbStudyHelp.Controls
                     args.Handled = true;
                     break;
                 case "DecreaseFontSize":
-                    if (App.ParametersData.FontSizeInfo > 10)
+                    if (StaticObjects.Parameters.FontSizeInfo > 10)
                     {
-                        App.ParametersData.FontSizeInfo--;
+                        StaticObjects.Parameters.FontSizeInfo--;
                         EventsControl.FireFontChanged();
                     }
                     else

@@ -1,12 +1,10 @@
-﻿using CommonMark.Syntax;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using System.Windows.Documents;
 using System.Xml.Linq;
 
-namespace UbStudyHelp.Classes
+namespace UbStandardObjects.Objects
 {
-    public class TOC_Entry : BaseClass
+	public class TOC_Entry
     {
         private const int MaxSampleTextSize = 80;
 
@@ -62,6 +60,15 @@ namespace UbStudyHelp.Classes
         {
         }
 
+        public TOC_Entry(Paragraph par)
+        {
+            this.Paper = par.Paper;
+            this.Section = par.Section;
+            this.ParagraphNo = par.ParagraphNo;
+            Text = par.Text;
+            IsExpanded = false;
+        }
+
         public TOC_Entry(short paper, short section, short paragraphNo)
         {
             this.Paper = paper;
@@ -81,18 +88,8 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public TOC_Entry(XElement xElemParagraph)
-        {
-            Paper = GetShort(xElemParagraph.Element("Paper"));
-            Section = GetShort(xElemParagraph.Element("Section"));
-            this.ParagraphNo = 0;
-            Text = GetString(xElemParagraph.Element("Text"));
-            IsExpanded = false;
-        }
 
-
-
-        private bool SamePaperSection(TOC_Entry index)
+        protected bool SamePaperSection(TOC_Entry index)
         {
             return index.Paper == Paper && index.Section == Section && index.IsExpanded;
         }
@@ -101,17 +98,6 @@ namespace UbStudyHelp.Classes
         public void CheckOldExpanded(List<TOC_Entry> listOldExpanded)
         {
             IsExpanded = listOldExpanded.Exists(SamePaperSection);
-        }
-
-
-        /// <summary>
-        /// Generate inlines collection from result text, highlighting found words
-        /// </summary>
-        /// <returns></returns>
-        public void GetInlinesText(InlineCollection Inlines, bool useReducedText = false)
-        {
-            TextWork textWork = new TextWork(Text);
-            textWork.GetInlinesText(Inlines, null, useReducedText);
         }
 
 

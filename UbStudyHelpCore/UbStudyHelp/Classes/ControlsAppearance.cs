@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
@@ -49,8 +50,8 @@ namespace UbStudyHelp.Classes
                     TargetType = typeof(System.Windows.Documents.Block)
                 };
 
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, App.ParametersData.FontSizeInfo));
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
                 style.Setters.Add(new Setter(System.Windows.Documents.Block.ForegroundProperty, App.Appearance.GetForegroundColorBrush()));
                 return style;
             }
@@ -174,8 +175,8 @@ namespace UbStudyHelp.Classes
                 TargetType = typeof(Control)
             };
             
-            style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
-            style.Setters.Add(new Setter(Control.FontSizeProperty, App.ParametersData.FontSizeInfo));
+            style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
+            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
             if (!(control is ComboBox || control is ListView))
             {
                 style.Setters.Add(new Setter(Control.BackgroundProperty, GetBackgroundColorBrush()));
@@ -192,8 +193,8 @@ namespace UbStudyHelp.Classes
                 TargetType = typeof(TextBlock)
             };
 
-            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
-            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, App.ParametersData.FontSizeInfo));
+            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
+            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
 
             style.Setters.Add(new Setter(TextBlock.BackgroundProperty, GetBackgroundColorBrush()));
             style.Setters.Add(new Setter(TextBlock.ForegroundProperty, GetForegroundColorBrush()));
@@ -207,19 +208,19 @@ namespace UbStudyHelp.Classes
             {
                 TargetType = typeof(Control)
             };
-            style.Setters.Add(new Setter(Control.FontSizeProperty, App.ParametersData.FontSizeInfo));
+            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
             control.Style = style;
         }
 
         public void SetFontSize(TextBlock control)
         {
-            control.FontSize = App.ParametersData.FontSizeInfo;
+            control.FontSize = StaticObjects.Parameters.FontSizeInfo;
         }
 
         public void SetHeight(Control control)
         {
             double delta = 10;
-            control.Height = App.ParametersData.FontSizeInfo + delta;
+            control.Height = StaticObjects.Parameters.FontSizeInfo + delta;
         }
 
         public string ThemeColor
@@ -232,7 +233,7 @@ namespace UbStudyHelp.Classes
             }
             set
             {
-                App.ParametersData.ThemeColor = value;
+                ((ParametersCore)StaticObjects.Parameters).ThemeColor = value;
                 ThemeManager.Current.ChangeTheme(Application.Current, $"{Theme}.{value}");
                 EventsControl.FireAppearanceChanged();
             }
@@ -248,8 +249,8 @@ namespace UbStudyHelp.Classes
             }
             set
             {
-                App.ParametersData.ThemeName = value;
-                ThemeManager.Current.ChangeTheme(Application.Current, $"{value}.{App.ParametersData.ThemeColor}");
+                ((ParametersCore)StaticObjects.Parameters).ThemeName = value;
+                ThemeManager.Current.ChangeTheme(Application.Current, $"{value}.{((ParametersCore)StaticObjects.Parameters).ThemeColor}");
                 EventsControl.FireAppearanceChanged();
             }
         }

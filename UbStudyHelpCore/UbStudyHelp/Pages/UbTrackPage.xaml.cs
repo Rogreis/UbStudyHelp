@@ -1,21 +1,17 @@
-﻿using System;
+﻿using Lucene.Net.Util;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using UbStudyHelp.Classes;
-using Newtonsoft.Json;
-using Lucene.Net.Util;
 using System.Windows.Documents;
-using Paragraph = UbStudyHelp.Classes.Paragraph;
-using CommonMark.Syntax;
-using static Lucene.Net.Documents.Field;
-using static System.Collections.Specialized.BitVector32;
-using static Lucene.Net.Util.Fst.Util;
-using System.Linq;
 using System.Windows.Media;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
+using UbStudyHelp.Classes;
+using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Pages
 {
@@ -59,7 +55,7 @@ namespace UbStudyHelp.Pages
             FlowDocument document = new FlowDocument();
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
-            foreach (TOC_Entry entry in App.ParametersData.TrackEntries)
+            foreach (TOC_Entry entry in StaticObjects.Parameters.TrackEntries)
             {
                 System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
                 {
@@ -72,7 +68,7 @@ namespace UbStudyHelp.Pages
                 paragraph.Style = App.Appearance.ForegroundStyle;
 
                 Bold link = new Bold();
-                link.FontSize = App.ParametersData.FontSizeInfo;
+                link.FontSize = StaticObjects.Parameters.FontSizeInfo;
                 link.Foreground = accentBrush;
                 link.Inlines.Add(entry.ParagraphID);
 
@@ -88,7 +84,8 @@ namespace UbStudyHelp.Pages
                 paragraph.Inlines.Add(hyperlink);
                 paragraph.Inlines.Add(new Run("  "));
                 document.Blocks.Add(paragraph);
-                entry.GetInlinesText(paragraph.Inlines);
+                TextWork textWork = new TextWork(entry.Text);
+                textWork.GetInlinesText(paragraph.Inlines, null);
             }
             TrackDataFlowDocument.Document = document;
             App.Appearance.SetFontSize(TrackDataFlowDocument);
@@ -128,19 +125,19 @@ namespace UbStudyHelp.Pages
 
         private void AddEntry(TOC_Entry entry)
         {
-            if (App.ParametersData.TrackEntries.Count == App.ParametersData.MaxExpressionsStored)
+            if (StaticObjects.Parameters.TrackEntries.Count == StaticObjects.Parameters.MaxExpressionsStored)
             {
-                App.ParametersData.TrackEntries.RemoveAt(App.ParametersData.TrackEntries.Count - 1);
+                StaticObjects.Parameters.TrackEntries.RemoveAt(StaticObjects.Parameters.TrackEntries.Count - 1);
             }
 
             if (string.IsNullOrEmpty(entry.Text))
             {
-                Paper paperLeft = Book.LeftTranslation.Paper(entry.Paper);
+                Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
                 Paragraph par = paperLeft.GetParagraph(entry);
-                entry.Text = par.ReducedText;
+                entry.Text = par.Text;
             }
 
-            App.ParametersData.TrackEntries.Insert(0, entry);
+            StaticObjects.Parameters.TrackEntries.Insert(0, entry);
             ShowTrackData();
         }
 
@@ -226,15 +223,15 @@ namespace UbStudyHelp.Pages
             switch (sortOrder)
             {
                 case TrachSortOrder.None:
-                    App.ParametersData.TrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
+                    StaticObjects.Parameters.TrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
                     sortOrder = TrachSortOrder.Ascending;
                     break;
                 case TrachSortOrder.Ascending:
-                    App.ParametersData.TrackEntries.Sort<TOC_Entry>((a, b) => a.InverseCompareTo(b));
+                    StaticObjects.Parameters.TrackEntries.Sort<TOC_Entry>((a, b) => a.InverseCompareTo(b));
                     sortOrder = TrachSortOrder.Descending;
                     break;
                 case TrachSortOrder.Descending:
-                    App.ParametersData.TrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
+                    StaticObjects.Parameters.TrackEntries.Sort<TOC_Entry>((a, b) => a.CompareTo(b));
                     sortOrder = TrachSortOrder.Ascending;
                     break;
             }
@@ -243,21 +240,21 @@ namespace UbStudyHelp.Pages
 
         private void ButtonTrackClear_Click(object sender, RoutedEventArgs e)
         {
-            App.ParametersData.TrackEntries.Clear();
+            StaticObjects.Parameters.TrackEntries.Clear();
             ShowTrackData();
         }
 
         private void ButtonTrackSave_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.SaveFileDialog saveFileDlg = new Microsoft.Win32.SaveFileDialog();
-            if (string.IsNullOrEmpty(App.ParametersData.LastTrackFileSaved))
+            if (string.IsNullOrEmpty(StaticObjects.Parameters.LastTrackFileSaved))
             {
                 saveFileDlg.FileName = "";
                 saveFileDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
             else
             {
-                saveFileDlg.FileName = App.ParametersData.LastTrackFileSaved;
+                saveFileDlg.FileName = StaticObjects.Parameters.LastTrackFileSaved;
             }
             saveFileDlg.DefaultExt = ".ubsht";
             saveFileDlg.Filter = "Ub Study Help Track files (.ubsht)|*.ubsht";
@@ -266,13 +263,13 @@ namespace UbStudyHelp.Pages
             {
                 if (result == true)
                 {
-                    var jsonString = JsonConvert.SerializeObject(App.ParametersData.TrackEntries, Formatting.Indented);
+                    var jsonString = JsonConvert.SerializeObject(StaticObjects.Parameters.TrackEntries, Formatting.Indented);
                     File.WriteAllText(saveFileDlg.FileName, jsonString);
                 }
             }
             catch (Exception ex)
             {
-                Log.Logger.Error($"Error saving saved track file to {saveFileDlg.FileName}", ex);
+                StaticObjects.Logger.Error($"Error saving saved track file to {saveFileDlg.FileName}", ex);
             }
 
         }
@@ -280,7 +277,7 @@ namespace UbStudyHelp.Pages
         private void ButtonTrackLoad_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
-            if (string.IsNullOrEmpty(App.ParametersData.LastTrackFileSaved))
+            if (string.IsNullOrEmpty(StaticObjects.Parameters.LastTrackFileSaved))
             {
                 openFileDlg.FileName = "";
                 string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "UbStudyHelp");
@@ -289,7 +286,7 @@ namespace UbStudyHelp.Pages
             }
             else
             {
-                openFileDlg.FileName = App.ParametersData.LastTrackFileSaved;
+                openFileDlg.FileName = StaticObjects.Parameters.LastTrackFileSaved;
             }
 
             openFileDlg.DefaultExt = ".ubsht";
@@ -300,12 +297,12 @@ namespace UbStudyHelp.Pages
                 try
                 {
                     var jsonString = File.ReadAllText(openFileDlg.FileName);
-                    App.ParametersData.TrackEntries = JsonConvert.DeserializeObject<List<TOC_Entry>>(jsonString);
+                    StaticObjects.Parameters.TrackEntries = JsonConvert.DeserializeObject<List<TOC_Entry>>(jsonString);
                 }
                 catch (Exception ex)
                 {
-                    Log.Logger.Error($"Error loading saved track file from {openFileDlg.FileName}", ex);
-                    App.ParametersData.TrackEntries = new List<TOC_Entry>();
+                    StaticObjects.Logger.Error($"Error loading saved track file from {openFileDlg.FileName}", ex);
+                    StaticObjects.Parameters.TrackEntries = new List<TOC_Entry>();
                 }
                 ShowTrackData();
             }

@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Classes.MarkdownClasses;
 
@@ -53,8 +54,8 @@ namespace UbStudyHelp.Pages
                     TargetType = typeof(Block)
                 };
 
-                style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
-                style.Setters.Add(new Setter(Block.FontSizeProperty, App.ParametersData.FontSizeInfo));
+                style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
+                style.Setters.Add(new Setter(Block.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
                 style.Setters.Add(new Setter(Block.ForegroundProperty, App.Appearance.GetForegroundColorBrush()));
                 return style;
             }
@@ -67,8 +68,8 @@ namespace UbStudyHelp.Pages
                 TargetType = typeof(Block)
             };
 
-            style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(App.ParametersData.FontFamilyInfo)));
-            style.Setters.Add(new Setter(Block.FontSizeProperty, App.ParametersData.FontSizeInfo + size));
+            style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
+            style.Setters.Add(new Setter(Block.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo + size));
             style.Setters.Add(new Setter(Block.ForegroundProperty, App.Appearance.GetHighlightColorBrush()));
             return style;
         }

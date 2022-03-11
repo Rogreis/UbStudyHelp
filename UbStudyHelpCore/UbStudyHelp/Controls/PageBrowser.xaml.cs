@@ -1,24 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Windows;
-using System.Windows.Annotations;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-//using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
-using static Lucene.Net.Documents.Field;
-using static Lucene.Net.Search.FieldValueHitQueue;
-using static Lucene.Net.Util.Fst.Util;
-using Paragraph = UbStudyHelp.Classes.Paragraph;
+using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Controls
 {
@@ -60,7 +49,7 @@ namespace UbStudyHelp.Controls
         /// <param name="addToTrack"></param>
         private void Show(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            if (App.ParametersData.ShowBilingual)
+            if (StaticObjects.Parameters.ShowBilingual)
             {
                 commands = new HtmlBilingual();
             }
@@ -73,7 +62,7 @@ namespace UbStudyHelp.Controls
 
 
             //// Keep latest pragraph shown for next program section
-            //App.ParametersData.Entry= new TOC_Entry(entry);
+            //StaticObjects.Parameters.Entry= new TOC_Entry(entry);
             //lastEntry = new TOC_Entry(entry);
             //lastShouldHighlightText = shouldHighlightText;
 
@@ -111,7 +100,7 @@ namespace UbStudyHelp.Controls
                 Run runIdent = new Run(entry.ParagraphID + " ")
                 {
                     //FontWeight = FontWeights.Bold,
-                    FontSize = App.ParametersData.FontSizeInfo,
+                    FontSize = StaticObjects.Parameters.FontSizeInfo,
                     Foreground = accentBrush
                 };
                 paragraph.Inlines.Add(runIdent);
@@ -161,7 +150,7 @@ namespace UbStudyHelp.Controls
 
 
         private void HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entry, string LeftText, string RightText,
-                                             enHtmlType enHtmlType = enHtmlType.NormalParagraph,
+                                             enHtmlType htmlType = enHtmlType.NormalParagraph,
                                              bool highlighted = false,
                                              List<string> words = null)
         {
@@ -173,7 +162,7 @@ namespace UbStudyHelp.Controls
             row.Cells.Add(cellLeft);
             row.Cells.Add(cellRight);
 
-            switch (enHtmlType)
+            switch (htmlType)
             {
                 case enHtmlType.BookTitle:
                     FormatTitle(cellLeft, LeftText, highlighted, words);
@@ -209,11 +198,11 @@ namespace UbStudyHelp.Controls
             TableRowGroup tableRowGroup = new TableRowGroup();
             table.RowGroups.Add(tableRowGroup);
 
-            Paper paperLeft = Book.LeftTranslation.Paper(entry.Paper);
-            Paper paperRight = Book.RightTranslation.Paper(entry.Paper);
+            Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
+            Paper paperRight = StaticObjects.Book.RightTranslation.Paper(entry.Paper);
 
-            HtmlSingleBilingualLine(tableRowGroup, null, Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString(),
-                                           Book.RightTranslation.PaperTranslation + " " + entry.Paper.ToString(),
+            HtmlSingleBilingualLine(tableRowGroup, null, StaticObjects.Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString(),
+                                           StaticObjects.Book.RightTranslation.PaperTranslation + " " + entry.Paper.ToString(),
                                            enHtmlType.PaperTitle);
 
             int indParagraph = 0;
@@ -267,7 +256,7 @@ namespace UbStudyHelp.Controls
 
         private void PageBrowser_Loaded(object sender, RoutedEventArgs e)
         {
-            Show(App.ParametersData.Entry);
+            Show(StaticObjects.Parameters.Entry);
         }
 
 
@@ -293,13 +282,13 @@ namespace UbStudyHelp.Controls
 
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
         {
-            Show(App.ParametersData.Entry);
+            Show(StaticObjects.Parameters.Entry);
         }
 
 
         private void EventsControl_FontChanged(Classes.ControlsAppearance appearance)
         {
-            Show(App.ParametersData.Entry);
+            Show(StaticObjects.Parameters.Entry);
         }
 
         private void EventsControl_TranslationsChanged()
