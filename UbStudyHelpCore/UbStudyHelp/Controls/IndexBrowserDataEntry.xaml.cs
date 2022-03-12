@@ -166,17 +166,21 @@ namespace UbStudyHelp.Controls
 
         private void ComboWhatToSearchInIndex_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string text = ComboWhatToSearchInIndex.Text.Trim();
-            if (text.Length > 2)
-            {
-                FillComboBoxIndexEntry(text);
-            }
+            // This leads to a slow search engine for index. Better not to use.
+            //string text = ComboWhatToSearchInIndex.Text.Trim();
+            //if (text.Length > 2)
+            //{
+            //    FillComboBoxIndexEntry(text);
+            //}
         }
 
         private void ComboBoxIndexSearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string text = ComboBoxIndexSearch.Text.Trim();
-            ShowIndexDetails?.Invoke(text);
+            if (!string.IsNullOrEmpty(text))
+            {
+                ShowIndexDetails?.Invoke(text);
+            }
         }
 
 

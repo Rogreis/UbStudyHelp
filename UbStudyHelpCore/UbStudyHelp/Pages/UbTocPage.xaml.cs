@@ -210,8 +210,10 @@ namespace UbStudyHelp.Pages
 
         private void EventsControl_TranslationsChanged()
         {
+            InternalChange = true;
             FillTreeView(TOC_Left, true);
             FillTreeView(TOC_Right, false);
+            InternalChange = false;
         }
 
 

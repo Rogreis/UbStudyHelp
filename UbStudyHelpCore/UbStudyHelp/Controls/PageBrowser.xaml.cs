@@ -19,8 +19,6 @@ namespace UbStudyHelp.Controls
 
         private Html_BaseClass commands = null;
 
-        private TOC_Entry lastEntry = new TOC_Entry(0, 1, 0);
-
         private bool lastShouldHighlightText = false;
 
 
@@ -250,7 +248,7 @@ namespace UbStudyHelp.Controls
 
         private void Refresh()
         {
-            Show(lastEntry, lastShouldHighlightText);
+            Show(StaticObjects.Parameters.Entry, lastShouldHighlightText);
         }
 
 
