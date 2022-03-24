@@ -126,6 +126,10 @@ namespace UbStudyHelp.Classes
             {
                 translation= new Translation();
             }
+            if (translation.Papers.Count > 0)
+            {
+                return translation;
+            }
             string translationFileName = $"TR{translatioId:000}.gz";
             string json= GetFile(translationFileName, true);
             translation.GetData(json);

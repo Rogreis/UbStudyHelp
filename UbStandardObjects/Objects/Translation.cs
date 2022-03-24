@@ -103,6 +103,7 @@ namespace UbStandardObjects.Objects
             this.ExternalName = root.ExternalName;
             this.PaperTranslation = root.PaperTranslation;
 
+            Papers = new List<Paper>();
             foreach (JsonPaper jsonPaper in root.Papers)
             {
                 this.Papers.Add(new Paper()
