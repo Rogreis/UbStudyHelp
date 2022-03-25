@@ -3,7 +3,7 @@ using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {
-    public class Paragraph : UbStandardObjects.Objects.Paragraph
+    public class ParagraphCore : UbStandardObjects.Objects.Paragraph
     {
 
         private TextWork TextWork = new TextWork();

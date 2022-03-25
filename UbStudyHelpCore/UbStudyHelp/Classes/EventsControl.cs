@@ -60,6 +60,11 @@ namespace UbStudyHelp.Classes
     public delegate void dlMainWindowSizeChanged(double width, double height);
 
     /// <summary>
+    /// Fired after a new paper is shown
+    /// </summary>
+    public delegate void dlNewPaperShown();
+
+    /// <summary>
     /// Used to ask to a text refresh in the main screen
     /// </summary>
     public delegate void dlRefreshText();
@@ -107,6 +112,8 @@ namespace UbStudyHelp.Classes
         public static event dlGridSplitter GridSplitterChanged = null;
 
         public static event dlMainWindowSizeChanged MainWindowSizeChanged = null;
+
+        public static event dlNewPaperShown NewPaperShown = null;
 
 
         public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
@@ -187,6 +194,11 @@ namespace UbStudyHelp.Classes
             AppearanceChanged?.Invoke(App.Appearance);
         }
 
+        // 
+        public static void FireNewPaperShown()
+        {
+            NewPaperShown?.Invoke();
+        }
 
     }
 }

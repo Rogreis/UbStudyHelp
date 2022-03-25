@@ -16,12 +16,22 @@ namespace UbStudyHelp
             this.Loaded += MainWindow_Loaded;
             EventsControl.SendMessage += EventsControl_SendMessage;
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.NewPaperShown += EventsControl_NewPaperShown;
+
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
+        }
+
+        private void EventsControl_NewPaperShown()
+        {
+            string messagePaper= 
+            this.Title = $"The Urantia Book Study Help - Paper {StaticObjects.Parameters.Entry.Paper}";
+            StatusBarPaper.Text = $"Paper { StaticObjects.Parameters.Entry.Paper}";
         }
 
         private void FontChanged()
         {
             App.Appearance.SetFontSize(StatusBarVersion);
+            App.Appearance.SetFontSize(StatusBarPaper);
             App.Appearance.SetFontSize(StatusBarMessages);
         }
 
@@ -65,7 +75,7 @@ namespace UbStudyHelp
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
-            StatusBarVersion.Text = "v 2.0";
+            StatusBarVersion.Text = "v 2.1";
         }
 
 

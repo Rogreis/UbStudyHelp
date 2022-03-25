@@ -65,8 +65,10 @@ namespace UbStudyHelp.Classes
         private Directory luceneIndexDirectory;
         private string indexPath;
         private bool indexAlreadyExist = false;
-        private Translation Translation = null;
-        public string ErrorMessage { get; private set; } = "";
+        public Translation Translation { get; set; } = null;
+        public string ErrorMessage = "";
+
+        public short TranslationId { get; private set; } = -1;
 
         public LuceneBookSearch(string basePathForFiles, Translation translation)
         {
@@ -94,7 +96,7 @@ namespace UbStudyHelp.Classes
 
         private bool CreateUBIndex()
         {
-            if (System.IO.Directory.GetFiles(indexPath, "*.*").Length > 0)
+            if (System.IO.Directory.GetFiles(indexPath, "*.*").Length > 4)
             {
                 return true;
             }
@@ -124,8 +126,10 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                StaticObjects.Logger.Error("Creating Search Index for " + indexPath, ex);
-                EventsControl.FireSendMessage("Creating Search Index", ex);
+                System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(indexPath);
+                directoryInfo.Delete(true);
+                StaticObjects.Logger.Error("Creating Book Search Data for " + indexPath, ex);
+                EventsControl.FireSendMessage("Creating Book Search Data for ", ex);
                 return false;
             }
         }

@@ -57,6 +57,7 @@ namespace UbStudyHelp.Controls
             }
             StaticObjects.Parameters.Entry = entry;
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
+            EventsControl.FireNewPaperShown();
 
 
             //// Keep latest pragraph shown for next program section
@@ -244,9 +245,10 @@ namespace UbStudyHelp.Controls
             Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
             Paper paperRight = StaticObjects.Book.RightTranslation.Paper(entry.Paper);
 
-            HtmlSingleBilingualLine(tableRowGroup, null, StaticObjects.Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString(),
-                                           StaticObjects.Book.RightTranslation.PaperTranslation + " " + entry.Paper.ToString(),
-                                           enHtmlType.PaperTitle);
+            string titleLeft = StaticObjects.Book.LeftTranslation.PaperTranslation.Replace("1", paperLeft.PaperNo.ToString());
+            string titleRight = StaticObjects.Book.RightTranslation.PaperTranslation.Replace("1", paperRight.PaperNo.ToString());
+
+            HtmlSingleBilingualLine(tableRowGroup, null, titleLeft, titleRight, enHtmlType.PaperTitle);
 
             int indParagraph = 0;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)

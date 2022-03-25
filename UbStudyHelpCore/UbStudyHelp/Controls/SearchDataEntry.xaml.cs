@@ -27,6 +27,7 @@ namespace UbStudyHelp.Controls
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
+            EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
         }
 
 
@@ -218,6 +219,10 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
+            if (luceneLeft.Translation.LanguageID != StaticObjects.Book.LeftTranslation.LanguageID)
+            {
+                luceneLeft = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.LeftTranslation);
+            }
             if (luceneLeft.Execute(data))
             {
                 lastData = data;
@@ -233,6 +238,10 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
+            if (luceneRight.Translation.LanguageID != StaticObjects.Book.RightTranslation.LanguageID)
+            {
+                luceneRight = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.RightTranslation);
+            }
             if (luceneRight.Execute(data))
             {
                 lastData = data;
@@ -240,6 +249,13 @@ namespace UbStudyHelp.Controls
             }
             ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
+
+        private void EventsControl_TranslationsChanged()
+        {
+            ButtonSearchLeftText.Text= "Search " + StaticObjects.Book.LeftTranslation.Description;
+            ButtonSearchRightText.Text = "Search " + StaticObjects.Book.RightTranslation.Description;
+        }
+
         #endregion
     }
 }

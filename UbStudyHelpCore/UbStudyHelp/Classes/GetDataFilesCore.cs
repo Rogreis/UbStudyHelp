@@ -13,13 +13,20 @@ using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
+    /// <summary>
+    /// Get data files specific for the WPF edition
+    /// Starting on version 2.1, files are embbedded into the exe and unziped in the start
+    /// </summary>
     public class GetDataFilesCore : GetDataFiles
     {
         private string DestinationFolder = "";
 
+        private string SourceFolder = "";
+
         public GetDataFilesCore(string destinationFolder)
         {
-            DestinationFolder= destinationFolder;
+            SourceFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "TUB_Files");
+            DestinationFolder = destinationFolder;
         }
 
         /// <summary>
@@ -29,10 +36,11 @@ namespace UbStudyHelp.Classes
         /// <param name="fileName"></param>
         /// <param name="isZip"></param>
         /// <returns>The uncompressed json string</returns>
-        private string GetFile(string fileName, bool isZip = true)
+        private string GetFile(short translatioId, string fileName, bool isZip = true)
         {
             try
             {
+                string json = "";
                 if (!Directory.Exists(DestinationFolder))
                 {
                     StaticObjects.Logger.Info("Creating data folder: " + DestinationFolder);
@@ -42,32 +50,16 @@ namespace UbStudyHelp.Classes
                 if (!File.Exists(path))
                 {
                     StaticObjects.Logger.Info("File does not exist: " + path);
-
-                    byte[] bytes = GetGitHubBinaryFile(fileName, true);
-                    string json = BytesToString(bytes, isZip);
-                    if (isZip)
-                    {
-                        File.WriteAllBytes(path, bytes);
-                    }
-                    else
-                    {
-                        File.WriteAllText(path, json);
-                    }
-                    return json;
+                    string translationStartupPath = Path.Combine(SourceFolder, $"TR{translatioId:000}.gz");
+                    byte[] bytes = File.ReadAllBytes(translationStartupPath);
+                    json= BytesToString(bytes, isZip);
+                    File.WriteAllText(path, json);
                 }
                 else
                 {
-                    StaticObjects.Logger.Info("File exists: " + path);
-                    if (isZip)
-                    {
-                        byte[] bytes= File.ReadAllBytes(path);
-                        return BytesToString(bytes, isZip);
-                    }
-                    else
-                    {
-                        return File.ReadAllText(path);
-                    }
+                    json= File.ReadAllText(path);
                 }
+                return json;
             }
             catch (Exception ex)
             {
@@ -76,49 +68,22 @@ namespace UbStudyHelp.Classes
             }
         }
 
-        public bool CheckFiles(string destinationFolder)
-        {
-            //try
-            //{
-            //    if (!GetFile(destinationFolder, ControlFileName, false))
-            //    {
-            //        return false;
-            //    }
-            //    if (!GetFile(destinationFolder, indexFileName, true))
-            //    {
-            //        return false;
-            //    }
-
-            //    string pathlistTranslations = Path.Combine(destinationFolder, ControlFileName);
-
-            //    XElement xElem = XElement.Load(pathlistTranslations);
-            //    List<TranslationCore> Translations = (from lang in xElem.Descendants("Translation")
-            //                                      select new TranslationCore(lang)).ToList();
-
-            //    foreach (TranslationCore translation in Translations)
-            //    {
-            //        string fileTranslationName = $"L{translation.LanguageID:000}.zip";
-            //        if (!GetFile(destinationFolder, fileTranslationName, true))
-            //        {
-            //            return false;
-            //        }
-            //    }
-            //    return true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.Logger.Error("Data not loaded!", ex);
-            //    return false;
-            //}
-            return false;
-        }
-
+        /// <summary>
+        /// Get the translations list from a local file
+        /// </summary>
+        /// <returns></returns>
         public override List<Translation> GetTranslations()
         {
-            string json = GetFile(ControlFileName, false);
+            string path = Path.Combine(SourceFolder, ControlFileName);
+            string json = File.ReadAllText(path);
             return Translations.DeserializeJson(json);
         }
 
+        /// <summary>
+        /// Get a translation from a local file
+        /// </summary>
+        /// <param name="translatioId"></param>
+        /// <returns></returns>
         public override Translation GetTranslation(short translatioId)
         {
             Translation translation= StaticObjects.Book.GetTranslation(translatioId);
@@ -130,8 +95,8 @@ namespace UbStudyHelp.Classes
             {
                 return translation;
             }
-            string translationFileName = $"TR{translatioId:000}.gz";
-            string json= GetFile(translationFileName, true);
+            string translationFileName = $"TR{translatioId:000}.json";
+            string json= GetFile(translatioId, translationFileName, true);
             translation.GetData(json);
             return translation;
         }
