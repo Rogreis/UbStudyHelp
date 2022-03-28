@@ -21,6 +21,8 @@ namespace UbStudyHelp.Controls
 
         private bool lastShouldHighlightText = false;
 
+        PaperContextMenu PaperContext = new PaperContextMenu();
+
 
         public PageBrowser()
         {
@@ -143,52 +145,12 @@ namespace UbStudyHelp.Controls
             paragraph.FontWeight = FontWeights.Bold;
             paragraph.Foreground = accentBrush;
             cell.Blocks.Add(paragraph);
+            cell.Tag = paragraph;
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
 
-        private void CreateCellContextMenu(TableCell cell)
-        {
-            ContextMenu contextMenu = new ContextMenu();
 
-            MenuItem item1 = new MenuItem();
-            MenuItem item2 = new MenuItem();
-
-            //I have about 10 items
-            //...
-            item1.Header = "item1";
-            item1.Click += Item1_Click;
-            contextMenu.Items.Add(item1);
-
-            item2.Header = "item2";
-            item2.Click += Item2_Click;
-            contextMenu.Items.Add(item2);
-
-
-            contextMenu.ContextMenuOpening += ContextMenu_ContextMenuOpening;
-            contextMenu.DataContext = cell;
-
-            cell.ContextMenu = contextMenu;
-        }
-
-        private void ContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
-        {
-            // https://docs.microsoft.com/en-us/dotnet/desktop/wpf/advanced/annotations-overview?view=netframeworkdesktop-4.8
-            ContextMenu contextMenu = sender as ContextMenu;
-            TableCell cell= contextMenu.DataContext as TableCell;
-            //Paragraph p= cell.Blocks.FirstBlock. as Paragraph;
-
-        }
-
-        private void Item1_Click(object sender, RoutedEventArgs e)
-        {
-            EventsControl.FireSendMessage("Copy");
-        }
-
-        private void Item2_Click(object sender, RoutedEventArgs e)
-        {
-            EventsControl.FireSendMessage("Menu 2");
-        }
 
         private void HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entry, string LeftText, string RightText,
                                              enHtmlType htmlType = enHtmlType.NormalParagraph,
@@ -203,8 +165,9 @@ namespace UbStudyHelp.Controls
             row.Cells.Add(cellLeft);
             row.Cells.Add(cellRight);
 
-            CreateCellContextMenu(cellLeft);
-            CreateCellContextMenu(cellRight);
+            cellLeft.MouseRightButtonDown += CellLeft_MouseRightButtonDown;
+            cellRight.MouseRightButtonDown += CellRight_MouseRightButtonDown;
+
 
             switch (htmlType)
             {
@@ -231,6 +194,17 @@ namespace UbStudyHelp.Controls
             }
         }
 
+        private void CellRight_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            TableCell cell = sender as TableCell;
+            PaperContext.CreateCellContextMenu(cell);
+        }
+
+        private void CellLeft_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            TableCell cell = sender as TableCell;
+            PaperContext.CreateCellContextMenu(cell);
+        }
 
         private void ShowShowBilingualFlowDocument(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
@@ -356,3 +330,4 @@ namespace UbStudyHelp.Controls
         }
     }
 }
+
