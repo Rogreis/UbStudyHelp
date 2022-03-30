@@ -16,11 +16,11 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Column="0" Grid.Row="0" x:Name="TextBlockWhatToSearch" Text="Type to search index:" Height="Auto" Width="Auto" 
-                   Margin="5,5,5,5" TextWrapping="Wrap" />
+                   Margin="20,5,5,5" TextWrapping="Wrap" />
 
-        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearch" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5" />
+        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearch" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="20,5,5,20" />
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Margin="20,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -32,7 +32,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" x:Name="TextBlockSearchIn" Height="Auto" Width="Auto" 
-                       Text="Search in:" Margin="5,5,5,5" TextWrapping="Wrap" />
+                       Text="Search in:" Margin="0,5,5,5" TextWrapping="Wrap" />
 
             <mah:ToggleSwitch x:Name="TooglePart1" Grid.Row="0" Grid.Column="1" Header="Part 1" Toggled="TooglePart1_Toggled" />
             <mah:ToggleSwitch x:Name="TooglePart2" Grid.Row="0" Grid.Column="2" Header="Part 2" Toggled="TooglePart2_Toggled"/>

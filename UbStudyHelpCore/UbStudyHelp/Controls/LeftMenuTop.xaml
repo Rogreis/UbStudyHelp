@@ -18,16 +18,16 @@
 
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100" />
+            <RowDefinition Height="130" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="140" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!--    How to create URIs for resources:
                 https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?redirectedfrom=MSDN&view=netframeworkdesktop-4.8
         -->
-        <svgc:SvgViewbox x:Name="SvgImage" Source="Images/Settings.svg" Height="90" Width="120" Margin="3" ToolTip="{DynamicResource ToolTip}"/>
+        <svgc:SvgViewbox x:Name="SvgImage" Source="Images/Settings.svg" Height="90" Width="120" Margin="20,3,3,3" ToolTip="{DynamicResource ToolTip}"/>
 
 
         <!--<Image Grid.Row="0" Grid.Column="0"  Source="{DynamicResource ImageSourcePath}" 
@@ -35,7 +35,7 @@
 
         <TextBlock Grid.Row="0" Grid.Column="1"  x:Name="TextBlockCaption" Margin="10,10,10,10"
                            Text="{DynamicResource TextToDisplay}" 
-                           TextWrapping="Wrap"/>
+                           TextWrapping="Wrap" VerticalAlignment="Center"/>
     </Grid>
     
 </UserControl>
