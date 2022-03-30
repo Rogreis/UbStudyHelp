@@ -29,6 +29,20 @@ namespace UbStudyHelp.Controls
             ubTrackPage.Initialize();
             searchHelpPage.Initialize();
             optionsPage.Initialize();
+
+            EventsControl.DirectSearch += EventsControl_DirectSearch;
+        }
+
+
+        /// <summary>
+        /// >Fired ehen text context menu search is called
+        /// </summary>
+        /// <param name="textToSearch"></param>
+        /// <param name="useRightTranslation"></param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void EventsControl_DirectSearch(string textToSearch, bool useRightTranslation)
+        {
+            FrameControl.Navigate(ubSearchPage);
         }
 
         private void LeftPainel_Loaded(object sender, RoutedEventArgs e)

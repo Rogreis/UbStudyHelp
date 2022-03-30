@@ -28,6 +28,7 @@ namespace UbStudyHelp.Controls
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
+            EventsControl.DirectSearch += EventsControl_DirectSearch;
         }
 
 
@@ -53,30 +54,13 @@ namespace UbStudyHelp.Controls
             {
                 ComboWhatToSearch.SelectedIndex = 0;
             }
-
-
-            //FillComboWhatToSearch();
         }
 
-
-        //private void FillComboWhatToSearch()
-        //{
-        //    ComboWhatToSearch.Items.Clear();
-        //    foreach (string searchString in StaticObjects.Parameters.SearchStrings)
-        //    {
-        //        ComboWhatToSearch.Items.Add(searchString);
-        //    }
-        //    if (ComboWhatToSearch.Items.Count > 0)
-        //    {
-        //        ComboWhatToSearch.SelectedIndex = 0;
-        //    }
-        //}
 
         private void SetFontSize()
         {
             App.Appearance.SetFontSize(TextBlockWhatToSearch);
             App.Appearance.SetFontSize(TextBlockSearchIn);
-            //App.Appearance.SetFontSize(ButtonSearchSort);
             App.Appearance.SetFontSize(ButtonSearchLeftText);
             App.Appearance.SetFontSize(ButtonSearchRightText);
             App.Appearance.SetFontSize(TooglePart1);
@@ -249,6 +233,35 @@ namespace UbStudyHelp.Controls
             }
             ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
+
+        private void EventsControl_DirectSearch(string textToSearch, bool isRightTranslation)
+        {
+            if (textToSearch.Trim() == "")
+            {
+                return;
+            }
+            ComboWhatToSearch.Text = textToSearch;
+            SearchData data = GetData();
+            data.QueryString = textToSearch;
+            if (isRightTranslation)
+            {
+                if (luceneRight.Execute(data))
+                {
+                    lastData = data;
+                    ShowSearchResults?.Invoke(data);
+                }
+            }
+            else
+            {
+                if (luceneLeft.Execute(data))
+                {
+                    lastData = data;
+                    ShowSearchResults?.Invoke(data);
+                }
+            }
+            ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
+        }
+
 
         private void EventsControl_TranslationsChanged()
         {

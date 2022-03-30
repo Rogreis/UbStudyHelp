@@ -28,6 +28,12 @@ namespace UbStudyHelp.Classes
     public delegate void dlSearchClicked(TOC_Entry entry, List<string> Words);
 
     /// <summary>
+    /// Used to fire a click on some seach result entry
+    /// </summary>
+    /// <param name="loc"></param>
+    public delegate void dlDirectSearch(string textToSearch, bool useRightTranslation);
+
+    /// <summary>
     /// Used to fire a click on index
     /// </summary>
     /// <param name="loc"></param>
@@ -89,6 +95,8 @@ namespace UbStudyHelp.Classes
     {
         public static event dlSearchClicked SearchClicked = null;
 
+        public static event dlDirectSearch DirectSearch = null;
+
         public static event dlIndexClicked IndexClicked = null;
 
         public static event dlOpenNewIndexEntry OpenNewIndexEntry = null;
@@ -120,6 +128,12 @@ namespace UbStudyHelp.Classes
         {
             SearchClicked?.Invoke(entry, Words);
         }
+
+        public static void FireDirectSearch(string textToSearch, bool useRightTranslation)
+        {
+            DirectSearch?.Invoke(textToSearch, useRightTranslation);
+        }
+        
 
         public static void FireIndexClicked(TOC_Entry entry)
         {

@@ -21,13 +21,17 @@ namespace UbStudyHelp.Controls
 
         private bool lastShouldHighlightText = false;
 
-        PaperContextMenu PaperContext = new PaperContextMenu();
+        private FlowDocument MainDocument = new FlowDocument();
+
+
+        private PaperContextMenu PaperContext = null;
 
 
         public PageBrowser()
         {
             InitializeComponent();
             this.Loaded += PageBrowser_Loaded;
+            PaperContext = new PaperContextMenu(TextFlowDocument);
 
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
@@ -116,6 +120,7 @@ namespace UbStudyHelp.Controls
         {
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
             cell.Blocks.Add(paragraph);
+            paragraph.Tag = cell.Tag;
             ShowParagraphIdentification(paragraph, entry);
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
@@ -129,6 +134,7 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Margin = new Thickness(50, 20, 20, 0);
+            paragraph.Tag = cell.Tag;
             ShowParagraphIdentification(paragraph, entry);
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
@@ -144,8 +150,8 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
             paragraph.FontWeight = FontWeights.Bold;
             paragraph.Foreground = accentBrush;
+            paragraph.Tag = cell.Tag;
             cell.Blocks.Add(paragraph);
-            cell.Tag = paragraph;
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
@@ -161,12 +167,11 @@ namespace UbStudyHelp.Controls
             tableRowGroup.Rows.Add(row);
             row.Tag = entry;
             TableCell cellLeft = new TableCell();
+            cellLeft.Tag = new ParagraphSearchData() { IsRightTranslation = false, Entry = entry };
             TableCell cellRight = new TableCell();
+            cellRight.Tag = new ParagraphSearchData() { IsRightTranslation = true, Entry = entry };
             row.Cells.Add(cellLeft);
             row.Cells.Add(cellRight);
-
-            cellLeft.MouseRightButtonDown += CellLeft_MouseRightButtonDown;
-            cellRight.MouseRightButtonDown += CellRight_MouseRightButtonDown;
 
 
             switch (htmlType)
@@ -194,25 +199,14 @@ namespace UbStudyHelp.Controls
             }
         }
 
-        private void CellRight_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            TableCell cell = sender as TableCell;
-            PaperContext.CreateCellContextMenu(cell);
-        }
-
-        private void CellLeft_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            TableCell cell = sender as TableCell;
-            PaperContext.CreateCellContextMenu(cell);
-        }
 
         private void ShowShowBilingualFlowDocument(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            FlowDocument document = new FlowDocument();
+            
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
 
             Table table = new Table();
-            document.Blocks.Add(table);
+            MainDocument.Blocks.Add(table);
             TableRowGroup tableRowGroup = new TableRowGroup();
             table.RowGroups.Add(tableRowGroup);
 
@@ -233,7 +227,7 @@ namespace UbStudyHelp.Controls
                 HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
             }
             TextFlowDocument.Tag = entry;
-            TextFlowDocument.Document = document;
+            TextFlowDocument.Document = MainDocument;
 
             if (entry != null && tableRowGroup != null)
             {
