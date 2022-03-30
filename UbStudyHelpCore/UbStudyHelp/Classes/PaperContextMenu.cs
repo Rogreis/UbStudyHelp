@@ -193,10 +193,10 @@ namespace UbStudyHelp.Classes
 
         // https://docs.microsoft.com/en-us/dotnet/api/system.windows.annotations.annotationservice.createtextstickynotecommand?view=windowsdesktop-6.0
 
-        AnnotationService _annotService = null;
-        FileStream _annotStream = null;
-        string _annotStorePath = "";
-        XmlStreamStore _annotStore = null;
+        //AnnotationService _annotService = null;
+        //FileStream _annotStream = null;
+        //string _annotStorePath = "";
+        //XmlStreamStore _annotStore = null;
 
 
         // ------------------------ StartAnnotations --------------------------

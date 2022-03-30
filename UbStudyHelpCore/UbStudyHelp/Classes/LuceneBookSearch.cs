@@ -183,7 +183,7 @@ namespace UbStudyHelp.Classes
 
                     short section = Convert.ToInt16(doc.GetField(FieldSection).GetStringValue());
                     short paragraphNo = Convert.ToInt16(doc.GetField(FieldParagraph).GetStringValue());
-                    TOC_Entry entry = new TOC_Entry(paper, section, paragraphNo);
+                    TOC_Entry entry = new TOC_Entry(paper, section, paragraphNo, 0, 0);
                     string text = doc.GetField(FieldText).GetStringValue();
                     SearchResult searchResult = new SearchResult(entry, text);
                     searchResult.OriginalPosition = i;  // used to restore relevancy order after a sort by paragraph

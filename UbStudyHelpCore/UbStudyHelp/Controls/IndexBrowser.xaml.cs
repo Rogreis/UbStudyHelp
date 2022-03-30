@@ -141,7 +141,7 @@ namespace UbStudyHelp.Controls
                 {
                     char[] sep = { ';' };
                     string[] parts = tag.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-                    TOC_Entry entry = new TOC_Entry(Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]));
+                    TOC_Entry entry = new TOC_Entry(Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]), 0, 0);
                     EventsControl.FireIndexClicked(entry);
                 }
                 catch

@@ -11,6 +11,8 @@ namespace UbStandardObjects.Objects
         public short Paper { get; set; } = 0;
         public short Section { get; set; } = 1;
         public short ParagraphNo { get; set; } = 1;
+        public short Page { get; set; }
+        public short Line { get; set; }
         public string Text { get; set; } = "";
         public bool IsExpanded { get; set; } = false;
 
@@ -19,9 +21,19 @@ namespace UbStandardObjects.Objects
         {
             get
             {
+                return $"{Paper}:{Section}-{ParagraphNo} ({Page}.{Line})";
+            }
+        }
+
+        [JsonIgnore]
+        public string ParagraphIDNoPage
+        {
+            get
+            {
                 return $"{Paper}:{Section}-{ParagraphNo}";
             }
         }
+
 
         [JsonIgnore]
         public string Anchor
@@ -65,15 +77,19 @@ namespace UbStandardObjects.Objects
             this.Paper = par.Paper;
             this.Section = par.Section;
             this.ParagraphNo = par.ParagraphNo;
+            this.Page = par.Page;
+            this.Line = par.Line;
             Text = par.Text;
             IsExpanded = false;
         }
 
-        public TOC_Entry(short paper, short section, short paragraphNo)
+        public TOC_Entry(short paper, short section, short paragraphNo, short page, short line)
         {
             this.Paper = paper;
             this.Section = section;
             this.ParagraphNo = paragraphNo;
+            this.Page = page;
+            this.Line = line;
             Text = "";
             IsExpanded = false;
         }
@@ -83,6 +99,8 @@ namespace UbStandardObjects.Objects
             this.Paper = entry.Paper;
             this.Section = entry.Section;
             this.ParagraphNo = entry.ParagraphNo;
+            this.Page = entry.Page;
+            this.Line = entry.Line;
             Text = entry.Text;
             IsExpanded = entry.IsExpanded;
         }

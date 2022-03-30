@@ -21,6 +21,8 @@ namespace UbStudyHelp.Pages
     public partial class UbTrackPage : Page
     {
 
+        private FlowDocumentFormat format = new FlowDocumentFormat();
+
         private enum TrachSortOrder
         {
             None,
@@ -59,33 +61,23 @@ namespace UbStudyHelp.Pages
             {
                 System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
                 {
-                    //BorderThickness = new Thickness(1),
-                    //BorderBrush = App.Appearance.GetHighlightColorBrush(),
                     Padding= new Thickness(5),
+                    Style = App.Appearance.ForegroundStyle
                 };
     
 
-                paragraph.Style = App.Appearance.ForegroundStyle;
+                //Bold link = new Bold();
+                //link.FontSize = StaticObjects.Parameters.FontSizeInfo;
+                //link.Foreground = accentBrush;
+                //link.Inlines.Add(entry.ParagraphID);
 
-                Bold link = new Bold();
-                link.FontSize = StaticObjects.Parameters.FontSizeInfo;
-                link.Foreground = accentBrush;
-                link.Inlines.Add(entry.ParagraphID);
-
-                Hyperlink hyperlink = new Hyperlink(link)
-                {
-                    NavigateUri = new Uri("about:blank"),
-                    TextDecorations = null
-                };
-                hyperlink.Tag = entry;
+                Hyperlink hyperlink = format.HyperlinkFullParagraph(entry, false, entry.Text);
                 hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
                 hyperlink.MouseEnter += Hyperlink_MouseEnter;
                 hyperlink.MouseLeave += Hyperlink_MouseLeave;
+
                 paragraph.Inlines.Add(hyperlink);
-                paragraph.Inlines.Add(new Run("  "));
                 document.Blocks.Add(paragraph);
-                TextWork textWork = new TextWork(entry.Text);
-                textWork.GetInlinesText(paragraph.Inlines, null);
             }
             TrackDataFlowDocument.Document = document;
             App.Appearance.SetFontSize(TrackDataFlowDocument);

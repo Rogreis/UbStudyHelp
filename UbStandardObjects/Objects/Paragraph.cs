@@ -36,6 +36,8 @@ namespace UbStandardObjects.Objects
                 entry.Paper = Paper;
                 entry.Section= Section;
                 entry.ParagraphNo = ParagraphNo;
+                entry.Page = Page;
+                entry.Line = Line;
                 entry.Text = Text;
                 return entry;
             }

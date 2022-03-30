@@ -26,7 +26,7 @@ namespace UbStandardObjects
 		/// <summary>
 		/// Last position in the text, default for first paragraph
 		/// </summary>
-		public TOC_Entry Entry { get; set; } = new TOC_Entry(0, 1, 0);
+		public TOC_Entry Entry { get; set; } = new TOC_Entry(0, 1, 0, 0, 0);
 
 		public short LanguageIDLeftTranslation { get; set; } = 0;
 

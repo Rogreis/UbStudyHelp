@@ -18,6 +18,8 @@ namespace UbStudyHelp.Pages
     {
         private SearchData lastSearchdata = null;
         private int NrPage, PageSize, TotalPages;
+        private FlowDocumentFormat format = new FlowDocumentFormat();
+
 
         public UbSearchResults()
         {
@@ -103,29 +105,11 @@ namespace UbStudyHelp.Pages
                 paragraphSearchResult.Style = App.Appearance.ForegroundStyle;
                 document.Blocks.Add(paragraphSearchResult);
 
-                // Create hyperlink ony with the paragraph identification
-                Run runIdent = new Run(result.Entry.ParagraphID)
-                {
-                    FontWeight = FontWeights.Bold,
-                    FontSize = StaticObjects.Parameters.FontSizeInfo,
-                    Foreground = accentBrush
-                };
-
-                Hyperlink hyperlink = new Hyperlink(runIdent)
-                {
-                    NavigateUri = new Uri("about:blank"),
-                    TextDecorations = null
-                };
-                hyperlink.Tag = result.Entry;
+                Hyperlink hyperlink = format.HyperlinkFullParagraph(result.Entry, false, result.Text);
                 hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
                 hyperlink.MouseEnter += Hyperlink_MouseEnter;
                 hyperlink.MouseLeave += Hyperlink_MouseLeave;
                 paragraphSearchResult.Inlines.Add(hyperlink);
-                paragraphSearchResult.Inlines.Add(new Run("  "));
-
-                // Paragraph text is inserted
-                TextWork textWork = new TextWork(result.Text);
-                textWork.GetInlinesText(paragraphSearchResult.Inlines);
             }
 
             SearchResultsFlowDocument.Document = document;

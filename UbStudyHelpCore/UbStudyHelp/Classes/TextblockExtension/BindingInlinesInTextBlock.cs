@@ -110,7 +110,7 @@ namespace UbStudyHelp.Classes
             short Paragraph = -1;
             short.TryParse(parts[2], out Paragraph);
 
-            TOC_Entry entry = new TOC_Entry(Paper, Section, Paragraph);
+            TOC_Entry entry = new TOC_Entry(Paper, Section, Paragraph, 0, 0);
             EventsControl.FireIndexClicked(entry);
 
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));

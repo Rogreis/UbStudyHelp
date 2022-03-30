@@ -23,6 +23,8 @@ namespace UbStudyHelp.Controls
 
         private FlowDocument MainDocument = new FlowDocument();
 
+        private FlowDocumentFormat format = new FlowDocumentFormat();
+
 
         private PaperContextMenu PaperContext = null;
 
@@ -64,16 +66,6 @@ namespace UbStudyHelp.Controls
             StaticObjects.Parameters.Entry = entry;
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
             EventsControl.FireNewPaperShown();
-
-
-            //// Keep latest pragraph shown for next program section
-            //StaticObjects.Parameters.Entry= new TOC_Entry(entry);
-            //lastEntry = new TOC_Entry(entry);
-            //lastShouldHighlightText = shouldHighlightText;
-
-            //EventsControl.FireSendMessage(entry.ToString());
-            //string htmlPage = commands.Html(entry, shouldHighlightText, Words);
-            //BrowserText.NavigateToString(htmlPage);
         }
 
         private System.Windows.Documents.Paragraph CreateParagraph(bool highlighted)
@@ -91,26 +83,12 @@ namespace UbStudyHelp.Controls
 
 
             paragraph.Style = App.Appearance.ForegroundStyle;
-            paragraph.Margin = new Thickness(20, 20, 20, 0);
-            paragraph.LineHeight = 32;
+            paragraph.Margin = new Thickness(20, 10, 10, 0);
+            paragraph.LineHeight = 26;
             paragraph.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
             return paragraph;
         }
 
-        private void ShowParagraphIdentification(System.Windows.Documents.Paragraph paragraph, TOC_Entry entry)
-        {
-            if (entry != null)
-            {
-                Brush accentBrush = App.Appearance.GetHighlightColorBrush();
-                Run runIdent = new Run(entry.ParagraphID + " ")
-                {
-                    //FontWeight = FontWeights.Bold,
-                    FontSize = StaticObjects.Parameters.FontSizeInfo,
-                    Foreground = accentBrush
-                };
-                paragraph.Inlines.Add(runIdent);
-            }
-        }
 
 
         private void FormatParagraph(TableCell cell,
@@ -121,7 +99,8 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Tag = cell.Tag;
-            ShowParagraphIdentification(paragraph, entry);
+            paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
+            paragraph.Inlines.Add(new Run(" "));
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
@@ -135,7 +114,8 @@ namespace UbStudyHelp.Controls
             cell.Blocks.Add(paragraph);
             paragraph.Margin = new Thickness(50, 20, 20, 0);
             paragraph.Tag = cell.Tag;
-            ShowParagraphIdentification(paragraph, entry);
+            paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
+            paragraph.Inlines.Add(new Run(" "));
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
