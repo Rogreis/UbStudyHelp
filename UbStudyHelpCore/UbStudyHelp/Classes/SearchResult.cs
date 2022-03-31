@@ -21,20 +21,14 @@ namespace UbStudyHelp.Classes
         {
             get
             {
-                return _text;
-            }
-            set
-            {
-                TextWork.LoadText(value);
-                _text = TextWork.GetHtml();
+                return Entry.Text;
             }
         }
 
 
-        public SearchResult(TOC_Entry entry, string text)
+        public SearchResult(TOC_Entry entry)
         {
             Entry = entry;
-            Text = text;
         }
 
         /// <summary>

@@ -122,6 +122,7 @@ namespace UbStudyHelp.Pages
                 StaticObjects.Parameters.TrackEntries.RemoveAt(StaticObjects.Parameters.TrackEntries.Count - 1);
             }
 
+            // When text is empty 
             if (string.IsNullOrEmpty(entry.Text))
             {
                 Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
