@@ -7,11 +7,10 @@ using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 
-
-
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {
@@ -66,8 +65,10 @@ namespace UbStudyHelp.Classes
         private Directory luceneIndexDirectory;
         private string indexPath;
         private bool indexAlreadyExist = false;
-        private Translation Translation = null;
-        public string ErrorMessage { get; private set; } = "";
+        public Translation Translation { get; set; } = null;
+        public string ErrorMessage = "";
+
+        public short TranslationId { get; private set; } = -1;
 
         public LuceneBookSearch(string basePathForFiles, Translation translation)
         {
@@ -95,7 +96,7 @@ namespace UbStudyHelp.Classes
 
         private bool CreateUBIndex()
         {
-            if (System.IO.Directory.GetFiles(indexPath, "*.*").Length > 0)
+            if (System.IO.Directory.GetFiles(indexPath, "*.*").Length > 4)
             {
                 return true;
             }
@@ -125,8 +126,10 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Creating Search Index for " + indexPath, ex);
-                EventsControl.FireSendMessage("Creating Search Index", ex);
+                System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(indexPath);
+                directoryInfo.Delete(true);
+                StaticObjects.Logger.Error("Creating Book Search Data for " + indexPath, ex);
+                EventsControl.FireSendMessage("Creating Book Search Data for ", ex);
                 return false;
             }
         }
@@ -139,7 +142,7 @@ namespace UbStudyHelp.Classes
                 if (!CreateUBIndex())
                 {
                     string message = "Book Index not created for " + indexPath;
-                    Log.NonFatalError(message);
+                    StaticObjects.Logger.NonFatalError(message);
                     EventsControl.FireSendMessage("Book Index not created.");
                 }
 
@@ -180,7 +183,7 @@ namespace UbStudyHelp.Classes
 
                     short section = Convert.ToInt16(doc.GetField(FieldSection).GetStringValue());
                     short paragraphNo = Convert.ToInt16(doc.GetField(FieldParagraph).GetStringValue());
-                    TOC_Entry entry = new TOC_Entry(paper, section, paragraphNo);
+                    TOC_Entry entry = new TOC_Entry(paper, section, paragraphNo, 0, 0);
                     string text = doc.GetField(FieldText).GetStringValue();
                     SearchResult searchResult = new SearchResult(entry, text);
                     searchResult.OriginalPosition = i;  // used to restore relevancy order after a sort by paragraph
@@ -190,7 +193,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Error executing Search.", ex);
+                StaticObjects.Logger.Error("Error executing Search.", ex);
                 EventsControl.FireSendMessage("Executing Search", ex);
                 return false;
             }

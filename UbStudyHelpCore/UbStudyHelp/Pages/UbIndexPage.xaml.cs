@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Pages
@@ -23,7 +24,7 @@ namespace UbStudyHelp.Pages
             DataEntry.ShowIndexDetails += DataEntry_ShowIndexDetails;
             if (!Index.Load())
             {
-                Log.NonFatalError("Index not lodaded");
+                StaticObjects.Logger.NonFatalError("Index not lodaded");
             }
         }
 
@@ -38,6 +39,11 @@ namespace UbStudyHelp.Pages
 
         private void CreateWebIndexPage(string indexEntry)
         {
+            if (indexEntry == null)
+            {
+                IndexBrowserInstance.Clear();
+                return;
+            }
             TubIndex index = Index.GetIndexEntry(indexEntry);
             EventsControl.FireSendMessage($"New index entry shown: {indexEntry}");
             IndexBrowserInstance.CreateWebIndexPage(index);

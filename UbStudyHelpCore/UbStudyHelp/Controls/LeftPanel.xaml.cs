@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using System.Windows;
 using System.Windows.Controls;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Pages;
 
@@ -28,6 +29,20 @@ namespace UbStudyHelp.Controls
             ubTrackPage.Initialize();
             searchHelpPage.Initialize();
             optionsPage.Initialize();
+
+            EventsControl.DirectSearch += EventsControl_DirectSearch;
+        }
+
+
+        /// <summary>
+        /// >Fired ehen text context menu search is called
+        /// </summary>
+        /// <param name="textToSearch"></param>
+        /// <param name="useRightTranslation"></param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void EventsControl_DirectSearch(string textToSearch, bool useRightTranslation)
+        {
+            FrameControl.Navigate(ubSearchPage);
         }
 
         private void LeftPainel_Loaded(object sender, RoutedEventArgs e)
@@ -44,9 +59,9 @@ namespace UbStudyHelp.Controls
             switch(targetView)
             {
                 case "IncreaseFontSize":
-                    if (App.ParametersData.FontSizeInfo < 22)
+                    if (StaticObjects.Parameters.FontSizeInfo < 22)
                     {
-                        App.ParametersData.FontSizeInfo++;
+                        StaticObjects.Parameters.FontSizeInfo++;
                         EventsControl.FireFontChanged();
                     }
                     else
@@ -56,9 +71,9 @@ namespace UbStudyHelp.Controls
                     args.Handled = true;
                     break;
                 case "DecreaseFontSize":
-                    if (App.ParametersData.FontSizeInfo > 10)
+                    if (StaticObjects.Parameters.FontSizeInfo > 10)
                     {
-                        App.ParametersData.FontSizeInfo--;
+                        StaticObjects.Parameters.FontSizeInfo--;
                         EventsControl.FireFontChanged();
                     }
                     else

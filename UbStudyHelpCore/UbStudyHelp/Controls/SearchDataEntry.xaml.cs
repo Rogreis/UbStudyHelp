@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
@@ -36,6 +27,8 @@ namespace UbStudyHelp.Controls
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
+            EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
+            EventsControl.DirectSearch += EventsControl_DirectSearch;
         }
 
 
@@ -43,16 +36,16 @@ namespace UbStudyHelp.Controls
         {
             SetAppearence();
             SetFontSize();
-            luceneLeft = new LuceneBookSearch(App.BaseTubFilesPath, Book.LeftTranslation);
-            luceneRight = new LuceneBookSearch(App.BaseTubFilesPath, Book.RightTranslation);
+            luceneLeft = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.LeftTranslation);
+            luceneRight = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.RightTranslation);
 
-            TooglePart1.IsOn= App.ParametersData.SimpleSearchIncludePartI;
-            TooglePart2.IsOn = App.ParametersData.SimpleSearchIncludePartII;
-            TooglePart3.IsOn = App.ParametersData.SimpleSearchIncludePartIII;
-            TooglePart4.IsOn = App.ParametersData.SimpleSearchIncludePartIV;
-            TooglePartCurrentPaper.IsOn = App.ParametersData.SimpleSearchCurrentPaperOnly;
+            TooglePart1.IsOn= StaticObjects.Parameters.SimpleSearchIncludePartI;
+            TooglePart2.IsOn = StaticObjects.Parameters.SimpleSearchIncludePartII;
+            TooglePart3.IsOn = StaticObjects.Parameters.SimpleSearchIncludePartIII;
+            TooglePart4.IsOn = StaticObjects.Parameters.SimpleSearchIncludePartIV;
+            TooglePartCurrentPaper.IsOn = StaticObjects.Parameters.SimpleSearchCurrentPaperOnly;
 
-            foreach (string entry in App.ParametersData.SearchStrings)
+            foreach (string entry in StaticObjects.Parameters.SearchStrings)
             {
                 LocalSearchStringsEntries.Add(entry);
             }
@@ -61,30 +54,13 @@ namespace UbStudyHelp.Controls
             {
                 ComboWhatToSearch.SelectedIndex = 0;
             }
-
-
-            //FillComboWhatToSearch();
         }
 
-
-        //private void FillComboWhatToSearch()
-        //{
-        //    ComboWhatToSearch.Items.Clear();
-        //    foreach (string searchString in App.ParametersData.SearchStrings)
-        //    {
-        //        ComboWhatToSearch.Items.Add(searchString);
-        //    }
-        //    if (ComboWhatToSearch.Items.Count > 0)
-        //    {
-        //        ComboWhatToSearch.SelectedIndex = 0;
-        //    }
-        //}
 
         private void SetFontSize()
         {
             App.Appearance.SetFontSize(TextBlockWhatToSearch);
             App.Appearance.SetFontSize(TextBlockSearchIn);
-            //App.Appearance.SetFontSize(ButtonSearchSort);
             App.Appearance.SetFontSize(ButtonSearchLeftText);
             App.Appearance.SetFontSize(ButtonSearchRightText);
             App.Appearance.SetFontSize(TooglePart1);
@@ -121,24 +97,24 @@ namespace UbStudyHelp.Controls
             data.Part3Included = TooglePart3.IsOn;
             data.Part4Included = TooglePart4.IsOn;
             data.CurrentPaperOnly = TooglePartCurrentPaper.IsOn;
-            data.CurrentPaper = App.ParametersData.Entry.Paper;
+            data.CurrentPaper = StaticObjects.Parameters.Entry.Paper;
             data.QueryString = ComboWhatToSearch.Text;
 
             // Store data for next session
-            App.ParametersData.SimpleSearchIncludePartI = data.Part1Included;
-            App.ParametersData.SimpleSearchIncludePartII = data.Part2Included;
-            App.ParametersData.SimpleSearchIncludePartIII = data.Part3Included;
-            App.ParametersData.SimpleSearchIncludePartIV = data.Part4Included;
-            App.ParametersData.SimpleSearchCurrentPaperOnly = data.CurrentPaperOnly;
+            StaticObjects.Parameters.SimpleSearchIncludePartI = data.Part1Included;
+            StaticObjects.Parameters.SimpleSearchIncludePartII = data.Part2Included;
+            StaticObjects.Parameters.SimpleSearchIncludePartIII = data.Part3Included;
+            StaticObjects.Parameters.SimpleSearchIncludePartIV = data.Part4Included;
+            StaticObjects.Parameters.SimpleSearchCurrentPaperOnly = data.CurrentPaperOnly;
 
-            App.ParametersData.AddEntry(App.ParametersData.SearchStrings, LocalSearchStringsEntries, data.QueryString);
+            ((ParametersCore)StaticObjects.Parameters).AddEntry(StaticObjects.Parameters.SearchStrings, LocalSearchStringsEntries, data.QueryString);
 
 
-            //if (App.ParametersData.SearchStrings.Contains(data.QueryString))
+            //if (StaticObjects.Parameters.SearchStrings.Contains(data.QueryString))
             //{
-            //    App.ParametersData.SearchStrings.Remove(data.QueryString);
+            //    StaticObjects.Parameters.SearchStrings.Remove(data.QueryString);
             //}
-            //App.ParametersData.SearchStrings.Add(data.QueryString);
+            //StaticObjects.Parameters.SearchStrings.Add(data.QueryString);
             //FillComboWhatToSearch();
             return data;
         }
@@ -227,6 +203,10 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
+            if (luceneLeft.Translation.LanguageID != StaticObjects.Book.LeftTranslation.LanguageID)
+            {
+                luceneLeft = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.LeftTranslation);
+            }
             if (luceneLeft.Execute(data))
             {
                 lastData = data;
@@ -242,6 +222,10 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
+            if (luceneRight.Translation.LanguageID != StaticObjects.Book.RightTranslation.LanguageID)
+            {
+                luceneRight = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.RightTranslation);
+            }
             if (luceneRight.Execute(data))
             {
                 lastData = data;
@@ -249,6 +233,42 @@ namespace UbStudyHelp.Controls
             }
             ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
+
+        private void EventsControl_DirectSearch(string textToSearch, bool isRightTranslation)
+        {
+            if (textToSearch.Trim() == "")
+            {
+                return;
+            }
+            ComboWhatToSearch.Text = textToSearch;
+            SearchData data = GetData();
+            data.QueryString = textToSearch;
+            if (isRightTranslation)
+            {
+                if (luceneRight.Execute(data))
+                {
+                    lastData = data;
+                    ShowSearchResults?.Invoke(data);
+                }
+            }
+            else
+            {
+                if (luceneLeft.Execute(data))
+                {
+                    lastData = data;
+                    ShowSearchResults?.Invoke(data);
+                }
+            }
+            ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
+        }
+
+
+        private void EventsControl_TranslationsChanged()
+        {
+            ButtonSearchLeftText.Text= "Search " + StaticObjects.Book.LeftTranslation.Description;
+            ButtonSearchRightText.Text = "Search " + StaticObjects.Book.RightTranslation.Description;
+        }
+
         #endregion
     }
 }

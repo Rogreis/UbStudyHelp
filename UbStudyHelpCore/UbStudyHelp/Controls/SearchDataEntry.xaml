@@ -12,16 +12,16 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Column="0" Grid.Row="0" x:Name="TextBlockWhatToSearch" Text="Type to search index:" Height="Auto" Width="Auto" 
-                   Margin="5,5,5,5" TextWrapping="Wrap" />
+                   Margin="20,5,5,5" TextWrapping="Wrap" />
 
-        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearch" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="5,5,5,5" />
+        <ComboBox Grid.Row="1" x:Name="ComboWhatToSearch" IsEditable="True" HorizontalAlignment="Stretch" Height="Auto" Margin="20,5,5,20" />
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Margin="20,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -32,7 +32,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" x:Name="TextBlockSearchIn" Height="Auto" Width="Auto" 
-                       Text="Search in:" Margin="5,5,5,5" TextWrapping="Wrap" />
+                       Text="Search in:" Margin="0,5,5,5" TextWrapping="Wrap" />
 
             <mah:ToggleSwitch x:Name="TooglePart1" Grid.Row="0" Grid.Column="1" Header="Part 1" Toggled="TooglePart1_Toggled" />
             <mah:ToggleSwitch x:Name="TooglePart2" Grid.Row="0" Grid.Column="2" Header="Part 2" Toggled="TooglePart2_Toggled"/>
@@ -40,31 +40,48 @@
             <mah:ToggleSwitch x:Name="TooglePartCurrentPaper" Grid.Row="1" Grid.Column="0" Header="Current Paper Only" Toggled="TooglePartCurrentPaper_Toggled" />
             <mah:ToggleSwitch x:Name="TooglePart3" Grid.Row="1" Grid.Column="1" Header="Part 3" Toggled="TooglePart3_Toggled"/>
             <mah:ToggleSwitch x:Name="TooglePart4" Grid.Row="1" Grid.Column="2" Header="Part 4" Toggled="TooglePart4_Toggled"/>
+        </Grid>
 
-
-            <Button x:Name="ButtonSearchSort" IsEnabled="False" Grid.Row="3" Grid.Column="0" Click="ButtonSearchSort_Click" ToolTip="Reorder the paragraphs by paper/section/paragraph" Width="52" Height="42">
+        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
+            <Button x:Name="ButtonSearchSort" IsEnabled="False" Click="ButtonSearchSort_Click" ToolTip="Reorder the paragraphs by paper/section/paragraph" Width="52" Height="42">
                 <StackPanel Orientation="Horizontal">
                     <!--<TextBlock x:Name="ButtonSearchSortText">Reorder</TextBlock>-->
-                    <Image x:Name="SortButtonImageIcon"  Margin="5"/>
+                    <Image x:Name="SortButtonImageIcon"  Margin="5">
+                    </Image>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonSearchLeft" Grid.Row="3" Grid.Column="1" Click="ButtonSearchLeft_Click" ToolTip="Search the left translation" Width="110" Height="42">
+            <Button x:Name="ButtonSearchLeft" Click="ButtonSearchLeft_Click" ToolTip="Search the left translation" Width="Auto" Height="42" Margin="20,0,0,0">
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="ButtonSearchLeftImage" Margin="5" Width="16" Height="20"/>
-                    <TextBlock x:Name="ButtonSearchLeftText">Left</TextBlock>
+                    <Image x:Name="ButtonSearchLeftImage" Margin="5" Width="16" Height="20">
+                        <Image.RenderTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="135" />
+                                <TranslateTransform X="15" Y="5" />
+                            </TransformGroup>
+                        </Image.RenderTransform>
+                    </Image>
+                    <TextBlock x:Name="ButtonSearchLeftText">Search Left</TextBlock>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonSearchRight" Grid.Row="3" Grid.Column="2" Click="ButtonSearchRight_Click" ToolTip="Search the right translation" Width="110" Height="42">
+            <Button x:Name="ButtonSearchRight" Click="ButtonSearchRight_Click" ToolTip="Search the right translation" Width="Auto" Height="42" Margin="20,0,0,0">
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="ButtonSearchRightImage" Margin="5" Width="16" Height="20"/>
-                    <TextBlock x:Name="ButtonSearchRightText">Right</TextBlock>
+                    <Image x:Name="ButtonSearchRightImage" Margin="5" Width="16" Height="20">
+                        <Image.RenderTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="135" />
+                                <TranslateTransform X="15" Y="5" />
+                            </TransformGroup>
+                        </Image.RenderTransform>
+                    </Image>
+                    <TextBlock x:Name="ButtonSearchRightText">Search Right</TextBlock>
                 </StackPanel>
             </Button>
+        </StackPanel>
 
 
-        </Grid>
-        
+
+
     </Grid>
 </UserControl>

@@ -1,10 +1,6 @@
-﻿using ControlzEx.Theming;
-using System;
-using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interop;
-using System.Windows.Threading;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp
@@ -16,57 +12,21 @@ namespace UbStudyHelp
     public partial class MainWindow
     {
 
-        DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
-
         public MainWindow()
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
             EventsControl.SendMessage += EventsControl_SendMessage;
             EventsControl.FontChanged += EventsControl_FontChanged;
+            EventsControl.NewPaperShown += EventsControl_NewPaperShown;
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
-
-            timer.Interval = TimeSpan.FromMinutes(3);
-            timer.Tick += Timer_Tick;
-            timer.Start();
-
-
         }
 
-
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-
-            System.Windows.Threading.Dispatcher.CurrentDispatcher.Hooks.DispatcherInactive += Hooks_DispatcherInactive;
-
-        }
-
-        private bool InactiveFired = false;
-        private void Hooks_DispatcherInactive(object sender, EventArgs e)
-        {
-            if (InactiveFired)
-            {
-                System.Windows.Threading.Dispatcher.CurrentDispatcher.Hooks.DispatcherInactive -= Hooks_DispatcherInactive;
-                return;
-            }
-            InactiveFired = true;
-            frmNewVersion frm = new frmNewVersion();
-            frm.ShowDialog();
-        }
-
-        //int count= 0;
-        //private void ComponentDispatcher_ThreadIdle(object sender, EventArgs e)
-        //{
-        //    count++;
-        //    Debug.WriteLine($"{count,8} componentDispatcher_ThreadIdle");
-        //    timer.Stop();
-        //    timer.Start();
-        //}
 
         private void FontChanged()
         {
             App.Appearance.SetFontSize(StatusBarVersion);
+            App.Appearance.SetFontSize(StatusBarPaper);
             App.Appearance.SetFontSize(StatusBarMessages);
         }
 
@@ -77,13 +37,13 @@ namespace UbStudyHelp
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            GridTexts.ColumnDefinitions[0].Width = new GridLength(App.ParametersData.SpliterDistance);
+            GridTexts.ColumnDefinitions[0].Width = new GridLength(StaticObjects.Parameters.SpliterDistance);
             FontChanged();
         }
 
         private void GridSplitterLeft_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            App.ParametersData.SpliterDistance = GridTexts.ColumnDefinitions[0].ActualWidth;
+            StaticObjects.Parameters.SpliterDistance = GridTexts.ColumnDefinitions[0].ActualWidth;
             EventsControl.FireGridSplitter(GridTexts.ColumnDefinitions[0].ActualWidth);
         }
 
@@ -97,20 +57,20 @@ namespace UbStudyHelp
             StatusBarMessages.Text = message;
             if (fatalError)
             {
-                Log.Logger.Error("Fatal error: " + message);
+                StaticObjects.Logger.Error("Fatal error: " + message);
                 MessageBox.Show(message);
                 System.Windows.Application.Current.Shutdown();
             }
             else
             {
-                Log.Logger.Warn(message);
+                StaticObjects.Logger.Warn(message);
             }
         }
 
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
-            StatusBarVersion.Text = "v 2.0.1";
+            StatusBarVersion.Text = "v 2.0";
         }
 
 

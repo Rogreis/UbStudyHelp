@@ -5,11 +5,10 @@ using System.Security;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows;
-using static Lucene.Net.Documents.Field;
-using CommonMark.Syntax;
+using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
@@ -258,30 +257,30 @@ namespace UbStudyHelp.Classes
                 {
                     case TextTag.Normal:
                         Run runNormal = new Run(textTag.Text);
-                        runNormal.FontSize = App.ParametersData.FontSizeInfo;
+                        runNormal.FontSize = StaticObjects.Parameters.FontSizeInfo;
                         Inlines.Add(runNormal);
                         break;
                     case TextTag.Italic:
                         var i = new Italic();
-                        i.FontSize = App.ParametersData.FontSizeInfo;
+                        i.FontSize = StaticObjects.Parameters.FontSizeInfo;
                         i.Inlines.Add(textTag.Text);
                         Inlines.Add(i);
                         break;
                     case TextTag.Bold:
                         var b = new Bold();
-                        b.FontSize = App.ParametersData.FontSizeInfo;
+                        b.FontSize = StaticObjects.Parameters.FontSizeInfo;
                         b.Inlines.Add(textTag.Text);
                         Inlines.Add(b);
                         break;
                     case TextTag.Superscript:
                         Run runSuper = new Run(textTag.Text);
-                        runSuper.FontSize = App.ParametersData.FontSizeInfo;
+                        runSuper.FontSize = StaticObjects.Parameters.FontSizeInfo;
                         runSuper.BaselineAlignment = BaselineAlignment.Superscript;
                         Inlines.Add(runSuper);
                         break;
                     case TextTag.Highlighted:
                         Bold bHighlighted = new Bold();
-                        bHighlighted.FontSize = App.ParametersData.FontSizeInfo;
+                        bHighlighted.FontSize = StaticObjects.Parameters.FontSizeInfo;
                         bHighlighted.Foreground = accentBrush;
                         bHighlighted.Inlines.Add(textTag.Text);
                         Inlines.Add(bHighlighted);

@@ -1,11 +1,11 @@
-﻿using CommonMark.Syntax;
-using System;
-using System.DirectoryServices;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using SearchResult = UbStudyHelp.Classes.SearchResult;
 
@@ -18,6 +18,8 @@ namespace UbStudyHelp.Pages
     {
         private SearchData lastSearchdata = null;
         private int NrPage, PageSize, TotalPages;
+        private FlowDocumentFormat format = new FlowDocumentFormat();
+
 
         public UbSearchResults()
         {
@@ -58,6 +60,9 @@ namespace UbStudyHelp.Pages
             {
                 paragraphTop.Inlines.Add(new Run("No paragraph found"));
                 EventsControl.FireSendMessage("No paragraph found");
+                SearchResultsFlowDocument.Document = document;
+                App.Appearance.SetFontSize(SearchResultsFlowDocument);
+                App.Appearance.SetThemeInfo(SearchResultsFlowDocument);
                 return;
             }
             string message = $"Showing page {nrPage} of {totalPages} ({data.SearchResults.Count} paragraph(s) found)";
@@ -66,7 +71,7 @@ namespace UbStudyHelp.Pages
             Run runTop = new Run($"({data.SearchResults.Count}) paragraph(s) found")
             {
                 //FontWeight = FontWeights.Bold,
-                FontSize = App.ParametersData.FontSizeInfo,
+                FontSize = StaticObjects.Parameters.FontSizeInfo,
                 Foreground = accentBrush
             };
             paragraphTop.Inlines.Add(runTop);
@@ -74,7 +79,7 @@ namespace UbStudyHelp.Pages
             paragraphTop.Inlines.Add(new LineBreak());
             Run runPageShown = new Run($"Showing page {nrPage} of {totalPages}")
             {
-                FontSize = App.ParametersData.FontSizeInfo,
+                FontSize = StaticObjects.Parameters.FontSizeInfo,
                 Foreground = accentBrush
             };
             paragraphTop.Inlines.Add(runPageShown);
@@ -100,29 +105,11 @@ namespace UbStudyHelp.Pages
                 paragraphSearchResult.Style = App.Appearance.ForegroundStyle;
                 document.Blocks.Add(paragraphSearchResult);
 
-                // Create hyperlink ony with the paragraph identification
-                Run runIdent = new Run(result.Entry.ParagraphID)
-                {
-                    FontWeight = FontWeights.Bold,
-                    FontSize = App.ParametersData.FontSizeInfo,
-                    Foreground = accentBrush
-                };
-
-                Hyperlink hyperlink = new Hyperlink(runIdent)
-                {
-                    NavigateUri = new Uri("about:blank"),
-                    TextDecorations = null
-                };
-                hyperlink.Tag = result.Entry;
+                Hyperlink hyperlink = format.HyperlinkFullParagraph(result.Entry, false, result.Text);
                 hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
                 hyperlink.MouseEnter += Hyperlink_MouseEnter;
                 hyperlink.MouseLeave += Hyperlink_MouseLeave;
                 paragraphSearchResult.Inlines.Add(hyperlink);
-                paragraphSearchResult.Inlines.Add(new Run("  "));
-
-                // Paragraph text is inserted
-                TextWork textWork = new TextWork(result.Text);
-                textWork.GetInlinesText(paragraphSearchResult.Inlines);
             }
 
             SearchResultsFlowDocument.Document = document;

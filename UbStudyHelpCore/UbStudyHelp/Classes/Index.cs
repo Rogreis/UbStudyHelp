@@ -3,38 +3,45 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
+using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
     public class Index
     {
-        private string basePath;
+        private string DestinationFolder;
+        private string SourceFolder;
         private LuceneIndexSearch lucene = null;
 
         public List<TubIndex> TubIndex { get; private set; } = new List<TubIndex>();
 
         public Index(string basePathForFiles)
         {
-            basePath = basePathForFiles;
-            lucene = new LuceneIndexSearch(basePath, 0); // Only English for now
+            SourceFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "TUB_Files");
+            //DestinationFolder = destinationFolder;
+
+
+            DestinationFolder = basePathForFiles;
+            lucene = new LuceneIndexSearch(DestinationFolder, 0); // Only English for now
         }
 
+
+        /// <summary>
+        /// Load the unique available index for now, English
+        /// </summary>
+        /// <returns></returns>
         public bool Load()
         {
             try
             {
-                string pathFile = Path.Combine(basePath, "tubIndex_000.json");
+                string pathFile = Path.Combine(SourceFolder, "tubIndex_000.json");
                 string json = File.ReadAllText(pathFile);
                 TubIndex = JsonConvert.DeserializeObject<List<TubIndex>>(json);
                 return lucene.CreateLuceneIndexForUBIndex(TubIndex);
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Error loading index.", ex);
+                StaticObjects.Logger.Error("Error loading index.", ex);
                 return false;
             }
         }
@@ -44,7 +51,7 @@ namespace UbStudyHelp.Classes
             List<string> wordsFound = lucene.Execute(startString);
             if (wordsFound == null)
             {
-                Log.Logger.Warn("Index search returned null for searching: " + startString);
+                StaticObjects.Logger.Warn("Index search returned null for searching: " + startString);
                 return null;
             }
 

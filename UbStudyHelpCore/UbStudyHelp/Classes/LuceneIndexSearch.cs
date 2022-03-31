@@ -2,18 +2,14 @@
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
-using Lucene.Net.QueryParsers;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static UbStudyHelp.Classes.Index;
+using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
@@ -72,7 +68,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Error creating Search Index for UB Index.", ex);
+                StaticObjects.Logger.Error("Error creating Search Index for UB Index.", ex);
                 EventsControl.FireSendMessage("Creating Search Index for UB Index", ex);
                 return false;
             }
@@ -117,7 +113,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("Error executing Index Search.", ex);
+                StaticObjects.Logger.Error("Error executing Index Search.", ex);
                 EventsControl.FireSendMessage("Executing Index Search", ex);
                 ErrorMessage = ex.Message;
                 return null;

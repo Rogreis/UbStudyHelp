@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Classes
@@ -26,6 +27,12 @@ namespace UbStudyHelp.Classes
     /// </summary>
     /// <param name="loc"></param>
     public delegate void dlSearchClicked(TOC_Entry entry, List<string> Words);
+
+    /// <summary>
+    /// Used to fire a click on some seach result entry
+    /// </summary>
+    /// <param name="loc"></param>
+    public delegate void dlDirectSearch(string textToSearch, bool useRightTranslation);
 
     /// <summary>
     /// Used to fire a click on index
@@ -60,6 +67,11 @@ namespace UbStudyHelp.Classes
     public delegate void dlMainWindowSizeChanged(double width, double height);
 
     /// <summary>
+    /// Fired after a new paper is shown
+    /// </summary>
+    public delegate void dlNewPaperShown();
+
+    /// <summary>
     /// Used to ask to a text refresh in the main screen
     /// </summary>
     public delegate void dlRefreshText();
@@ -90,6 +102,8 @@ namespace UbStudyHelp.Classes
     {
         public static event dlSearchClicked SearchClicked = null;
 
+        public static event dlDirectSearch DirectSearch = null;
+
         public static event dlIndexClicked IndexClicked = null;
 
         public static event dlOpenNewIndexEntry OpenNewIndexEntry = null;
@@ -116,11 +130,19 @@ namespace UbStudyHelp.Classes
 
         public static event dlMainWindowSizeChanged MainWindowSizeChanged = null;
 
+        public static event dlNewPaperShown NewPaperShown = null;
+
 
         public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
         {
             SearchClicked?.Invoke(entry, Words);
         }
+
+        public static void FireDirectSearch(string textToSearch, bool useRightTranslation)
+        {
+            DirectSearch?.Invoke(textToSearch, useRightTranslation);
+        }
+        
 
         public static void FireIndexClicked(TOC_Entry entry)
         {
@@ -199,6 +221,11 @@ namespace UbStudyHelp.Classes
             AppearanceChanged?.Invoke(App.Appearance);
         }
 
+        // 
+        public static void FireNewPaperShown()
+        {
+            NewPaperShown?.Invoke();
+        }
 
     }
 }

@@ -5,8 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
-using static Lucene.Net.Documents.Field;
 using Hyperlink = System.Windows.Documents.Hyperlink;
 using Paragraph = System.Windows.Documents.Paragraph;
 
@@ -29,6 +29,12 @@ namespace UbStudyHelp.Controls
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+        }
+
+        public void Clear()
+        {
+            FlowDocument document = new FlowDocument();
+            IndexDocumentResults.Document = document;
         }
 
 
@@ -135,7 +141,7 @@ namespace UbStudyHelp.Controls
                 {
                     char[] sep = { ';' };
                     string[] parts = tag.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-                    TOC_Entry entry = new TOC_Entry(Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]));
+                    TOC_Entry entry = new TOC_Entry(Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]), 0, 0);
                     EventsControl.FireIndexClicked(entry);
                 }
                 catch

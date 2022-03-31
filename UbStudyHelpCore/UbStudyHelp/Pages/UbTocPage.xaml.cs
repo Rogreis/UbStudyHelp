@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Pages
@@ -49,14 +51,14 @@ namespace UbStudyHelp.Pages
 
         private void FillTreeView(TreeView tree, bool useLeftTranslation)
         {
-            Translation translation = useLeftTranslation ? Book.LeftTranslation : Book.RightTranslation;
+            Translation translation = useLeftTranslation ? StaticObjects.Book.LeftTranslation : StaticObjects.Book.RightTranslation;
             tree.Tag = translation;
             TreeViewItemUB itemPaper = null;
 
             tree.Items.Clear();
             foreach (TOC_Entry entry in translation.TableOfContents)
             {
-                if (entry.Section == 0)
+                if (entry.Section == 0 && entry.ParagraphNo == 0)
                 {
                     itemPaper = new TreeViewItemUB(entry);
                     SetItemEvents(itemPaper);
@@ -69,7 +71,6 @@ namespace UbStudyHelp.Pages
                     itemPaper.Items.Add(itemSection);
                 }
             }
-
         }
 
         /// <summary>
@@ -209,8 +210,10 @@ namespace UbStudyHelp.Pages
 
         private void EventsControl_TranslationsChanged()
         {
+            InternalChange = true;
             FillTreeView(TOC_Left, true);
             FillTreeView(TOC_Right, false);
+            InternalChange = false;
         }
 
 
@@ -221,8 +224,8 @@ namespace UbStudyHelp.Pages
         {
             SetFontSize();
             SetAppearence();
-            TOC_Right.Visibility = App.ParametersData.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
-            TabItemRight.Visibility = App.ParametersData.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
+            TOC_Right.Visibility = StaticObjects.Parameters.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
+            TabItemRight.Visibility = StaticObjects.Parameters.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
             FillTreeView(TOC_Left, true);
             FillTreeView(TOC_Right, false);
         }

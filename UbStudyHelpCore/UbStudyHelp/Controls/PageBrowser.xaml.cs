@@ -1,24 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Windows;
-using System.Windows.Annotations;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-//using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
-using static Lucene.Net.Documents.Field;
-using static Lucene.Net.Search.FieldValueHitQueue;
-using static Lucene.Net.Util.Fst.Util;
-using Paragraph = UbStudyHelp.Classes.Paragraph;
+using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Controls
 {
@@ -30,15 +19,21 @@ namespace UbStudyHelp.Controls
 
         private Html_BaseClass commands = null;
 
-        private TOC_Entry lastEntry = new TOC_Entry(0, 1, 0);
-
         private bool lastShouldHighlightText = false;
+
+        private FlowDocument MainDocument = new FlowDocument();
+
+        private FlowDocumentFormat format = new FlowDocumentFormat();
+
+
+        private PaperContextMenu PaperContext = null;
 
 
         public PageBrowser()
         {
             InitializeComponent();
             this.Loaded += PageBrowser_Loaded;
+            PaperContext = new PaperContextMenu(TextFlowDocument);
 
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
@@ -60,7 +55,7 @@ namespace UbStudyHelp.Controls
         /// <param name="addToTrack"></param>
         private void Show(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            if (App.ParametersData.ShowBilingual)
+            if (StaticObjects.Parameters.ShowBilingual)
             {
                 commands = new HtmlBilingual();
             }
@@ -68,18 +63,9 @@ namespace UbStudyHelp.Controls
             {
                 commands = new HtmlSingle();
             }
-
+            StaticObjects.Parameters.Entry = entry;
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
-
-
-            //// Keep latest pragraph shown for next program section
-            //App.ParametersData.Entry= new TOC_Entry(entry);
-            //lastEntry = new TOC_Entry(entry);
-            //lastShouldHighlightText = shouldHighlightText;
-
-            //EventsControl.FireSendMessage(entry.ToString());
-            //string htmlPage = commands.Html(entry, shouldHighlightText, Words);
-            //BrowserText.NavigateToString(htmlPage);
+            EventsControl.FireNewPaperShown();
         }
 
         private System.Windows.Documents.Paragraph CreateParagraph(bool highlighted)
@@ -97,26 +83,12 @@ namespace UbStudyHelp.Controls
 
 
             paragraph.Style = App.Appearance.ForegroundStyle;
-            paragraph.Margin = new Thickness(20, 20, 20, 0);
-            paragraph.LineHeight = 32;
+            paragraph.Margin = new Thickness(20, 10, 10, 0);
+            paragraph.LineHeight = 26;
             paragraph.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
             return paragraph;
         }
 
-        private void ShowParagraphIdentification(System.Windows.Documents.Paragraph paragraph, TOC_Entry entry)
-        {
-            if (entry != null)
-            {
-                Brush accentBrush = App.Appearance.GetHighlightColorBrush();
-                Run runIdent = new Run(entry.ParagraphID + " ")
-                {
-                    //FontWeight = FontWeights.Bold,
-                    FontSize = App.ParametersData.FontSizeInfo,
-                    Foreground = accentBrush
-                };
-                paragraph.Inlines.Add(runIdent);
-            }
-        }
 
 
         private void FormatParagraph(TableCell cell,
@@ -126,7 +98,9 @@ namespace UbStudyHelp.Controls
         {
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
             cell.Blocks.Add(paragraph);
-            ShowParagraphIdentification(paragraph, entry);
+            paragraph.Tag = cell.Tag;
+            paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
+            paragraph.Inlines.Add(new Run(" "));
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
@@ -139,7 +113,9 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Margin = new Thickness(50, 20, 20, 0);
-            ShowParagraphIdentification(paragraph, entry);
+            paragraph.Tag = cell.Tag;
+            paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
+            paragraph.Inlines.Add(new Run(" "));
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
@@ -154,14 +130,16 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
             paragraph.FontWeight = FontWeights.Bold;
             paragraph.Foreground = accentBrush;
+            paragraph.Tag = cell.Tag;
             cell.Blocks.Add(paragraph);
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
 
 
+
         private void HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entry, string LeftText, string RightText,
-                                             enHtmlType enHtmlType = enHtmlType.NormalParagraph,
+                                             enHtmlType htmlType = enHtmlType.NormalParagraph,
                                              bool highlighted = false,
                                              List<string> words = null)
         {
@@ -169,11 +147,14 @@ namespace UbStudyHelp.Controls
             tableRowGroup.Rows.Add(row);
             row.Tag = entry;
             TableCell cellLeft = new TableCell();
+            cellLeft.Tag = new ParagraphSearchData() { IsRightTranslation = false, Entry = entry };
             TableCell cellRight = new TableCell();
+            cellRight.Tag = new ParagraphSearchData() { IsRightTranslation = true, Entry = entry };
             row.Cells.Add(cellLeft);
             row.Cells.Add(cellRight);
 
-            switch (enHtmlType)
+
+            switch (htmlType)
             {
                 case enHtmlType.BookTitle:
                     FormatTitle(cellLeft, LeftText, highlighted, words);
@@ -201,20 +182,21 @@ namespace UbStudyHelp.Controls
 
         private void ShowShowBilingualFlowDocument(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            FlowDocument document = new FlowDocument();
+            
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
 
             Table table = new Table();
-            document.Blocks.Add(table);
+            MainDocument.Blocks.Add(table);
             TableRowGroup tableRowGroup = new TableRowGroup();
             table.RowGroups.Add(tableRowGroup);
 
-            Paper paperLeft = Book.LeftTranslation.Paper(entry.Paper);
-            Paper paperRight = Book.RightTranslation.Paper(entry.Paper);
+            Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
+            Paper paperRight = StaticObjects.Book.RightTranslation.Paper(entry.Paper);
 
-            HtmlSingleBilingualLine(tableRowGroup, null, Book.LeftTranslation.PaperTranslation + " " + entry.Paper.ToString(),
-                                           Book.RightTranslation.PaperTranslation + " " + entry.Paper.ToString(),
-                                           enHtmlType.PaperTitle);
+            string titleLeft = StaticObjects.Book.LeftTranslation.PaperTranslation.Replace("1", paperLeft.PaperNo.ToString());
+            string titleRight = StaticObjects.Book.RightTranslation.PaperTranslation.Replace("1", paperRight.PaperNo.ToString());
+
+            HtmlSingleBilingualLine(tableRowGroup, null, titleLeft, titleRight, enHtmlType.PaperTitle);
 
             int indParagraph = 0;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)
@@ -225,7 +207,7 @@ namespace UbStudyHelp.Controls
                 HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
             }
             TextFlowDocument.Tag = entry;
-            TextFlowDocument.Document = document;
+            TextFlowDocument.Document = MainDocument;
 
             if (entry != null && tableRowGroup != null)
             {
@@ -261,13 +243,13 @@ namespace UbStudyHelp.Controls
 
         private void Refresh()
         {
-            Show(lastEntry, lastShouldHighlightText);
+            Show(StaticObjects.Parameters.Entry, lastShouldHighlightText);
         }
 
 
         private void PageBrowser_Loaded(object sender, RoutedEventArgs e)
         {
-            Show(App.ParametersData.Entry);
+            Show(StaticObjects.Parameters.Entry);
         }
 
 
@@ -293,13 +275,13 @@ namespace UbStudyHelp.Controls
 
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
         {
-            Show(App.ParametersData.Entry);
+            Show(StaticObjects.Parameters.Entry);
         }
 
 
         private void EventsControl_FontChanged(Classes.ControlsAppearance appearance)
         {
-            Show(App.ParametersData.Entry);
+            Show(StaticObjects.Parameters.Entry);
         }
 
         private void EventsControl_TranslationsChanged()
@@ -322,3 +304,4 @@ namespace UbStudyHelp.Controls
         }
     }
 }
+

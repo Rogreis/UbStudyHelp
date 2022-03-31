@@ -5,7 +5,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
+using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Text;
 using static System.Environment;
 
 namespace UbStudyHelp
@@ -18,38 +21,22 @@ namespace UbStudyHelp
         // Styles based on https://mahapps.com/docs/guides/quick-start
         private static string pathParameters;
 
-        public static Parameters ParametersData = new Parameters();
-
         public static string BaseTubFilesPath = "";
 
         public static ControlsAppearance Appearance = new ControlsAppearance();
 
-        private static bool LoadData()
+        private string DataFolder()
         {
 
-            GetDataFiles dataFiles = new GetDataFiles();
-            try
-            {
-                if (!dataFiles.CheckFiles(App.BaseTubFilesPath))
-                {
-                    return false;
-                }
-                dataFiles.BackGroundChecking();
-                return Book.Inicialize(App.BaseTubFilesPath);
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error("Data not loaded!", ex);
-                return false;
-            }
+            string processName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
+            return Path.Combine(commonpath, processName);
         }
 
 
         private string MakeProgramDataFolder(string fileName)
         {
-            string processName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
-            string folder= Path.Combine(commonpath, processName);
+            string folder = DataFolder();
             Directory.CreateDirectory(folder);
             return Path.Combine(folder, fileName);
         }
@@ -61,25 +48,27 @@ namespace UbStudyHelp
         {
             // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
-            Log.Start(pathLog);
 
-            // Parameters for the application
+            StaticObjects.Logger = new LogCore();
+            StaticObjects.Logger.Initialize(pathLog, false);
+
             pathParameters = MakeProgramDataFolder("UbStudyHelp.json");
             if (!File.Exists(pathParameters))
             {
-                Log.Logger.Info("Parameters not found, creating a new one: " + pathParameters);
+                StaticObjects.Logger.Info("Parameters not found, creating a new one: " + pathParameters);
             }
-            ParametersData = Parameters.Deserialize(pathParameters);
-
+            StaticObjects.Parameters= ParametersCore.Deserialize(pathParameters);
 
             ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();
 
-
             BaseTubFilesPath = MakeProgramDataFolder("TUB_Files");
-            if (!LoadData())
+
+            StaticObjects.Book= new BookCore();
+
+            if (!StaticObjects.Book.Inicialize(BaseTubFilesPath, StaticObjects.Parameters.LanguageIDLeftTranslation, StaticObjects.Parameters.LanguageIDRightTranslation))
             {
-                Log.Logger.Error("Data not loaded!");
+                StaticObjects.Logger.Error("Data not loaded!");
                 if(MessageBox.Show("Data not loaded!\n\nOpen log file?", "Ub Study Help", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     Process.Start("notepad.exe", pathLog);
@@ -99,7 +88,7 @@ namespace UbStudyHelp
         protected override void OnExit(ExitEventArgs e)
         {
             // Serialize parameters
-            Parameters.Serialize(ParametersData, pathParameters);
+            ParametersCore.Serialize((ParametersCore)StaticObjects.Parameters, pathParameters);
             base.OnExit(e);
         }
 

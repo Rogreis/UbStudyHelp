@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using UbStandardObjects;
 using UbStudyHelp.Classes;
 
 namespace UbStudyHelp.Controls
@@ -24,7 +25,6 @@ namespace UbStudyHelp.Controls
         // Object to manipulate the index
         public UbStudyHelp.Classes.Index Index { get; set; }
 
-
         public IndexBrowserDataEntry()
         {
             InitializeComponent();
@@ -38,7 +38,7 @@ namespace UbStudyHelp.Controls
             ComboWhatToSearchInIndex.DropDownClosed += ComboWhatToSearchInIndex_DropDownClosed;
             ComboBoxIndexSearch.DropDownClosed += ComboBoxIndexSearch_DropDownClosed;
 
-            foreach (string entry in App.ParametersData.IndexLetters)
+            foreach (string entry in StaticObjects.Parameters.IndexLetters)
             {
                 LocalIndexLettersEntries.Add(entry);
             }
@@ -51,15 +51,16 @@ namespace UbStudyHelp.Controls
 
         private void AddEntry(string indexEntry)
         {
-            App.ParametersData.AddEntry(App.ParametersData.IndexLetters, LocalIndexLettersEntries, indexEntry);
+            ((ParametersCore)StaticObjects.Parameters).AddEntry(StaticObjects.Parameters.IndexLetters, LocalIndexLettersEntries, indexEntry);
         }
 
 
         private void FillComboBoxIndexEntry(string indexEntry)
         {
+            ShowIndexDetails?.Invoke(null);
             if (!Index.Load())
             {
-                Log.NonFatalError("Index not lodaded");
+                StaticObjects.Logger.NonFatalError("Index not lodaded");
                 ComboBoxIndexSearch.IsEnabled = false;
                 return;
             }
@@ -73,12 +74,12 @@ namespace UbStudyHelp.Controls
             List<string> list = Index.Search(indexEntry);
             if (list == null || list.Count == 0)
             {
-                Log.NonFatalError("Could not do a search");
+                StaticObjects.Logger.NonFatalError("Could not do a search");
                 ComboBoxIndexSearch.IsEnabled = false;
                 return;
             }
 
-            int maxItems = Math.Min(list.Count, App.ParametersData.MaxExpressionsStored);
+            int maxItems = Math.Min(list.Count, StaticObjects.Parameters.MaxExpressionsStored);
             ComboBoxIndexSearch.Items.Clear();
             for (int i = 0; i < maxItems; i++)
             {
@@ -91,6 +92,7 @@ namespace UbStudyHelp.Controls
             {
                 ComboBoxIndexSearch.SelectedIndex = 0;
                 ComboBoxIndexSearch.IsEnabled = true;
+                //ShowIndexDetails?.Invoke(indexEntry);
             }
             EventsControl.FireSendMessage($"{ComboBoxIndexSearch.Items.Count} index entry(ies) found.");
 
@@ -142,7 +144,6 @@ namespace UbStudyHelp.Controls
             string text = ComboBoxIndexSearch.Text.Trim();
             ShowIndexDetails?.Invoke(text);
         }
-
         private void ComboWhatToSearchInIndex_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -161,6 +162,27 @@ namespace UbStudyHelp.Controls
         {
             SetAppearence();
         }
+
+
+        private void ComboWhatToSearchInIndex_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // This leads to a slow search engine for index. Better not to use.
+            //string text = ComboWhatToSearchInIndex.Text.Trim();
+            //if (text.Length > 2)
+            //{
+            //    FillComboBoxIndexEntry(text);
+            //}
+        }
+
+        private void ComboBoxIndexSearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string text = ComboBoxIndexSearch.Text.Trim();
+            if (!string.IsNullOrEmpty(text))
+            {
+                ShowIndexDetails?.Invoke(text);
+            }
+        }
+
 
         #endregion
 
