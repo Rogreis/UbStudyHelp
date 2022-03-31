@@ -157,7 +157,7 @@ namespace UbStudyHelp.Pages
 
         private void ButtonShowLog_Click(object sender, RoutedEventArgs e)
         {
-            Log.Show();
+            //Log.Show();
         }
 
         #endregion
@@ -188,8 +188,6 @@ namespace UbStudyHelp.Pages
 
             ComboTheme.Text = ((ParametersCore)StaticObjects.Parameters).ThemeColor;
             ToggleSwitchThemme.IsOn = App.Appearance.Theme == "Dark";
-            ToggleSwitchShowParIdent.IsOn = App.ParametersData.ShowParagraphIdentification;
-            ToggleSwitchBilingual.IsOn = App.ParametersData.ShowBilingual;
 
             GeometryImages images = new GeometryImages();
             ButtonUpdateAvailableImage.Source = images.GetImage(GeometryImagesTypes.Update);
