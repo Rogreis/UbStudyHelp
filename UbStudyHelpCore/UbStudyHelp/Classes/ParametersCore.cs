@@ -13,6 +13,9 @@ namespace UbStudyHelp.Classes
     [Serializable]
     public class ParametersCore : Parameters
     {
+        // Verify the possibility to change to microsoft Json
+        // https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/
+
 
 
         public string ThemeName { get; set; } = "Light";

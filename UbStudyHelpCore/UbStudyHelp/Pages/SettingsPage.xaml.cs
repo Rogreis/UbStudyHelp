@@ -1,4 +1,7 @@
 ﻿using ControlzEx.Theming;
+using log4net.Core;
+using log4net;
+using Microsoft.Windows.Themes;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,9 +24,13 @@ namespace UbStudyHelp.Pages
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+            EventsControl.UpdateAvailable += EventsControl_UpdateAvailable;
+
             ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
             ToggleSwitchShowParIdent.Toggled += ToggleSwitchShowParIdent_Toggled;
             ToggleSwitchBilingual.Toggled += ToggleSwitchBilingual_Toggled;
+
+
 
             ThemmeColors.Add("Green");
             ThemmeColors.Add("Blue");
@@ -135,6 +142,24 @@ namespace UbStudyHelp.Pages
             EventsControl.FireBilingualChanged(ToggleSwitchBilingual.IsOn);
         }
 
+        /// <summary>
+        /// New updates available
+        /// </summary>
+        /// <param name="updateList"></param>
+        private void EventsControl_UpdateAvailable()
+        {
+            ButtonUpdateAvailable.Visibility = Visibility.Visible;
+        }
+
+        private void ButtonUpdateAvailable_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void ButtonShowLog_Click(object sender, RoutedEventArgs e)
+        {
+            //Log.Show();
+        }
+
         #endregion
 
         private void SelectComboCurrentTranslation(ComboBox comboBox, short id)
@@ -163,6 +188,9 @@ namespace UbStudyHelp.Pages
 
             ComboTheme.Text = ((ParametersCore)StaticObjects.Parameters).ThemeColor;
             ToggleSwitchThemme.IsOn = App.Appearance.Theme == "Dark";
+
+            GeometryImages images = new GeometryImages();
+            ButtonUpdateAvailableImage.Source = images.GetImage(GeometryImagesTypes.Update);
             ToggleSwitchShowParIdent.IsOn = StaticObjects.Parameters.ShowParagraphIdentification;
             ToggleSwitchBilingual.IsOn = StaticObjects.Parameters.ShowBilingual;
         }

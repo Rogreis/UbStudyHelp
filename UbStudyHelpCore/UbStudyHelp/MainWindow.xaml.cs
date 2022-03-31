@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using UbStandardObjects;
 using UbStudyHelp.Classes;
 
@@ -10,6 +11,7 @@ namespace UbStudyHelp
     /// </summary>
     public partial class MainWindow
     {
+
         public MainWindow()
         {
             InitializeComponent();
@@ -17,16 +19,16 @@ namespace UbStudyHelp
             EventsControl.SendMessage += EventsControl_SendMessage;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.NewPaperShown += EventsControl_NewPaperShown;
-
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
         }
 
         private void EventsControl_NewPaperShown()
         {
-            string messagePaper= 
+            string messagePaper =
             this.Title = $"The Urantia Book Study Help - Paper {StaticObjects.Parameters.Entry.Paper}";
             StatusBarPaper.Text = $"Paper { StaticObjects.Parameters.Entry.Paper}";
         }
+
 
         private void FontChanged()
         {
@@ -75,7 +77,7 @@ namespace UbStudyHelp
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
-            StatusBarVersion.Text = "v 2.1";
+            StatusBarVersion.Text = "v 2.0";
         }
 
 

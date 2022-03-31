@@ -1,5 +1,6 @@
 ﻿using ControlzEx.Standard;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
@@ -26,6 +27,7 @@ namespace UbStudyHelp
 
         private string DataFolder()
         {
+
             string processName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
             return Path.Combine(commonpath, processName);
@@ -44,6 +46,7 @@ namespace UbStudyHelp
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
 
             StaticObjects.Logger = new LogCore();
@@ -72,6 +75,12 @@ namespace UbStudyHelp
                 }
                 return;
             }
+
+            //frmNewVersion frm = new frmNewVersion();
+            //frm.ShowDialog();
+            //return;
+
+
             base.OnStartup(e);
         }
 
