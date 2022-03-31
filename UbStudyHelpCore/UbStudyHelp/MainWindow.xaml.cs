@@ -22,6 +22,13 @@ namespace UbStudyHelp
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
         }
 
+        private void EventsControl_NewPaperShown()
+        {
+            string messagePaper =
+            this.Title = $"The Urantia Book Study Help - Paper {StaticObjects.Parameters.Entry.Paper}";
+            StatusBarPaper.Text = $"Paper { StaticObjects.Parameters.Entry.Paper}";
+        }
+
 
         private void FontChanged()
         {

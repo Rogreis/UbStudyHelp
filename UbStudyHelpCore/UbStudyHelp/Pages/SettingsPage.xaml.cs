@@ -153,8 +153,6 @@ namespace UbStudyHelp.Pages
 
         private void ButtonUpdateAvailable_Click(object sender, RoutedEventArgs e)
         {
-            frmNewVersion frm = new frmNewVersion();
-            frm.ShowDialog();
         }
 
         private void ButtonShowLog_Click(object sender, RoutedEventArgs e)

@@ -52,12 +52,12 @@ namespace UbStudyHelp.Classes
                     StaticObjects.Logger.Info("File does not exist: " + path);
                     string translationStartupPath = Path.Combine(SourceFolder, $"TR{translatioId:000}.gz");
                     byte[] bytes = File.ReadAllBytes(translationStartupPath);
-                    json= BytesToString(bytes, isZip);
+                    json = BytesToString(bytes, isZip);
                     File.WriteAllText(path, json);
                 }
                 else
                 {
-                    json= File.ReadAllText(path);
+                    json = File.ReadAllText(path);
                 }
                 return json;
             }
@@ -86,17 +86,17 @@ namespace UbStudyHelp.Classes
         /// <returns></returns>
         public override Translation GetTranslation(short translatioId)
         {
-            Translation translation= StaticObjects.Book.GetTranslation(translatioId);
+            Translation translation = StaticObjects.Book.GetTranslation(translatioId);
             if (translation == null)
             {
-                translation= new Translation();
+                translation = new Translation();
             }
             if (translation.Papers.Count > 0)
             {
                 return translation;
             }
             string translationFileName = $"TR{translatioId:000}.json";
-            string json= GetFile(translatioId, translationFileName, true);
+            string json = GetFile(translatioId, translationFileName, true);
             translation.GetData(json);
             return translation;
         }
