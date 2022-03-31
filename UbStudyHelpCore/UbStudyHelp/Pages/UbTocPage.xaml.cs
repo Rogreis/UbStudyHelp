@@ -226,6 +226,8 @@ namespace UbStudyHelp.Pages
             SetAppearence();
             TOC_Right.Visibility = StaticObjects.Parameters.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
             TabItemRight.Visibility = StaticObjects.Parameters.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
+            TabItemLeft.Header = StaticObjects.Book.LeftTranslation.Description;
+            TabItemRight.Header = StaticObjects.Book.RightTranslation.Description;
             FillTreeView(TOC_Left, true);
             FillTreeView(TOC_Right, false);
         }
