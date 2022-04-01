@@ -11,8 +11,6 @@ namespace UbStudyHelp.Classes
     {
         private TextWork TextWork = new TextWork();
 
-        private string _text = "";
-
         public TOC_Entry Entry { get; set; }
 
         public int OriginalPosition { get; set; } = -1;

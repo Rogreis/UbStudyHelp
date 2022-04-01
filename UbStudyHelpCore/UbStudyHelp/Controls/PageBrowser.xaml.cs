@@ -17,8 +17,6 @@ namespace UbStudyHelp.Controls
     public partial class PageBrowser : UserControl
     {
 
-        private Html_BaseClass commands = null;
-
         private bool lastShouldHighlightText = false;
 
         private FlowDocument MainDocument = new FlowDocument();
@@ -55,14 +53,6 @@ namespace UbStudyHelp.Controls
         /// <param name="addToTrack"></param>
         private void Show(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            if (StaticObjects.Parameters.ShowBilingual)
-            {
-                commands = new HtmlBilingual();
-            }
-            else
-            {
-                commands = new HtmlSingle();
-            }
             StaticObjects.Parameters.Entry = entry;
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
             EventsControl.FireNewPaperShown();
