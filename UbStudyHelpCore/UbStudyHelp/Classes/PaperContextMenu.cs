@@ -21,14 +21,14 @@ namespace UbStudyHelp.Classes
 
     internal class PaperContextMenu
     {
-        private FlowDocumentScrollViewer Document = null;
+        private FlowDocumentScrollViewer FlowDocument = null;
         private MenuItem menuItemSearch = null;
 
         public PaperContextMenu(FlowDocumentScrollViewer document)
         {
-            Document= document;
-            //StartAnnotations(Document.Document);
-            AnnotationService annotService = new AnnotationService(Document);
+            FlowDocument= document;
+            //StartAnnotations(FlowDocument);
+            AnnotationService annotService = new AnnotationService(FlowDocument);
             document.ContextMenu = CreateCellContextMenu();
             document.ContextMenuOpening += ContextMenu_ContextMenuOpening;
         }
@@ -56,18 +56,20 @@ namespace UbStudyHelp.Classes
         {
             ContextMenu contextMenu = new ContextMenu();
 
-            contextMenu.Items.Add(CreateMenuItem("Add Highlight", AnnotationService.CreateHighlightCommand));
-            contextMenu.Items.Add(CreateMenuItem("Add Text Note", AnnotationService.CreateTextStickyNoteCommand));
-            contextMenu.Items.Add(CreateMenuItem("Add Ink Note", AnnotationService.CreateInkStickyNoteCommand));
-            contextMenu.Items.Add(CreateMenuItem("Remove Highlights", AnnotationService.ClearHighlightsCommand));
-            contextMenu.Items.Add(CreateMenuItem("Remove Notes", AnnotationService.DeleteStickyNotesCommand));
-            contextMenu.Items.Add(CreateMenuItem("Remove Highlights & Notes", AnnotationService.DeleteAnnotationsCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Add Highlight", AnnotationService.CreateHighlightCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Add Text Note", AnnotationService.CreateTextStickyNoteCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Add Ink Note", AnnotationService.CreateInkStickyNoteCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Remove Highlights", AnnotationService.ClearHighlightsCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Remove Notes", AnnotationService.DeleteStickyNotesCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Remove Highlights & Notes", AnnotationService.DeleteAnnotationsCommand));
 
-            contextMenu.Items.Add(new Separator());
 
             contextMenu.Items.Add(CreateMenuItem("Copy", ItemCopy_Click));
+            contextMenu.Items.Add(new Separator());
+            contextMenu.Items.Add(CreateMenuItem("Quick Search", ItemQuickSearch_Click));
             menuItemSearch = CreateMenuItem("Search", ItemSearch_Click);
             contextMenu.Items.Add(menuItemSearch);
+            contextMenu.Items.Add(new Separator());
             contextMenu.Items.Add(CreateMenuItem("Select All", SelectAll_Click));
 
             return contextMenu;
@@ -76,8 +78,8 @@ namespace UbStudyHelp.Classes
 
         private string GetSelectedText()
         {
-            TextPointer potStart = Document.Selection.Start;
-            TextPointer potEnd = Document.Selection.End;
+            TextPointer potStart = FlowDocument.Selection.Start;
+            TextPointer potEnd = FlowDocument.Selection.End;
             TextRange range = new TextRange(potStart, potEnd);
             return range.Text;
         }
@@ -96,7 +98,7 @@ namespace UbStudyHelp.Classes
 
         private ParagraphSearchData GetCurrentParagraph()
         {
-            TextPointer pointer = Document.Selection.Start;
+            TextPointer pointer = FlowDocument.Selection.Start;
             System.Windows.Documents.Paragraph p = pointer.Paragraph;
             ParagraphSearchData data= p.Tag as ParagraphSearchData;
             return data;
@@ -105,9 +107,9 @@ namespace UbStudyHelp.Classes
 
         private void SelectAll()
         {
-            TextPointer pointerStart = Document.Document.ContentStart;
-            TextPointer pointerEnd = Document.Document.ContentEnd;
-            Document.Selection.Select(pointerStart, pointerEnd);
+            TextPointer pointerStart = FlowDocument.Document.ContentStart;
+            TextPointer pointerEnd = FlowDocument.Document.ContentEnd;
+            FlowDocument.Selection.Select(pointerStart, pointerEnd);
 
             // Hightlight all:
 
@@ -157,13 +159,30 @@ namespace UbStudyHelp.Classes
 
         private void ItemCopy_Click(object sender, RoutedEventArgs e)
         {
-            TextRange range = new TextRange(Document.Selection.Start, Document.Selection.End);
+            TextRange range = new TextRange(FlowDocument.Selection.Start, FlowDocument.Selection.End);
             using (Stream stream = new MemoryStream())
             {
                 range.Save(stream, DataFormats.Text);
                 Clipboard.SetData(DataFormats.Text, Encoding.UTF8.GetString((stream as MemoryStream).ToArray()));
             }
         }
+
+        private void ItemQuickSearch_Click(object sender, RoutedEventArgs e)
+        {
+            ParagraphSearchData data = GetCurrentParagraph();
+            QuickSearch quickSearch = new QuickSearch();
+            quickSearch.ShowInTaskbar = false;
+            quickSearch.IsRightTranslation = data.IsRightTranslation;
+            quickSearch.Owner = Application.Current.MainWindow;
+            bool? result = quickSearch.ShowDialog();
+
+            if (result!= null && result.Value)
+            {
+
+            }
+        }
+
+
 
         private void ItemSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -202,7 +221,7 @@ namespace UbStudyHelp.Classes
         // ------------------------ StartAnnotations --------------------------
         /// <summary>
         ///   Enables annotations and displays all that are viewable.</summary>
-        private AnnotationService StartAnnotations(FlowDocumentReader doc)
+        private AnnotationService StartAnnotations(FlowDocumentScrollViewer doc)
         {
             AnnotationService annotService = new AnnotationService(doc);
 

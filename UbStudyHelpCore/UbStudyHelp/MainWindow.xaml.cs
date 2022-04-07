@@ -81,14 +81,6 @@ namespace UbStudyHelp
         }
 
 
-        private void LaunchUFSite(object sender, RoutedEventArgs e)
-        {
-            //Process.Start("http://www.urantia.org");
-            TestWindow cw = new TestWindow();
-            cw.ShowInTaskbar = false;
-            cw.Owner = Application.Current.MainWindow;
-            cw.Show();
-        }
 
         private void MetroWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
