@@ -19,47 +19,37 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public class GetDataFilesCore : GetDataFiles
     {
-        private string DestinationFolder = "";
-
         private string SourceFolder = "";
 
-        public GetDataFilesCore(string destinationFolder)
+        public GetDataFilesCore()
         {
             SourceFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "TUB_Files");
-            DestinationFolder = destinationFolder;
         }
 
         /// <summary>
-        /// Checks is a files exists localy
-        /// Is not, get it from server
+        /// Get all papers from the zipped file
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="translatioId"></param>
         /// <param name="isZip"></param>
-        /// <returns>The uncompressed json string</returns>
-        private string GetFile(short translatioId, string fileName, bool isZip = true)
+        /// <returns></returns>
+        private string GetFile(short translatioId, bool isZip = true)
         {
             try
             {
                 string json = "";
-                if (!Directory.Exists(DestinationFolder))
+                string translationStartupPath = Path.Combine(SourceFolder, $"TR{translatioId:000}.gz");
+                if (File.Exists(translationStartupPath))
                 {
-                    StaticObjects.Logger.Info("Creating data folder: " + DestinationFolder);
-                    Directory.CreateDirectory(DestinationFolder);
-                }
-                string path = Path.Combine(DestinationFolder, fileName);
-                if (!File.Exists(path))
-                {
-                    StaticObjects.Logger.Info("File does not exist: " + path);
-                    string translationStartupPath = Path.Combine(SourceFolder, $"TR{translatioId:000}.gz");
+                    StaticObjects.Logger.Info("File exists: " + translationStartupPath);
                     byte[] bytes = File.ReadAllBytes(translationStartupPath);
                     json = BytesToString(bytes, isZip);
-                    File.WriteAllText(path, json);
+                    return json;
                 }
                 else
                 {
-                    json = File.ReadAllText(path);
+                    StaticObjects.Logger.Error($"Translation not found {translatioId}");
+                    return null;
                 }
-                return json;
             }
             catch (Exception ex)
             {
@@ -67,6 +57,7 @@ namespace UbStudyHelp.Classes
                 return null;
             }
         }
+
 
         /// <summary>
         /// Get the translations list from a local file
@@ -95,8 +86,7 @@ namespace UbStudyHelp.Classes
             {
                 return translation;
             }
-            string translationFileName = $"TR{translatioId:000}.json";
-            string json = GetFile(translatioId, translationFileName, true);
+            string json = GetFile(translatioId, true);
             translation.GetData(json);
             return translation;
         }

@@ -17,7 +17,7 @@ namespace UbStudyHelp.Text
             try
             {
                 FilesPath = baseDataPath;
-                dataFiles = new GetDataFilesCore(baseDataPath);
+                dataFiles = new GetDataFilesCore();
                 Translations = dataFiles.GetTranslations();
                 LeftTranslation = dataFiles.GetTranslation(leftTranslationId);
                 RightTranslation = dataFiles.GetTranslation(rightTranslationID);
