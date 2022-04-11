@@ -91,21 +91,6 @@ namespace UbStudyHelp.Classes
             _logIniciado = false;
         }
 
-        private void ShowLog()
-        {
-            Close();
-            Process.Start("notepad.exe", PathLog);
-
-            //using (var fs = new FileStream(PathLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            //using (var sr = new StreamReader(fs, Encoding.Default))
-            //{
-            //    string text = sr.ReadToEnd();
-            //}
-
-        }
-
-
-
         private void Start(string pathLog, bool append = false)
         {
             if (!append)
@@ -188,6 +173,25 @@ namespace UbStudyHelp.Classes
             Environment.Exit(1);
         }
 
+        /// <summary>
+        /// Shoe log file
+        /// </summary>
+        public override void ShowLog()
+        {
+            //Close();
+            Process.Start("notepad.exe", PathLog);
+
+            //using (var fs = new FileStream(PathLog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            //using (var sr = new StreamReader(fs, Encoding.Default))
+            //{
+            //    string text = sr.ReadToEnd();
+            //}
+
+        }
+
+        /// <summary>
+        /// Enable the log again
+        /// </summary>
         public void Show()
         {
             ShowLog();

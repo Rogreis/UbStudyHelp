@@ -4,8 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-      xmlns:local="clr-namespace:UbStudyHelp.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OptionsPage">
@@ -41,11 +39,12 @@
                 </StackPanel>
             </Button>
 
-            <Button Name="ButtonShowLog" ToolTip="Show log for debug" Margin="5" Width="200" Height="80" Click="ButtonShowLog_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Show Log" Margin="10"></TextBlock>
-                </StackPanel>
-            </Button>
+            <DockPanel HorizontalAlignment="Center">
+                <Button Name="ButtonShowLog" ToolTip="Show log for debug" Margin="5" Width="160" Height="32" Click="ButtonShowLog_Click">Show Log</Button>
+                <Button Name="ButtonCheckNewVersion" ToolTip="Check for new version" Margin="5" Width="160" Height="32"  Click="ButtonCheckNewVersion_Click">Check for New Version</Button>
+            </DockPanel>
+
+
 
 
         </StackPanel>

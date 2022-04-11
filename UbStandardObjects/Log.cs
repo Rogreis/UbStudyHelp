@@ -23,6 +23,9 @@ namespace UbStandardObjects
 
 		public abstract void NonFatalError(string message);
 
+		public abstract void ShowLog();
+
+
 		protected void FireShowMessage(string message, bool isError = false, bool isFatal = false)
         {
 			ShowMessage?.Invoke(message, isError, isFatal);
