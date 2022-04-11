@@ -90,11 +90,13 @@ namespace UbStandardObjects
 
 		public string SimilarSearchFor { get; set; } = "";
 
-		public string BoxFirstWord { get; set; } = "";
+		public string CloseSearchDistance { get; set; } = "5";
 
-		public string SecondWord { get; set; } = "";
+		public string CloseSearchFirstWord { get; set; } = "";
 
-		public string Distance { get; set; } = "5";
+		public string CloseSearchSecondWord { get; set; } = "";
+
+		public List<string> CloseSearchWords { get; set; } = new List<string>();
 
 
 	}

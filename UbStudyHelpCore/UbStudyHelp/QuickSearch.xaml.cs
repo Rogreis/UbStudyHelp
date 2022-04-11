@@ -25,6 +25,8 @@ namespace UbStudyHelp
 
             GeometryImages images = new GeometryImages();
 
+            this.Loaded += QuickSearch_Loaded;
+
             //        
             ButtonCancelSearchImage.Source = images.GetImage(GeometryImagesTypes.Clear);
             ButtonSearchSearchImage.Source = images.GetImage(GeometryImagesTypes.Search);
@@ -35,18 +37,44 @@ namespace UbStudyHelp
             ButtonCancelCloseImage.Source = images.GetImage(GeometryImagesTypes.Clear);
             ButtonSearchCloseImage.Source = images.GetImage(GeometryImagesTypes.Search);
 
-            LoadDefaultData();
         }
 
-
+        private void QuickSearch_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadDefaultData();
+        }
 
         private string SearchFor { get => TextBoxSearchFor.Text; set => TextBoxSearchFor.Text = value; }
 
         private string SimilarSearchFor { get => TextBoxSimilarSearchFor.Text; set => TextBoxSimilarSearchFor.Text = value; }
 
-        private string BoxFirstWord { get => TextBoxFirstWord.Text; set => TextBoxFirstWord.Text = value; }
+        private string FirstWord { get => ComboFirstWord.Text; set => ComboFirstWord.Text = value; }
 
-        private string SecondWord { get => TextBoxSecondWord.Text; set => TextBoxSecondWord.Text = value; }
+        private string SecondWord { get => ComboSecondWord.Text; set => ComboSecondWord.Text = value; }
+
+
+        private List<string> _closeSearchWords = new List<string>();
+        private List<string> CloseSearchWords
+        {
+            get
+            {
+                return _closeSearchWords;
+            }
+            set
+            {
+                _closeSearchWords = value;
+                ComboFirstWord.ItemsSource = _closeSearchWords;
+                ComboSecondWord.ItemsSource = _closeSearchWords;
+                if (_closeSearchWords.Count > 0)
+                {
+                    FirstWord = SearchFor = SimilarSearchFor = CloseSearchWords[0];
+                }
+                if (_closeSearchWords.Count > 1)
+                {
+                    SecondWord = CloseSearchWords[1];
+                }
+            }
+        }
 
         private string Distance { get => SliderDistance.Value.ToString(); set => SliderDistance.Value = Convert.ToDouble(value); }
 
@@ -59,18 +87,24 @@ namespace UbStudyHelp
         {
             SearchFor = StaticObjects.Parameters.SearchFor;
             SimilarSearchFor = StaticObjects.Parameters.SimilarSearchFor;
-            BoxFirstWord = StaticObjects.Parameters.BoxFirstWord;
-            SecondWord = StaticObjects.Parameters.SecondWord;
-            Distance = StaticObjects.Parameters.Distance;
+            // Stored values recovered only when no current data
+            if (CloseSearchWords.Count == 0)
+            {
+                CloseSearchWords = StaticObjects.Parameters.CloseSearchWords;
+                FirstWord = StaticObjects.Parameters.CloseSearchFirstWord;
+                SecondWord = StaticObjects.Parameters.CloseSearchSecondWord;
+            }
+            Distance = StaticObjects.Parameters.CloseSearchDistance;
         }
 
         private void SaveDefaultData()
         {
             StaticObjects.Parameters.SearchFor = SearchFor;
             StaticObjects.Parameters.SimilarSearchFor = SimilarSearchFor;
-            StaticObjects.Parameters.BoxFirstWord = BoxFirstWord;
-            StaticObjects.Parameters.SecondWord = SecondWord;
-            StaticObjects.Parameters.Distance = Distance;
+            StaticObjects.Parameters.CloseSearchDistance = Distance;
+            StaticObjects.Parameters.CloseSearchWords = CloseSearchWords;
+            StaticObjects.Parameters.CloseSearchFirstWord = FirstWord;
+            StaticObjects.Parameters.CloseSearchSecondWord = SecondWord;
         }
 
 
@@ -84,14 +118,7 @@ namespace UbStudyHelp
             {
                 return;
             }
-            if (parts.Length > 0)
-            {
-                BoxFirstWord = SearchFor = SimilarSearchFor = parts[0];
-            }
-            if (parts.Length > 1)
-            {
-                SecondWord = parts[1];
-            }
+            CloseSearchWords = new List<string>(parts);
         }
 
 
@@ -111,13 +138,13 @@ namespace UbStudyHelp
             switch (type)
             {
                 case QuickSearchType.Quick:
-                    data.QueryString = TextBoxSearchFor.Text;
+                    data.QueryString = SearchFor;
                     break;
                 case QuickSearchType.Similar:
-                    data.QueryString = TextBoxSimilarSearchFor.Text + "~";
+                    data.QueryString = SimilarSearchFor + "~";
                     break;
                 case QuickSearchType.Close:
-                    data.QueryString = $"\"{TextBoxFirstWord.Text} {TextBoxSecondWord.Text}\"~{TextBoxDistance.Text}";
+                    data.QueryString = $"\"{FirstWord} {SecondWord}\"~{Distance}";
                     break;
             }
 

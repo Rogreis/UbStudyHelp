@@ -202,9 +202,22 @@ namespace UbStudyHelp.Classes
             quickSearch.IsRightTranslation = data == null ? true : data.IsRightTranslation;
             quickSearch.WindowStyle = WindowStyle.ToolWindow;
             quickSearch.Owner = Application.Current.MainWindow;
-            var point = Mouse.GetPosition(Application.Current.MainWindow);
-            quickSearch.Left = point.X;
-            quickSearch.Top = point.Y;
+
+            quickSearch.BorderThickness = new Thickness(2.0);
+            quickSearch.BorderBrush = App.Appearance.GetHighlightColorBrush();
+
+            //const double MinWidth = 200;
+            //const double MinHeight = 200;
+            //double width = Application.Current.MainWindow.Width - 50;
+            //double height = Application.Current.MainWindow.Height - 30;
+            //quickSearch.Width = width > MinWidth ? width : MinWidth;
+            //quickSearch.Height = height > MinHeight ? height : MinHeight;
+
+            quickSearch.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            //var point = Mouse.GetPosition(Application.Current.MainWindow);
+            //quickSearch.Left = point.X;
+            //quickSearch.Top = point.Y;
             quickSearch.ShowDialog();
         }
 
