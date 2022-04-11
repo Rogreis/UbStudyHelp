@@ -40,7 +40,7 @@ namespace UbStudyHelp.Controls
         /// <param name="textToSearch"></param>
         /// <param name="useRightTranslation"></param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private void EventsControl_DirectSearch(string textToSearch, bool useRightTranslation)
+        private void EventsControl_DirectSearch(ParagraphSearchData data)
         {
             FrameControl.Navigate(ubSearchPage);
         }

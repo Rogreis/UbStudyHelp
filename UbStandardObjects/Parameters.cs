@@ -85,5 +85,17 @@ namespace UbStandardObjects
 
 		public virtual ColorSerial HighlightColor { get; set; } = new ColorSerial(0, 0, 102, 255); // rgb(0, 102, 255)
 
+		// Quick search
+		public string SearchFor { get; set; } = "";
+
+		public string SimilarSearchFor { get; set; } = "";
+
+		public string BoxFirstWord { get; set; } = "";
+
+		public string SecondWord { get; set; } = "";
+
+		public string Distance { get; set; } = "5";
+
+
 	}
 }

@@ -32,7 +32,7 @@ namespace UbStudyHelp.Classes
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlDirectSearch(string textToSearch, bool useRightTranslation);
+    public delegate void dlDirectSearch(ParagraphSearchData data);
 
     /// <summary>
     /// Used to fire a click on index
@@ -138,9 +138,9 @@ namespace UbStudyHelp.Classes
             SearchClicked?.Invoke(entry, Words);
         }
 
-        public static void FireDirectSearch(string textToSearch, bool useRightTranslation)
+        public static void FireDirectSearch(ParagraphSearchData data)
         {
-            DirectSearch?.Invoke(textToSearch, useRightTranslation);
+            DirectSearch?.Invoke(data);
         }
         
 

@@ -9,13 +9,24 @@ using System.Windows.Annotations.Storage;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using UbStandardObjects;
 using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {
-    internal class ParagraphSearchData
+
+    public enum QuickSearchType
+    {
+        Quick,
+        Simple,
+        Similar,
+        Close
+    }
+
+    public class ParagraphSearchData
     {
         public bool IsRightTranslation { get; set; } = false;
+        public string QueryString = "";
         public TOC_Entry Entry { get; set; }
     }
 
@@ -100,8 +111,25 @@ namespace UbStudyHelp.Classes
         {
             TextPointer pointer = FlowDocument.Selection.Start;
             System.Windows.Documents.Paragraph p = pointer.Paragraph;
+            if (p == null) return null;
             ParagraphSearchData data= p.Tag as ParagraphSearchData;
             return data;
+        }
+
+        /// <summary>
+        /// Split the currente selected text in words
+        /// </summary>
+        /// <returns></returns>
+        private string[] SplitSelectedText()
+        {
+            // SOme day check regex:  new Regex(@"[^\p{L}]*\p{Z}[^\p{L}]*")  https://stackoverflow.com/questions/10239518/how-do-i-split-a-phrase-into-words-using-regex-in-c-sharp
+            string text = GetSelectedText();
+            if (text != null && !string.IsNullOrWhiteSpace(text))
+            {
+                char[] sep = { ' ', '.', ',', ';', ':', '!', '?', '\t' };
+                return text.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+            }
+            return null;
         }
 
 
@@ -143,17 +171,12 @@ namespace UbStudyHelp.Classes
                 return;
             }
 
-            string text = GetSelectedText();
-            if (text != null && !string.IsNullOrWhiteSpace(text))
+            string[] parts = SplitSelectedText();
+            if (parts != null && parts.Length > 0)
             {
-                char[] sep = { ' ', '.', ',', ';' };
-                string[] parts = text.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length > 0)
-                {
-                    menuItemSearch.Header = "Search for " + parts[0];
-                    menuItemSearch.Tag = parts[0];
-                    menuItemSearch.IsEnabled = true;
-                }
+                menuItemSearch.Header = "Search for " + parts[0];
+                menuItemSearch.Tag = parts[0];
+                menuItemSearch.IsEnabled = true;
             }
         }
 
@@ -167,19 +190,22 @@ namespace UbStudyHelp.Classes
             }
         }
 
+
         private void ItemQuickSearch_Click(object sender, RoutedEventArgs e)
         {
+            string[] parts = SplitSelectedText();
+
             ParagraphSearchData data = GetCurrentParagraph();
             QuickSearch quickSearch = new QuickSearch();
             quickSearch.ShowInTaskbar = false;
-            quickSearch.IsRightTranslation = data.IsRightTranslation;
+            quickSearch.SetData(parts);
+            quickSearch.IsRightTranslation = data == null ? true : data.IsRightTranslation;
+            quickSearch.WindowStyle = WindowStyle.ToolWindow;
             quickSearch.Owner = Application.Current.MainWindow;
-            bool? result = quickSearch.ShowDialog();
-
-            if (result!= null && result.Value)
-            {
-
-            }
+            var point = Mouse.GetPosition(Application.Current.MainWindow);
+            quickSearch.Left = point.X;
+            quickSearch.Top = point.Y;
+            quickSearch.ShowDialog();
         }
 
 
@@ -193,7 +219,8 @@ namespace UbStudyHelp.Classes
                 if (data != null)
                 {
                     // Fire search command
-                    EventsControl.FireDirectSearch(textToSearch, data.IsRightTranslation);
+                    data.QueryString = textToSearch;
+                    EventsControl.FireDirectSearch(data);
                 }
 
             }

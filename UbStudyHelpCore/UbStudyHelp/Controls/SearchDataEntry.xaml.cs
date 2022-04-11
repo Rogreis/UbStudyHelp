@@ -234,16 +234,16 @@ namespace UbStudyHelp.Controls
             ButtonSearchSort.IsEnabled = data.SearchResults.Count > 0;
         }
 
-        private void EventsControl_DirectSearch(string textToSearch, bool isRightTranslation)
+        private void EventsControl_DirectSearch(ParagraphSearchData searchData)
         {
-            if (textToSearch.Trim() == "")
+            if (searchData.QueryString.Trim() == "")
             {
                 return;
             }
-            ComboWhatToSearch.Text = textToSearch;
+            ComboWhatToSearch.Text = searchData.QueryString;
             SearchData data = GetData();
-            data.QueryString = textToSearch;
-            if (isRightTranslation)
+            data.QueryString = searchData.QueryString;
+            if (searchData.IsRightTranslation)
             {
                 if (luceneRight.Execute(data))
                 {
