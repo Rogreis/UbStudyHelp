@@ -156,8 +156,13 @@ namespace UbStudyHelp.Pages
             //ButtonUpdateAvailable.Visibility = Visibility.Visible;
         }
 
+
+        // https://www.urantia.org/MultiLanguageBook
+        // https://github.com/Rogreis/UbStudyHelp
+
         private void ButtonUpdateAvailable_Click(object sender, RoutedEventArgs e)
         {
+            // Not implemented yet
         }
 
         private void ButtonShowLog_Click(object sender, RoutedEventArgs e)
@@ -169,6 +174,17 @@ namespace UbStudyHelp.Pages
         {
             Process.Start(new ProcessStartInfo("https://github.com/Rogreis/UbStudyHelp/releases") { UseShellExecute = true });
         }
+
+        private void ButtonSupport_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://www.facebook.com/groups/3162754254046527") { UseShellExecute = true });
+        }
+
+        private void ButtonBugsButtonBugs_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/Rogreis/UbStudyHelp/issues") { UseShellExecute = true });
+        }
+
 
 
         #endregion

@@ -39,13 +39,20 @@
                 </StackPanel>
             </Button>
 
-            <DockPanel HorizontalAlignment="Center">
-                <Button Name="ButtonShowLog" ToolTip="Show log for debug" Margin="5" Width="160" Height="32" Click="ButtonShowLog_Click">Show Log</Button>
-                <Button Name="ButtonCheckNewVersion" ToolTip="Check for new version" Margin="5" Width="160" Height="32"  Click="ButtonCheckNewVersion_Click">Check for New Version</Button>
-            </DockPanel>
-
-
-
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Name="ButtonShowLog"         Grid.Row="0" Grid.Column="0" ToolTip="Show log for debug" Margin="5" Width="160" Height="32" Click="ButtonShowLog_Click" HorizontalAlignment="Center">Show Log</Button>
+                <Button Name="ButtonCheckNewVersion" Grid.Row="0" Grid.Column="1" ToolTip="Check for new version" Margin="5" Width="160" Height="32"  Click="ButtonCheckNewVersion_Click" HorizontalAlignment="Center">Check for New Version</Button>
+                <Button Name="ButtonSupport"         Grid.Row="1" Grid.Column="0" ToolTip="Information about how to use this tool" Margin="5" Width="160" Height="32" Click="ButtonSupport_Click" HorizontalAlignment="Center">Facebook</Button>
+                <Button Name="ButtonBugs"            Grid.Row="1" Grid.Column="1" ToolTip="Bugs - Sugestions" Margin="5" Width="160" Height="32"  Click="ButtonBugsButtonBugs_Click" HorizontalAlignment="Center">Bugs - Suggestions</Button>
+            </Grid>
 
         </StackPanel>
     </Grid>
