@@ -12,6 +12,30 @@ using Paragraph = System.Windows.Documents.Paragraph;
 
 namespace UbStudyHelp.Controls
 {
+
+    public class IndexLinkData
+    {
+        public bool IsSeeAlso { get; set; } = false;
+        public short TranslationsId { get; set; } = 0;
+        public string Link { get; set; } = "";
+
+        public TOC_Entry Entry 
+        { 
+            get
+            {
+                if (!IsSeeAlso)
+                {
+                    char[] sep = { ';' };
+                    string[] parts = Link.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+                    return new TOC_Entry(TranslationsId, Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]), 0, 0);
+                }
+                return null;
+            }
+        }
+
+    }
+
+
     /// <summary>
     /// Interaction logic for UbStudyBrowser.xaml
     /// </summary>
@@ -98,8 +122,8 @@ namespace UbStudyHelp.Controls
                     hyperlink.MouseEnter += Hyperlink_MouseEnter;
                     hyperlink.MouseLeave += Hyperlink_MouseLeave;
                     // Tag for Hyperlinks tag are different from seaqrch tags, because of the "see also"
-                    string tag = isSeeAlso ? "»" + link : link.Replace(':', ';').Replace('.', ';');
-                    hyperlink.Tag = tag;
+                    // Index is now only for English
+                    hyperlink.Tag = new IndexLinkData() { IsSeeAlso = isSeeAlso, Link = link, TranslationsId = 0 };
                     pDetail.Inlines.Add(rComma);
                     pDetail.Inlines.Add(hyperlink);
                     rComma = new Run(", ");
@@ -129,20 +153,17 @@ namespace UbStudyHelp.Controls
             }
             hyperlink.Foreground = accentBrush;
 
-            string tag = (string)hyperlink.Tag;
-            if (tag.StartsWith("»"))
+
+            IndexLinkData indexLinkData = hyperlink.Tag as IndexLinkData;
+            if (indexLinkData.IsSeeAlso)
             {
-                tag = tag.Remove(0, 1); 
-                EventsControl.FireOpenNewIndexEntry(tag);
+                EventsControl.FireOpenNewIndexEntry(indexLinkData.Link);
             }
             else
             {
                 try
                 {
-                    char[] sep = { ';' };
-                    string[] parts = tag.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-                    TOC_Entry entry = new TOC_Entry(Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]), 0, 0);
-                    EventsControl.FireIndexClicked(entry);
+                    EventsControl.FireIndexClicked(indexLinkData.Entry);
                 }
                 catch
                 { // Ignore errors

@@ -8,6 +8,7 @@ namespace UbStandardObjects.Objects
     {
         private const int MaxSampleTextSize = 80;
 
+        public short TranslationId { get; set; } = 0;
         public short Paper { get; set; } = 0;
         public short Section { get; set; } = 1;
         public short ParagraphNo { get; set; } = 1;
@@ -68,42 +69,43 @@ namespace UbStandardObjects.Objects
         }
 
 
-        public TOC_Entry()
-        {
-        }
+        //public TOC_Entry()
+        //{
+        //}
 
-        public TOC_Entry(Paragraph par)
-        {
-            this.Paper = par.Paper;
-            this.Section = par.Section;
-            this.ParagraphNo = par.ParagraphNo;
-            this.Page = par.Page;
-            this.Line = par.Line;
-            Text = par.Text;
-            IsExpanded = false;
-        }
+        //public TOC_Entry(Paragraph par)
+        //{
+        //    this.Paper = par.Paper;
+        //    this.Section = par.Section;
+        //    this.ParagraphNo = par.ParagraphNo;
+        //    this.Page = par.Page;
+        //    this.Line = par.Line;
+        //    Text = par.Text;
+        //    IsExpanded = false;
+        //}
 
-        public TOC_Entry(short paper, short section, short paragraphNo, short page, short line)
+        public TOC_Entry(short translationId, short paper, short section, short paragraphNo, short page, short line)
         {
-            this.Paper = paper;
-            this.Section = section;
-            this.ParagraphNo = paragraphNo;
-            this.Page = page;
-            this.Line = line;
+            TranslationId = translationId;
+            Paper = paper;
+            Section = section;
+            ParagraphNo = paragraphNo;
+            Page = page;
+            Line = line;
             Text = "";
             IsExpanded = false;
         }
 
-        public TOC_Entry(TOC_Entry entry)
-        {
-            this.Paper = entry.Paper;
-            this.Section = entry.Section;
-            this.ParagraphNo = entry.ParagraphNo;
-            this.Page = entry.Page;
-            this.Line = entry.Line;
-            Text = entry.Text;
-            IsExpanded = entry.IsExpanded;
-        }
+        //public TOC_Entry(TOC_Entry entry)
+        //{
+        //    this.Paper = entry.Paper;
+        //    this.Section = entry.Section;
+        //    this.ParagraphNo = entry.ParagraphNo;
+        //    this.Page = entry.Page;
+        //    this.Line = entry.Line;
+        //    Text = entry.Text;
+        //    IsExpanded = entry.IsExpanded;
+        //}
 
 
 
@@ -118,6 +120,14 @@ namespace UbStandardObjects.Objects
             IsExpanded = listOldExpanded.Exists(SamePaperSection);
         }
 
+        public string Description
+        {
+            get
+            {
+                Translation trans= StaticObjects.Book.Translations.Find(t => t.LanguageID == TranslationId);
+                return $"{trans} - {ToString()}";
+            }
+        }
 
         #region Operators
         public override bool Equals(object obj)

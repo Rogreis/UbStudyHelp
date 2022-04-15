@@ -7,6 +7,7 @@ using System.Windows.Media;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Controls
@@ -19,19 +20,16 @@ namespace UbStudyHelp.Controls
 
         private bool lastShouldHighlightText = false;
 
-        private FlowDocument MainDocument = new FlowDocument();
-
         private FlowDocumentFormat format = new FlowDocumentFormat();
 
-
-        private PaperContextMenu PaperContext = null;
+        private UbAnnotations annotations = new UbAnnotations();
 
 
         public PageBrowser()
         {
             InitializeComponent();
             this.Loaded += PageBrowser_Loaded;
-            PaperContext = new PaperContextMenu(TextFlowDocument);
+            ContextMenu = new PaperContextMenu();
 
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
@@ -42,6 +40,8 @@ namespace UbStudyHelp.Controls
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+
+            annotations.StartAnnotations(TextFlowDocument);
         }
 
 
@@ -58,11 +58,12 @@ namespace UbStudyHelp.Controls
             EventsControl.FireNewPaperShown();
         }
 
-        private System.Windows.Documents.Paragraph CreateParagraph(bool highlighted)
+        private System.Windows.Documents.Paragraph CreateParagraph(TOC_Entry entry, bool highlighted)
         {
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
             {
-                Padding = new Thickness(5)
+                Padding = new Thickness(5),
+                ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry)
             };
 
             if (highlighted)
@@ -86,7 +87,7 @@ namespace UbStudyHelp.Controls
                                      bool highlighted = false,
                                      List<string> Words = null)
         {
-            System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
+            System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Tag = cell.Tag;
             paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
@@ -100,7 +101,7 @@ namespace UbStudyHelp.Controls
                                      bool highlighted = false,
                                      List<string> Words = null)
         {
-            System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
+            System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Margin = new Thickness(50, 20, 20, 0);
             paragraph.Tag = cell.Tag;
@@ -112,12 +113,12 @@ namespace UbStudyHelp.Controls
 
 
         private void FormatTitle(TableCell cell,
-                                 string text,
+                                 TOC_Entry entry, string text,
                                  bool highlighted = false,
                                  List<string> Words = null)
         {
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
-            System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
+            System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             paragraph.FontWeight = FontWeights.Bold;
             paragraph.Foreground = accentBrush;
             paragraph.Tag = cell.Tag;
@@ -147,16 +148,16 @@ namespace UbStudyHelp.Controls
             switch (htmlType)
             {
                 case enHtmlType.BookTitle:
-                    FormatTitle(cellLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entry, LeftText, highlighted, words);
+                    FormatTitle(cellRight, entry, RightText, highlighted, words);
                     break;
                 case enHtmlType.PaperTitle:
-                    FormatTitle(cellLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entry, LeftText, highlighted, words);
+                    FormatTitle(cellRight, entry, RightText, highlighted, words);
                     break;
                 case enHtmlType.SectionTitle:
-                    FormatTitle(cellLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entry, LeftText, highlighted, words);
+                    FormatTitle(cellRight, entry, RightText, highlighted, words);
                     break;
                 case enHtmlType.NormalParagraph:
                     FormatParagraph(cellLeft, entry, LeftText, highlighted, words);
@@ -176,7 +177,9 @@ namespace UbStudyHelp.Controls
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
 
             Table table = new Table();
+            FlowDocument MainDocument = new FlowDocument();
             MainDocument.Blocks.Add(table);
+            
             TableRowGroup tableRowGroup = new TableRowGroup();
             table.RowGroups.Add(tableRowGroup);
 

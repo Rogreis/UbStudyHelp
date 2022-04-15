@@ -29,16 +29,7 @@ namespace UbStudyHelp.Classes
             Entry = entry;
         }
 
-        /// <summary>
-        /// Generate inlines collection from result text, highlighting found words
-        /// </summary>
-        /// <returns></returns>
-        public void GetInlinesText(InlineCollection Inlines, List<string> Words, bool useReducedText= false)
-        {
-            TextWork.GetInlinesText(Inlines, Words);
-        }
-
-    }
+     }
 
 
 }

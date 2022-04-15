@@ -21,5 +21,9 @@ namespace UbStudyHelp.Classes
             }
         }
 
+        public ParagraphCore(short translationId) : base(translationId)
+        {
+        }
+
     }
 }

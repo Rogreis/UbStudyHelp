@@ -1,12 +1,7 @@
-﻿using ControlzEx.Standard;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
 using UbStandardObjects;
-using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Text;
 using static System.Environment;

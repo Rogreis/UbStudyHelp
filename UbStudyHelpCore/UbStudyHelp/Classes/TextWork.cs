@@ -98,22 +98,6 @@ namespace UbStudyHelp.Classes
         };
 
 
-        private string DecodedText
-        {
-            get
-            {
-                return sbText.ToString();
-            }
-        }
-
-        private int MaxSize
-        {
-            get
-            {
-                return maxTextSixe;
-            }
-        }
-
         public TextWork()
         {
         }
@@ -121,14 +105,6 @@ namespace UbStudyHelp.Classes
         public TextWork(string text)
         {
             LoadText(text);
-        }
-
-
-
-
-        private string RemoveAll(string input, string toReplace, string newValue)
-        {
-            return Regex.Replace(input, toReplace, newValue);
         }
 
 

@@ -112,6 +112,10 @@ namespace UbStandardObjects.Objects
                 });
             }
 
+            foreach(Paper paper in Papers)
+            {
+                foreach (Paragraph p in paper.Paragraphs) p.TranslationId = LanguageID;
+            }
 
         }
 

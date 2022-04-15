@@ -11,6 +11,7 @@ using System.Windows.Media;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Pages
@@ -22,6 +23,7 @@ namespace UbStudyHelp.Pages
     {
 
         private FlowDocumentFormat format = new FlowDocumentFormat();
+        private UbAnnotations annotations = new UbAnnotations();
 
         private enum TrachSortOrder
         {
@@ -39,6 +41,16 @@ namespace UbStudyHelp.Pages
             EventsControl.SearchClicked += EventsControl_SeachClicked;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
+
+            TrackDataFlowDocument.MouseRightButtonDown += TrackDataFlowDocument_MouseRightButtonDown;
+            annotations.StartAnnotations(TrackDataFlowDocument);
+
+            //PaperContextMenu = new PaperContextMenu(TrackDataFlowDocument);
+        }
+
+        private void TrackDataFlowDocument_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public void Initialize()
@@ -61,15 +73,11 @@ namespace UbStudyHelp.Pages
             {
                 System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
                 {
-                    Padding= new Thickness(5),
-                    Style = App.Appearance.ForegroundStyle
+                    Padding = new Thickness(5),
+                    Style = App.Appearance.ForegroundStyle,
+                    Tag = entry,
+                    ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry)
                 };
-    
-
-                //Bold link = new Bold();
-                //link.FontSize = StaticObjects.Parameters.FontSizeInfo;
-                //link.Foreground = accentBrush;
-                //link.Inlines.Add(entry.ParagraphID);
 
                 Hyperlink hyperlink = format.HyperlinkFullParagraph(entry, false, entry.Text);
                 hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
@@ -87,7 +95,6 @@ namespace UbStudyHelp.Pages
 
         private void SetFontSize()
         {
-            //App.Appearance.SetFontSize(TrackDataFlowDocument);
             ShowTrackData();
             App.Appearance.SetFontSize(ButtonTrackSort);
             App.Appearance.SetFontSize(ButtonTrackClear);
@@ -101,7 +108,6 @@ namespace UbStudyHelp.Pages
 
         private void SetAppearence()
         {
-            //App.Appearance.SetThemeInfo(TrackDataFlowDocument);
             ShowTrackData();
             App.Appearance.SetThemeInfo(ButtonTrackSort);
             App.Appearance.SetThemeInfo(ButtonTrackClear);

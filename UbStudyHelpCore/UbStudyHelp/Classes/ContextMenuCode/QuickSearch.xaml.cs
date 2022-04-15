@@ -37,6 +37,12 @@ namespace UbStudyHelp
             ButtonCancelCloseImage.Source = images.GetImage(GeometryImagesTypes.Clear);
             ButtonSearchCloseImage.Source = images.GetImage(GeometryImagesTypes.Search);
 
+            BorderThickness = new Thickness(2.0);
+            BorderBrush = App.Appearance.GetHighlightColorBrush();
+            ShowInTaskbar = false;
+            WindowStyle = WindowStyle.ToolWindow;
+            Owner = Application.Current.MainWindow;
+
         }
 
         private void QuickSearch_Loaded(object sender, RoutedEventArgs e)
@@ -108,21 +114,6 @@ namespace UbStudyHelp
         }
 
 
-        /// <summary>
-        /// Set the internal data
-        /// </summary>
-        /// <param name="parts"></param>
-        public void SetData(string[] parts)
-        {
-            if (parts == null || parts.Length == 0)
-            {
-                return;
-            }
-            CloseSearchWords = new List<string>(parts);
-        }
-
-
-
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
@@ -169,5 +160,28 @@ namespace UbStudyHelp
         {
             Search(QuickSearchType.Close);
         }
+
+        /// <summary>
+        /// Set the internal data
+        /// </summary>
+        /// <param name="parts"></param>
+        public void SetData(string[] parts)
+        {
+            if (IsRightTranslation)
+            {
+                ButtonSearchCloseText.Text = ButtonSearchSearchText.Text = ButtonSearchSimilarText.Text = "Search " + StaticObjects.Book.RightTranslation.Description;
+            }
+            else
+            {
+                ButtonSearchCloseText.Text = ButtonSearchSearchText.Text = ButtonSearchSimilarText.Text = "Search " + StaticObjects.Book.LeftTranslation.Description;
+            }
+            if (parts == null || parts.Length == 0)
+            {
+                return;
+            }
+            CloseSearchWords = new List<string>(parts);
+        }
+
+
     }
 }

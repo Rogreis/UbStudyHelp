@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using UbStandardObjects;
@@ -42,5 +43,23 @@ namespace UbStudyHelp.Classes
             textWork.GetInlinesText(hyperlink.Inlines);
             return hyperlink;
         }
+
+        public System.Windows.Documents.Paragraph FullParagraph(TOC_Entry entry, bool includePage, string text)
+        {
+            System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
+            {
+                Padding = new Thickness(5),
+                Style = App.Appearance.ForegroundStyle,
+            };
+
+            Run runIdent = ParagraphIdentification(entry, includePage);
+            paragraph.Inlines.Add(runIdent);
+            paragraph.Inlines.Add(new Run("  "));
+            TextWork textWork = new TextWork(text);
+            textWork.GetInlinesText(paragraph.Inlines);
+            return paragraph;
+        }
+
+
     }
 }

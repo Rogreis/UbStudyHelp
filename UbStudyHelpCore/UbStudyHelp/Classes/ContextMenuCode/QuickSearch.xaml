@@ -23,7 +23,7 @@
                             <Button x:Name="ButtonSearchSearch" Click="ButtonSearchSearch_Click"  VerticalAlignment="Center" ToolTip="Execute the search" Width="160" Height="42" Margin="5, 0, 0, 0">
                                 <StackPanel Orientation="Horizontal">
                                     <Image x:Name="ButtonSearchSearchImage" Margin="5, 0, 25, 0"/>
-                                    <TextBlock Width="160" VerticalAlignment="Center">Search Left</TextBlock>
+                                    <TextBlock x:Name="ButtonSearchSearchText" Width="160" VerticalAlignment="Center">Search Left</TextBlock>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -43,7 +43,7 @@
                             <Button x:Name="ButtonSearchSimilar" Click="ButtonSearchSimilar_Click"  VerticalAlignment="Center" ToolTip="Execute the search" Width="160" Height="42" Margin="5, 0, 0, 0">
                                 <StackPanel Orientation="Horizontal">
                                     <Image x:Name="ButtonSearchSimilarImage" Margin="5, 0, 25, 0"/>
-                                    <TextBlock Width="160" VerticalAlignment="Center">Search Left</TextBlock>
+                                    <TextBlock x:Name="ButtonSearchSimilarText" Width="160" VerticalAlignment="Center">Search Left</TextBlock>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -88,7 +88,7 @@
                             <Button x:Name="ButtonSearchClose" Click="ButtonSearchClose_Click"  VerticalAlignment="Center" ToolTip="Execute the search" Width="160" Height="42" Margin="5, 0, 0, 0">
                                 <StackPanel Orientation="Horizontal">
                                     <Image x:Name="ButtonSearchCloseImage" Margin="5, 0, 25, 0"/>
-                                    <TextBlock Width="160" VerticalAlignment="Center">Search Left</TextBlock>
+                                    <TextBlock x:Name="ButtonSearchCloseText" Width="160" VerticalAlignment="Center">Search Left</TextBlock>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
