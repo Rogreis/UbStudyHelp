@@ -5,9 +5,27 @@ using System.Text;
 using System.Windows.Annotations;
 using System.Windows.Annotations.Storage;
 using System.Windows.Controls;
+using System.Xml;
+using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes.ContextMenuCode
 {
+
+    public class UbAnnotationData
+    {
+        public Annotation Note { get; set; }
+        public StoreContentAction Action { get; set; }
+        public EbAnnotationType AnnotationType { get; set; }
+    }
+
+
+    public enum EbAnnotationType
+    {
+        Paper,
+        Paragraph
+    }
+
+
     internal class UbAnnotations
     {
         // https://docs.microsoft.com/en-us/dotnet/api/system.windows.annotations.annotationservice.createtextstickynotecommand?view=windowsdesktop-6.0
@@ -16,6 +34,8 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         private XmlStreamStore _annotStore = null;
         private MemoryStream MemoryStreamAnnotations = null;
 
+        public EbAnnotationType AnnotationType { get; private set; }
+        public TOC_Entry Entry { get; set; }
 
         public string XmlAnnotations
         {
@@ -30,6 +50,11 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             }
         }
 
+
+        public UbAnnotations(EbAnnotationType annotationType)
+        {
+            AnnotationType = annotationType;
+        }
 
         // ------------------------ StartAnnotations --------------------------
         /// <summary>
@@ -51,10 +76,27 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             // Create an AnnotationStore using the memory string with the annotations already stored
             _annotStore = new XmlStreamStore(MemoryStreamAnnotations);
 
+            _annotStore.StoreContentChanged += _annotStore_StoreContentChanged;
+
             // Enable the AnnotationService using the new store.
             annotService.Enable(_annotStore);
             return annotService;
         }// end:StartAnnotations()
+
+
+        private void _annotStore_StoreContentChanged(object sender, StoreContentChangedEventArgs e)
+        {
+            AnnotationResource resource= new AnnotationResource();
+            resource.Contents.Add(Entry.Xml);
+            e.Annotation.Cargos.Add(resource);
+            UbAnnotationData data = new UbAnnotationData()
+            {
+                Note = e.Annotation,
+                Action = e.Action,
+                AnnotationType = this.AnnotationType
+            };
+            EventsControl.FireAnnotationChanged(data);
+        }
 
         // ------------------------ StopAnnotations ---------------------------
         /// <summary>

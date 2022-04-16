@@ -22,14 +22,15 @@ namespace UbStudyHelp.Controls
 
         private FlowDocumentFormat format = new FlowDocumentFormat();
 
-        private UbAnnotations annotations = new UbAnnotations();
-
+        /// <summary>
+        /// Annootations is set for the page document scroll object, then must be global to the module
+        /// </summary>
+        private UbAnnotations Annotations = new UbAnnotations(EbAnnotationType.Paper);
 
         public PageBrowser()
         {
             InitializeComponent();
             this.Loaded += PageBrowser_Loaded;
-            ContextMenu = new PaperContextMenu();
 
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
@@ -41,7 +42,7 @@ namespace UbStudyHelp.Controls
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
 
-            annotations.StartAnnotations(TextFlowDocument);
+            Annotations.StartAnnotations(TextFlowDocument);
         }
 
 
@@ -54,6 +55,7 @@ namespace UbStudyHelp.Controls
         private void Show(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
             StaticObjects.Parameters.Entry = entry;
+            Annotations.Entry = entry;
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
             EventsControl.FireNewPaperShown();
         }
@@ -63,7 +65,7 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
             {
                 Padding = new Thickness(5),
-                ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry)
+                ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry, true, true)
             };
 
             if (highlighted)

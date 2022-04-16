@@ -23,7 +23,6 @@ namespace UbStudyHelp.Pages
     {
 
         private FlowDocumentFormat format = new FlowDocumentFormat();
-        private UbAnnotations annotations = new UbAnnotations();
 
         private enum TrachSortOrder
         {
@@ -41,17 +40,8 @@ namespace UbStudyHelp.Pages
             EventsControl.SearchClicked += EventsControl_SeachClicked;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
-
-            TrackDataFlowDocument.MouseRightButtonDown += TrackDataFlowDocument_MouseRightButtonDown;
-            annotations.StartAnnotations(TrackDataFlowDocument);
-
-            //PaperContextMenu = new PaperContextMenu(TrackDataFlowDocument);
         }
 
-        private void TrackDataFlowDocument_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Initialize()
         {
@@ -76,7 +66,7 @@ namespace UbStudyHelp.Pages
                     Padding = new Thickness(5),
                     Style = App.Appearance.ForegroundStyle,
                     Tag = entry,
-                    ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry)
+                    ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry, true, false)
                 };
 
                 Hyperlink hyperlink = format.HyperlinkFullParagraph(entry, false, entry.Text);

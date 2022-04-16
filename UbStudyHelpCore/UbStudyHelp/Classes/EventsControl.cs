@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Controls;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Classes
 {
@@ -98,6 +99,17 @@ namespace UbStudyHelp.Classes
     /// <param name="data"></param>
     public delegate void dlShowSearchResults(SearchData data);
 
+    /// <summary>
+    /// Fired when some annotations in included or removed for a pragraph
+    /// </summary>
+    /// <param name="data"></param>
+    public delegate void dsAnnotationChanged(UbAnnotationData data);
+
+
+
+    /// <summary>
+    /// Static class to control events inside the wpf application only
+    /// </summary>
     public static class EventsControl
     {
         public static event dlSearchClicked SearchClicked = null;
@@ -131,6 +143,8 @@ namespace UbStudyHelp.Classes
         public static event dlMainWindowSizeChanged MainWindowSizeChanged = null;
 
         public static event dlNewPaperShown NewPaperShown = null;
+
+        public static event dsAnnotationChanged AnnotationChanged = null;
 
 
         public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
@@ -227,5 +241,10 @@ namespace UbStudyHelp.Classes
             NewPaperShown?.Invoke();
         }
 
+
+        public static void FireAnnotationChanged(UbAnnotationData data)
+        {
+            AnnotationChanged?.Invoke(data);
+        }
     }
 }

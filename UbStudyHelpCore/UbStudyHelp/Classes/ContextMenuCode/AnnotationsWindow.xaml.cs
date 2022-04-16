@@ -21,7 +21,7 @@ namespace UbStudyHelp.Classes
 
         private TOC_Entry Entry = null;
         private FlowDocumentFormat format = new FlowDocumentFormat();
-        private UbAnnotations annotations = new UbAnnotations();
+        private UbAnnotations Annotations = new UbAnnotations(EbAnnotationType.Paragraph);
 
 
         public AnnotationsWindow(TOC_Entry entry)
@@ -30,6 +30,7 @@ namespace UbStudyHelp.Classes
 
             this.Loaded += AnnotationsWindow_Loaded;
             this.Unloaded += AnnotationsWindow_Unloaded;
+            Annotations.Entry = entry;
 
             this.Title = $"Paragraph Annotations for {entry.ParagraphID}";
 
@@ -48,7 +49,7 @@ namespace UbStudyHelp.Classes
             App.Appearance.SetFontSize(FlowDocument);
             App.Appearance.SetThemeInfo(FlowDocument);
 
-            annotations.StartAnnotations(FlowDocument);
+            Annotations.StartAnnotations(FlowDocument);
 
             lblCheck.Content= entry.Description;
 
@@ -72,18 +73,27 @@ namespace UbStudyHelp.Classes
 
         private void AnnotationsWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            annotations.StopAnnotations();
+            Annotations.StopAnnotations();
         }
 
 
         protected MenuItem CreateMenuItem(string header, RoutedUICommand command)
         {
-            return new MenuItem
+            MenuItem item = new MenuItem()
             {
                 Header = header,
-                Command = command
+                Command = command,
+                Tag = Entry,
             };
+
+            item.Click += Item_Click;
+            return item;
         }
 
+        private void Item_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = e.Source as MenuItem;
+            object xx= e.Source;
+        }
     }
 }

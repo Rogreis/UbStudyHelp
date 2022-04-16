@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Annotations;
+using System.Windows.Annotations.Storage;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Text
 {
@@ -11,6 +14,55 @@ namespace UbStudyHelp.Text
     {
 		private GetDataFilesCore dataFiles = null;
 
+        public BookCore()
+        {
+            EventsControl.AnnotationChanged += EventsControl_AnnotationChanged;
+        }
+
+        #region Annotations
+
+        private List<Annotation> PaperAnnotations= new List<Annotation>();
+        private List<Annotation> ParagraphAnnotations = new List<Annotation>();
+
+        private void EventsControl_AnnotationChanged(UbAnnotationData data)
+        {
+            switch (data.AnnotationType)
+            {
+                case EbAnnotationType.Paper:
+                    PaperAnnotationsWork(data);
+                    break;
+                case EbAnnotationType.Paragraph:
+                    ParagraphAnnotationsWork(data);
+                    break;
+            }
+        }
+
+        private void PaperAnnotationsWork(UbAnnotationData data)
+        {
+            switch(data.Action)
+            {
+                case StoreContentAction.Added:
+                    PaperAnnotations.Add(data.Note);
+                    break;
+                case StoreContentAction.Deleted:
+                    PaperAnnotations.Remove(data.Note);
+                    break;
+            }
+        }
+
+        private void ParagraphAnnotationsWork(UbAnnotationData data)
+        {
+            switch (data.Action)
+            {
+                case StoreContentAction.Added:
+                    ParagraphAnnotations.Add(data.Note);
+                    break;
+                case StoreContentAction.Deleted:
+                    ParagraphAnnotations.Remove(data.Note);
+                    break;
+            }
+        }
+        #endregion
 
         public override bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID)
         {

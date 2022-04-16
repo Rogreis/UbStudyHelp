@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text.Json.Serialization;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace UbStandardObjects.Objects
 {
@@ -68,21 +71,49 @@ namespace UbStandardObjects.Objects
             }
         }
 
+        [JsonIgnore]
+        public string Description
+        {
+            get
+            {
+                Translation trans = StaticObjects.Book.Translations.Find(t => t.LanguageID == TranslationId);
+                return $"{trans} - {ToString()}";
+            }
+        }
 
-        //public TOC_Entry()
-        //{
-        //}
 
-        //public TOC_Entry(Paragraph par)
-        //{
-        //    this.Paper = par.Paper;
-        //    this.Section = par.Section;
-        //    this.ParagraphNo = par.ParagraphNo;
-        //    this.Page = par.Page;
-        //    this.Line = par.Line;
-        //    Text = par.Text;
-        //    IsExpanded = false;
-        //}
+
+        /// <summary>
+        /// Provides a xml serialization
+        /// </summary>
+        [JsonIgnore]
+        public XmlElement Xml
+        {
+            get
+            {
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(TOC_Entry));
+                var xml = "";
+                using (var sww = new StringWriter())
+                {
+                    using (XmlWriter writer = XmlWriter.Create(sww))
+                    {
+                        xsSubmit.Serialize(writer, this);
+                        xml = sww.ToString(); // Your XML
+                    }
+                }
+
+                return GetElement(xml);
+            }
+        }
+
+        /// <summary>
+        /// Parameterless constructor used for xml serialization
+        /// </summary>
+        public TOC_Entry()
+        {
+
+        }
+
 
         public TOC_Entry(short translationId, short paper, short section, short paragraphNo, short page, short line)
         {
@@ -96,19 +127,6 @@ namespace UbStandardObjects.Objects
             IsExpanded = false;
         }
 
-        //public TOC_Entry(TOC_Entry entry)
-        //{
-        //    this.Paper = entry.Paper;
-        //    this.Section = entry.Section;
-        //    this.ParagraphNo = entry.ParagraphNo;
-        //    this.Page = entry.Page;
-        //    this.Line = entry.Line;
-        //    Text = entry.Text;
-        //    IsExpanded = entry.IsExpanded;
-        //}
-
-
-
         protected bool SamePaperSection(TOC_Entry index)
         {
             return index.Paper == Paper && index.Section == Section && index.IsExpanded;
@@ -120,13 +138,12 @@ namespace UbStandardObjects.Objects
             IsExpanded = listOldExpanded.Exists(SamePaperSection);
         }
 
-        public string Description
+
+        private static XmlElement GetElement(string xml)
         {
-            get
-            {
-                Translation trans= StaticObjects.Book.Translations.Find(t => t.LanguageID == TranslationId);
-                return $"{trans} - {ToString()}";
-            }
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return doc.DocumentElement;
         }
 
         #region Operators

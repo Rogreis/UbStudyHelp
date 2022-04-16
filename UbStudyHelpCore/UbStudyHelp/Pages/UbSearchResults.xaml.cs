@@ -20,14 +20,12 @@ namespace UbStudyHelp.Pages
         private SearchData lastSearchdata = null;
         private int NrPage, PageSize, TotalPages;
         private FlowDocumentFormat format = new FlowDocumentFormat();
-        private UbAnnotations annotations = new UbAnnotations();
 
         public UbSearchResults()
         {
             InitializeComponent();
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
-            annotations.StartAnnotations(SearchResultsFlowDocument);
         }
 
         private void SetFontSize()
@@ -120,7 +118,7 @@ namespace UbStudyHelp.Pages
                 {
                     Style = App.Appearance.ForegroundStyle,
                     Tag= result.Entry,
-                    ContextMenu = new UbParagraphContextMenu(SearchResultsFlowDocument, result.Entry)
+                    ContextMenu = new UbParagraphContextMenu(SearchResultsFlowDocument, result.Entry, false, false)
                 };
                 document.Blocks.Add(paragraphSearchResult);
 
