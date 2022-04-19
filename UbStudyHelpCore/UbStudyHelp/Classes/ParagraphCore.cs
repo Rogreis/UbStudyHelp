@@ -1,7 +1,4 @@
-﻿using System.Xml.Linq;
-using UbStandardObjects.Objects;
-
-namespace UbStudyHelp.Classes
+﻿namespace UbStudyHelp.Classes
 {
     public class ParagraphCore : UbStandardObjects.Objects.Paragraph
     {

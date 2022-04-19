@@ -64,6 +64,11 @@ namespace UbStudyHelp.Text
         }
         #endregion
 
+        private void GetAnnotations()
+        {
+
+        }
+
         public override bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID)
         {
             try

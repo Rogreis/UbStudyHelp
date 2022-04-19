@@ -9,8 +9,10 @@ using System.Text.Json.Serialization;
 
 namespace UbStandardObjects.Objects
 {
+
     public class Paragraph
     {
+        [JsonPropertyName("TranslationID")]
         public short TranslationId { get; set; } = 0;
         public short Paper { get; set; }
         public short PK_Seq { get; set; }
@@ -29,11 +31,11 @@ namespace UbStandardObjects.Objects
         }
 
         [JsonIgnore]
-        public TOC_Entry Entry 
-        { 
+        public TOC_Entry Entry
+        {
             get
             {
-                TOC_Entry entry= new TOC_Entry(TranslationId, Paper, Section, ParagraphNo, Page, Line);
+                TOC_Entry entry = new TOC_Entry(TranslationId, Paper, Section, ParagraphNo, Page, Line);
                 entry.Text = Text;
                 return entry;
             }
@@ -65,7 +67,7 @@ namespace UbStandardObjects.Objects
 
         public Paragraph(short translationId)
         {
-            TranslationId= translationId;
+            TranslationId = translationId;
         }
 
         public override string ToString()

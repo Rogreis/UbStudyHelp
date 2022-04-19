@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO.Compression;
 using System.IO;
-using System.Net;
-using System.Xml.Linq;
-using UbStudyHelp.Classes;
-using System.Runtime.InteropServices.ComTypes;
-using UbStandardObjects.Objects;
 using UbStandardObjects;
+using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {
