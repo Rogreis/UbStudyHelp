@@ -8,12 +8,19 @@
         Title="Paragraph Annotations" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <!--<RowDefinition Height="Auto"></RowDefinition>-->
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
+
+        <!--<DockPanel Grid.Row="0">
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar Name="ToolBarAnnotations">
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>-->
+
         <FlowDocumentScrollViewer Name="FlowDocument" Grid.Row="0"></FlowDocumentScrollViewer>
         <RichTextBox x:Name="RichTextBoxNote" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5" ></RichTextBox>
-        <Label x:Name="lblCheck" Grid.Row="2"></Label>
     </Grid>
 </Window>
