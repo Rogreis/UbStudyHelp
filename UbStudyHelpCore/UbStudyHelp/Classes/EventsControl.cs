@@ -103,7 +103,7 @@ namespace UbStudyHelp.Classes
     /// Fired when some annotations in included or removed for a pragraph
     /// </summary>
     /// <param name="data"></param>
-    public delegate void dsAnnotationChanged(UbAnnotationData data);
+    public delegate void dsAnnotationChanged(UbAnnotationsStoreData data);
 
 
 
@@ -242,7 +242,7 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public static void FireAnnotationChanged(UbAnnotationData data)
+        public static void FireAnnotationChanged(UbAnnotationsStoreData data)
         {
             AnnotationChanged?.Invoke(data);
         }

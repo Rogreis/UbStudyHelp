@@ -10,6 +10,14 @@ namespace UbStandardObjects.Objects
     public abstract class Book
 	{
 
+		public string FilesPath { get; set; }
+
+		public Translation LeftTranslation { get; set; }
+
+		public Translation RightTranslation { get; set; }
+
+		public List<Translation> Translations { get; set; }
+
 		public Translation GetTranslation(short id)
 		{
 			Translation trans = Translations.Find(o => o.LanguageID == id);
@@ -22,13 +30,6 @@ namespace UbStandardObjects.Objects
 			return trans;
 		}
 
-		public string FilesPath { get; set; }
-
-		public Translation LeftTranslation { get; set; }
-
-		public Translation RightTranslation { get; set; }
-
-		public List<Translation> Translations { get; set; }
 
 		public List<Translation> ObservableTranslations
 		{

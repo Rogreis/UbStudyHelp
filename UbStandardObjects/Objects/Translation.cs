@@ -59,6 +59,10 @@ namespace UbStandardObjects.Objects
 
         public List<Paper> Papers { get; set; } = new List<Paper>();
 
+        public List<UbAnnotationsStoreData> PaperAnnotations = new List<UbAnnotationsStoreData>();
+        public List<UbAnnotationsStoreData> ParagraphAnnotations = new List<UbAnnotationsStoreData>();
+
+
         public List<TOC_Entry> TableOfContents
         {
             get
@@ -145,6 +149,63 @@ namespace UbStandardObjects.Objects
             return Papers.Find(p => p.PaperNo == PaperNo);
         }
 
+
+        #region Annotations
+
+        private void DiskStore(List<UbAnnotationsStoreData> list)
+        {
+
+        }
+
+
+        private void PaperAnnotationsWork(UbAnnotationsStoreData data)
+        {
+            switch (data.Action)
+            {
+                case UbStoreContentAction.Insert:
+                    PaperAnnotations.Add(data);
+                    break;
+                case UbStoreContentAction.Delete:
+                    PaperAnnotations.Remove(data);
+                    break;
+            }
+            DiskStore(PaperAnnotations);
+        }
+
+        private void ParagraphAnnotationsWork(UbAnnotationsStoreData data)
+        {
+            switch (data.Action)
+            {
+                case UbStoreContentAction.Insert:
+                    ParagraphAnnotations.Add(data);
+                    break;
+                case UbStoreContentAction.Delete:
+                    ParagraphAnnotations.Remove(data);
+                    break;
+            }
+            DiskStore(ParagraphAnnotations);
+        }
+
+
+
+        public void GetAnnotations()
+        {
+
+        }
+
+        public void StoreAnnotations(UbAnnotationsStoreData data)
+        {
+            switch (data.AnnotationType)
+            {
+                case UbAnnotationType.Paper:
+                    PaperAnnotationsWork(data);
+                    break;
+                case UbAnnotationType.Paragraph:
+                    ParagraphAnnotationsWork(data);
+                    break;
+            }
+        }
+        #endregion
 
 
         public override string ToString()

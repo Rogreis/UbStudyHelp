@@ -25,7 +25,7 @@ namespace UbStudyHelp.Controls
         /// <summary>
         /// Annootations is set for the page document scroll object, then must be global to the module
         /// </summary>
-        private UbAnnotations Annotations = new UbAnnotations(EbAnnotationType.Paper);
+        private UbAnnotations Annotations = new UbAnnotations(UbAnnotationType.Paper);
 
         public PageBrowser()
         {

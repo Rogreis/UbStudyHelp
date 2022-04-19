@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
+using UbStudyHelp.Text;
 
 namespace UbStudyHelp.Classes
 {

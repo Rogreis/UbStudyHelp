@@ -21,7 +21,7 @@ namespace UbStudyHelp.Classes
 
         private TOC_Entry Entry = null;
         private FlowDocumentFormat format = new FlowDocumentFormat();
-        private UbAnnotations Annotations = new UbAnnotations(EbAnnotationType.Paragraph);
+        private UbAnnotations Annotations = new UbAnnotations(UbAnnotationType.Paragraph);
 
 
         public AnnotationsWindow(TOC_Entry entry)
@@ -91,9 +91,9 @@ namespace UbStudyHelp.Classes
             FlowDocument.ContextMenu = new ContextMenu();
             FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Copy", ApplicationCommands.Copy));
             FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Select all", ApplicationCommands.SelectAll));
-            FlowDocument.ContextMenu.Items.Add(new Separator());
-            FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Print Preview", ApplicationCommands.PrintPreview));
-            FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Print", ApplicationCommands.Print));
+            //FlowDocument.ContextMenu.Items.Add(new Separator());
+            //FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Print Preview", ApplicationCommands.PrintPreview));
+            //FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Print", ApplicationCommands.Print));
             FlowDocument.ContextMenu.Items.Add(new Separator());
             FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Add Highlight", AnnotationService.CreateHighlightCommand));
             FlowDocument.ContextMenu.Items.Add(CreateMenuItem("Add Text Note", AnnotationService.CreateTextStickyNoteCommand));

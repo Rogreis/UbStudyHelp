@@ -12,7 +12,9 @@ namespace UbStudyHelp.Text
 {
     public class BookCore : Book
     {
-		private GetDataFilesCore dataFiles = null;
+
+        private GetDataFilesCore dataFiles = null;
+
 
         public BookCore()
         {
@@ -21,53 +23,21 @@ namespace UbStudyHelp.Text
 
         #region Annotations
 
-        private List<Annotation> PaperAnnotations= new List<Annotation>();
-        private List<Annotation> ParagraphAnnotations = new List<Annotation>();
 
-        private void EventsControl_AnnotationChanged(UbAnnotationData data)
+        private void EventsControl_AnnotationChanged(UbAnnotationsStoreData data)
         {
-            switch (data.AnnotationType)
+            if (data.TranslationId == LeftTranslation.LanguageID)
             {
-                case EbAnnotationType.Paper:
-                    PaperAnnotationsWork(data);
-                    break;
-                case EbAnnotationType.Paragraph:
-                    ParagraphAnnotationsWork(data);
-                    break;
+                LeftTranslation.StoreAnnotations(data);
+            }
+            else
+            {
+                RightTranslation.StoreAnnotations(data);
             }
         }
 
-        private void PaperAnnotationsWork(UbAnnotationData data)
-        {
-            switch(data.Action)
-            {
-                case StoreContentAction.Added:
-                    PaperAnnotations.Add(data.Note);
-                    break;
-                case StoreContentAction.Deleted:
-                    PaperAnnotations.Remove(data.Note);
-                    break;
-            }
-        }
-
-        private void ParagraphAnnotationsWork(UbAnnotationData data)
-        {
-            switch (data.Action)
-            {
-                case StoreContentAction.Added:
-                    ParagraphAnnotations.Add(data.Note);
-                    break;
-                case StoreContentAction.Deleted:
-                    ParagraphAnnotations.Remove(data.Note);
-                    break;
-            }
-        }
         #endregion
 
-        private void GetAnnotations()
-        {
-
-        }
 
         public override bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID)
         {
@@ -102,6 +72,8 @@ namespace UbStudyHelp.Text
             }
             EventsControl.FireTranslationsChanged();
         }
+
+
 
 
     }

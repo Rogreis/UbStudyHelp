@@ -6,26 +6,13 @@ using System.Windows.Annotations;
 using System.Windows.Annotations.Storage;
 using System.Windows.Controls;
 using System.Xml;
+using System.Xml.Serialization;
 using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes.ContextMenuCode
 {
 
-    public class UbAnnotationData
-    {
-        public Annotation Note { get; set; }
-        public StoreContentAction Action { get; set; }
-        public EbAnnotationType AnnotationType { get; set; }
-    }
-
-
-    public enum EbAnnotationType
-    {
-        Paper,
-        Paragraph
-    }
-
-
+ 
     internal class UbAnnotations
     {
         // https://docs.microsoft.com/en-us/dotnet/api/system.windows.annotations.annotationservice.createtextstickynotecommand?view=windowsdesktop-6.0
@@ -34,7 +21,7 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         private XmlStreamStore _annotStore = null;
         private MemoryStream MemoryStreamAnnotations = null;
 
-        public EbAnnotationType AnnotationType { get; private set; }
+        public UbAnnotationType AnnotationType { get; private set; }
         public TOC_Entry Entry { get; set; }
 
         public string XmlAnnotations
@@ -51,7 +38,7 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         }
 
 
-        public UbAnnotations(EbAnnotationType annotationType)
+        public UbAnnotations(UbAnnotationType annotationType)
         {
             AnnotationType = annotationType;
         }
@@ -84,17 +71,48 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         }// end:StartAnnotations()
 
 
+        private static XmlElement GetElement(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return doc.DocumentElement;
+        }
+
+
+        private string XmlFromAnnotation(Annotation annotation)
+        {
+            XmlSerializer xsSubmit = new XmlSerializer(typeof(Annotation));
+            using (var sww = new StringWriter())
+            {
+                using (XmlWriter writer = XmlWriter.Create(sww))
+                {
+                    xsSubmit.Serialize(writer, this);
+                    return sww.ToString(); 
+                }
+            }
+        }
+
+
         private void _annotStore_StoreContentChanged(object sender, StoreContentChangedEventArgs e)
         {
             AnnotationResource resource= new AnnotationResource();
             resource.Contents.Add(Entry.Xml);
             e.Annotation.Cargos.Add(resource);
-            UbAnnotationData data = new UbAnnotationData()
+            UbAnnotationsStoreData data = new UbAnnotationsStoreData()
             {
-                Note = e.Annotation,
-                Action = e.Action,
+                NoteXml = XmlFromAnnotation(e.Annotation),
                 AnnotationType = this.AnnotationType
             };
+
+            switch (e.Action)
+            {
+                case StoreContentAction.Added:
+                    data.Action = UbStoreContentAction.Insert;
+                    break;
+                case StoreContentAction.Deleted:
+                    data.Action = UbStoreContentAction.Delete;
+                    break;
+            }
             EventsControl.FireAnnotationChanged(data);
         }
 
