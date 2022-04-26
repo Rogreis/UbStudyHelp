@@ -152,6 +152,7 @@ namespace UbStandardObjects.Objects
             if (obj == null) return false;
             TOC_Entry entry = obj as TOC_Entry;
             if (entry == null) return false;
+            if (entry.TranslationId != this.TranslationId) return false;
             if (entry.Paper != this.Paper) return false;
             if (entry.Section != Section) return false;
             if (entry.ParagraphNo != ParagraphNo) return false;
@@ -164,6 +165,23 @@ namespace UbStandardObjects.Objects
             if ((object)e1 == null || (object)e2 == null) return false;
             return e1.Equals(e2);
         }
+
+        /// <summary>
+        /// Special operator that ignores the translation Id
+        /// </summary>
+        /// <param name="e1"></param>
+        /// <param name="e2"></param>
+        /// <returns></returns>
+        public static bool operator * (TOC_Entry e1, TOC_Entry e2)
+        {
+            if (System.Object.ReferenceEquals(e1, e2)) return true;
+            if ((object)e1 == null || (object)e2 == null) return false;
+            if (e1.Paper != e2.Paper) return false;
+            if (e1.Section != e2.Section) return false;
+            if (e1.ParagraphNo != e2.ParagraphNo) return false;
+            return true;
+        }
+
 
         public static bool operator !=(TOC_Entry e1, TOC_Entry e2)
         {

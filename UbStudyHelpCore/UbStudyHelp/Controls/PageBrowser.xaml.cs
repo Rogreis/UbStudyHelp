@@ -138,7 +138,7 @@ namespace UbStudyHelp.Controls
         {
             TableRow row = new TableRow();
             tableRowGroup.Rows.Add(row);
-            //row.Tag = null;
+            row.Tag = entryLeft;
             TableCell cellLeft = new TableCell();
             cellLeft.Tag = new ParagraphSearchData() { IsRightTranslation = false, Entry = entryLeft };
             TableCell cellRight = new TableCell();
@@ -208,7 +208,7 @@ namespace UbStudyHelp.Controls
             {
                 //Paragraph pragraph1 = Annotation / Textrange / Paragraph, etc...  
                 //paragraph1.BringIntoView();
-                TableRow row = tableRowGroup.Rows.ToList().Find(r => (r.Tag as TOC_Entry) == entry);
+                TableRow row = tableRowGroup.Rows.ToList().Find(r => (r.Tag as TOC_Entry) * entry);
                 
                 if (row != null)
                 {
