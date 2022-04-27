@@ -157,7 +157,8 @@ namespace UbStudyHelp.Classes
                 Query searchQuery = parser.Parse(searchData.QueryString);
 
                 // Store information to highlight searched words
-                searchData.SetSearchString(FieldText + ":", searchQuery.ToString());
+                searchData.ExtractTerms(searchQuery);
+                //searchData.SetSearchString(FieldText + ":", searchQuery.ToString());
 
                 var reader = DirectoryReader.Open(FSDirectory.Open(indexPath));
                 IndexSearcher searcher = new IndexSearcher(reader);
