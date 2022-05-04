@@ -1,19 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UbStandardObjects.Objects
 {
     public abstract class GetDataFiles
     {
+        protected const string TubFilesFolder = "TUB_Files";
+
         protected const string ControlFileName = "Translations.json";
 
         protected const string indexFileName = "Index.zip";
+
+        protected const string translationAnnotationsFileName = "TranslationAnnotations";
+
+        protected const string paragraphAnnotationsFileName = "TranslationParagraphAnnotations";
+
+        /// <summary>
+        /// Folder for existing files (translations)
+        /// </summary>
+        protected string SourceFolder = "";
+
+        /// <summary>
+        /// Folder for generated files by this app
+        /// </summary>
+        protected string StoreFolder = "";
+
+        /// <summary>
+        /// Generates the control file full path
+        /// </summary>
+        /// <returns></returns>
+        protected string ControlFilePath()
+        {
+            return Path.Combine(SourceFolder, ControlFileName);
+
+        }
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected string TranslationFilePath(short translationId)
+        {
+            return Path.Combine(SourceFolder, $"TR{translationId:000}.gz");
+        }
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected string TranslationAnnotationsJsonFilePath(short translationId)
+        {
+            return Path.Combine(StoreFolder, $"{translationAnnotationsFileName}_{translationId:000}.json");
+        }
+
+        protected string ParagraphAnnotationsJsonFilePath(short translationId)
+        {
+            return Path.Combine(StoreFolder, $"{paragraphAnnotationsFileName}_{translationId:000}.json");
+        }
 
 
         /// <summary>
@@ -106,6 +155,18 @@ namespace UbStandardObjects.Objects
         /// </summary>
         /// <returns></returns>
         public abstract List<Translation> GetTranslations();
+
+        /// <summary>
+        /// Store annotations done for a paper
+        /// </summary>
+        /// <param name="jsonString"></param>
+        public abstract void StorePaperAnnotations(short translationId, List<UbAnnotationsStoreData> list);
+
+        /// <summary>
+        /// Load annotations done for a paper
+        /// </summary>
+        /// <param name="jsonString"></param>
+        public abstract List<UbAnnotationsStoreData> LoadPaperAnnotations(short translationId);
 
     }
 

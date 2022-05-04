@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace UbStandardObjects.Objects
 {
@@ -40,6 +38,8 @@ namespace UbStandardObjects.Objects
 				return list;
 			}
 		}
+
+		public abstract UbAnnotationsStoreData GetUbAnnotationsStoreData(TOC_Entry entry, UbAnnotationType annotationType);
 
 		public abstract bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID);
 

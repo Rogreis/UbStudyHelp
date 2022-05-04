@@ -10,6 +10,7 @@ using UbStandardObjects.Objects;
 using static System.Environment;
 using System.Text;
 using UbStudyHelp.Classes.ContextMenuCode;
+using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
@@ -21,7 +22,7 @@ namespace UbStudyHelp.Classes
 
         private TOC_Entry Entry = null;
         private FlowDocumentFormat format = new FlowDocumentFormat();
-        private UbAnnotations Annotations = new UbAnnotations(UbAnnotationType.Paragraph);
+        private UbAnnotations UbAnnotationsObject = new UbAnnotations(UbAnnotationType.Paragraph);
 
 
         public AnnotationsWindow(TOC_Entry entry)
@@ -30,7 +31,7 @@ namespace UbStudyHelp.Classes
 
             this.Loaded += AnnotationsWindow_Loaded;
             this.Unloaded += AnnotationsWindow_Unloaded;
-            Annotations.Entry = entry;
+            UbAnnotationsObject.Entry = entry;
 
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
@@ -52,7 +53,7 @@ namespace UbStudyHelp.Classes
             App.Appearance.SetFontSize(FlowDocument);
             App.Appearance.SetThemeInfo(FlowDocument);
 
-            Annotations.StartAnnotations(FlowDocument);
+            // corrigir Annotations.StartAnnotations(FlowDocument);
 
             //RichTextBoxNote.AppendText(entry.Description);
             SetFontSize();
@@ -112,6 +113,8 @@ namespace UbStudyHelp.Classes
             RichTextBoxNote.ContextMenu.Items.Add(CreateMenuItem("Select all", ApplicationCommands.SelectAll));
 
 
+            UbAnnotationsObject.StartAnnotations(FlowDocument);
+
             //ToolBarAnnotations.Items.Add(new Separator());
             //ToolBarAnnotations.Items.Add(CreateMenuItem("Copy", ApplicationCommands.Copy));
             //ToolBarAnnotations.Items.Add(CreateMenuItem("Select All", ApplicationCommands.SelectAll));
@@ -127,7 +130,8 @@ namespace UbStudyHelp.Classes
 
         private void AnnotationsWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            Annotations.StopAnnotations();
+            UbAnnotationsObject.Store();
+            UbAnnotationsObject.StopAnnotations();
         }
 
 

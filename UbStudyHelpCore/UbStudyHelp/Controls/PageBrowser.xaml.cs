@@ -42,7 +42,7 @@ namespace UbStudyHelp.Controls
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
 
-            Annotations.StartAnnotations(TextFlowDocument);
+            // corrigir Annotations.StartAnnotations(TextFlowDocument);
         }
 
 

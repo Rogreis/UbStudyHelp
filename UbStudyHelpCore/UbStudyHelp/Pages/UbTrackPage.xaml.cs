@@ -1,17 +1,16 @@
-﻿using Lucene.Net.Util;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Lucene.Net.Util;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
-using UbStudyHelp.Classes.ContextMenuCode;
 using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Pages
@@ -252,7 +251,12 @@ namespace UbStudyHelp.Pages
             {
                 if (result == true)
                 {
-                    var jsonString = JsonConvert.SerializeObject(StaticObjects.Parameters.TrackEntries, Formatting.Indented);
+                    var options = new JsonSerializerOptions
+                    {
+                        AllowTrailingCommas = true,
+                        WriteIndented = true,
+                    };
+                    var jsonString = JsonSerializer.Serialize<List<TOC_Entry>>(StaticObjects.Parameters.TrackEntries, options);
                     File.WriteAllText(saveFileDlg.FileName, jsonString);
                 }
             }
@@ -286,7 +290,7 @@ namespace UbStudyHelp.Pages
                 try
                 {
                     var jsonString = File.ReadAllText(openFileDlg.FileName);
-                    StaticObjects.Parameters.TrackEntries = JsonConvert.DeserializeObject<List<TOC_Entry>>(jsonString);
+                    StaticObjects.Parameters.TrackEntries = App.DeserializeObject<List<TOC_Entry>>(jsonString);
                 }
                 catch (Exception ex)
                 {

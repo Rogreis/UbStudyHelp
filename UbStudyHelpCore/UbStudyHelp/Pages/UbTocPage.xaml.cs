@@ -87,7 +87,7 @@ namespace UbStudyHelp.Pages
             }
             foreach (TreeViewItemUB item in collection)
             {
-                if (entry == item.Entry)
+                if (entry * item.Entry)
                 {
                     return item;
                 }
@@ -186,10 +186,13 @@ namespace UbStudyHelp.Pages
                 TreeViewItemUB item = e.Source as TreeViewItemUB;
                 TreeView tree = item.Parent == TOC_Left ? TOC_Right : TOC_Left;
                 TreeViewItemUB itemNew = FindItem(tree.Items, item.Entry);
-                InternalChange = true;
-                itemNew.IsExpanded = true;
-                DoEvents();
-                InternalChange = false;
+                if (itemNew != null)
+                {
+                    InternalChange = true;
+                    itemNew.IsExpanded = true;
+                    DoEvents();
+                    InternalChange = false;
+                }
             }
             catch { } // Errors are ignored
         }

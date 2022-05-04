@@ -25,7 +25,7 @@ namespace UbStudyHelp.Controls
             {
                 if (!IsSeeAlso)
                 {
-                    char[] sep = { ';' };
+                    char[] sep = { ';', ':', '.' };
                     string[] parts = Link.Split(sep, StringSplitOptions.RemoveEmptyEntries);
                     return new TOC_Entry(TranslationsId, Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]), 0, 0);
                 }

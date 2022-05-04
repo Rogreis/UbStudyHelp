@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
-using UbStudyHelp.Text;
 
 namespace UbStudyHelp.Classes
 {
@@ -13,25 +12,26 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public class GetDataFilesCore : GetDataFiles
     {
-        private string SourceFolder = "";
 
         public GetDataFilesCore()
         {
-            SourceFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "TUB_Files");
+            SourceFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, TubFilesFolder);
+            StoreFolder = App.BaseTubFilesPath;
         }
+
 
         /// <summary>
         /// Get all papers from the zipped file
         /// </summary>
-        /// <param name="translatioId"></param>
+        /// <param name="translationId"></param>
         /// <param name="isZip"></param>
         /// <returns></returns>
-        private string GetFile(short translatioId, bool isZip = true)
+        private string GetFile(short translationId, bool isZip = true)
         {
             try
             {
                 string json = "";
-                string translationStartupPath = Path.Combine(SourceFolder, $"TR{translatioId:000}.gz");
+                string translationStartupPath = TranslationFilePath(translationId);
                 if (File.Exists(translationStartupPath))
                 {
                     StaticObjects.Logger.Info("File exists: " + translationStartupPath);
@@ -41,7 +41,7 @@ namespace UbStudyHelp.Classes
                 }
                 else
                 {
-                    StaticObjects.Logger.Error($"Translation not found {translatioId}");
+                    StaticObjects.Logger.Error($"Translation not found {translationId}");
                     return null;
                 }
             }
@@ -59,7 +59,7 @@ namespace UbStudyHelp.Classes
         /// <returns></returns>
         public override List<Translation> GetTranslations()
         {
-            string path = Path.Combine(SourceFolder, ControlFileName);
+            string path = ControlFilePath();
             string json = File.ReadAllText(path);
             return Translations.DeserializeJson(json);
         }
@@ -83,6 +83,24 @@ namespace UbStudyHelp.Classes
             string json = GetFile(translatioId, true);
             translation.GetData(json);
             return translation;
+        }
+
+        public override void StorePaperAnnotations(short translationId, List<UbAnnotationsStoreData> list)
+        {
+            string path = TranslationAnnotationsJsonFilePath(translationId);
+            string jsonString = App.Serialize<List<UbAnnotationsStoreData>>(list);
+            File.WriteAllText(path, jsonString);
+        }
+
+        public override List<UbAnnotationsStoreData> LoadPaperAnnotations(short translationId)
+        {
+            string path = TranslationAnnotationsJsonFilePath(translationId);
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                return App.DeserializeObject<List<UbAnnotationsStoreData>>(json);
+            }
+            return new List<UbAnnotationsStoreData>();
         }
 
     }

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Annotations;
-using System.Windows.Annotations.Storage;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
-using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Text
 {
@@ -23,17 +19,22 @@ namespace UbStudyHelp.Text
 
         #region Annotations
 
-
         private void EventsControl_AnnotationChanged(UbAnnotationsStoreData data)
         {
-            if (data.TranslationId == LeftTranslation.LanguageID)
+            List<UbAnnotationsStoreData> list = dataFiles.LoadPaperAnnotations(data.Entry.TranslationId);
+            UbAnnotationsStoreData existingData= list.Find(d => d.Entry == data.Entry && data.AnnotationType == data.AnnotationType);
+            if (existingData != null)
             {
-                LeftTranslation.StoreAnnotations(data);
+                list.Remove(existingData);
             }
-            else
-            {
-                RightTranslation.StoreAnnotations(data);
-            }
+            list.Add(data);
+            dataFiles.StorePaperAnnotations(data.Entry.TranslationId, list);
+        }
+
+        public override UbAnnotationsStoreData GetUbAnnotationsStoreData(TOC_Entry entry, UbAnnotationType annotationType)
+        {
+            List<UbAnnotationsStoreData> list = dataFiles.LoadPaperAnnotations(entry.TranslationId);
+            return list.Find(d => d.Entry == entry && d.AnnotationType == annotationType);
         }
 
         #endregion
@@ -72,9 +73,6 @@ namespace UbStudyHelp.Text
             }
             EventsControl.FireTranslationsChanged();
         }
-
-
-
 
     }
 }

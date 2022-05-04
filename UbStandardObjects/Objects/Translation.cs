@@ -9,10 +9,6 @@ using System.Linq;
 namespace UbStandardObjects.Objects
 {
 
-
-
-
-
     internal class JsonRootobject
     {
         public short LanguageID { get; set; }
@@ -57,12 +53,13 @@ namespace UbStandardObjects.Objects
         public string ExternalName { get; set; }
         public string PaperTranslation { get; set; }
 
+        [JsonIgnore]
+        private List<UbAnnotationsStoreData> Annotations { get; set; } = new List<UbAnnotationsStoreData>();
+
+        [JsonIgnore]
         public List<Paper> Papers { get; set; } = new List<Paper>();
 
-        public List<UbAnnotationsStoreData> PaperAnnotations = new List<UbAnnotationsStoreData>();
-        public List<UbAnnotationsStoreData> ParagraphAnnotations = new List<UbAnnotationsStoreData>();
-
-
+        [JsonIgnore]
         public List<TOC_Entry> TableOfContents
         {
             get
@@ -70,9 +67,9 @@ namespace UbStandardObjects.Objects
                 List<TOC_Entry> toc = new List<TOC_Entry>();
                 foreach (Paper paper in Papers)
                 {
-                    var paragraphEntries =   from p in paper.Paragraphs
-                                            where p.ParagraphNo == 0
-                                          orderby p.PK_Seq ascending
+                    var paragraphEntries = from p in paper.Paragraphs
+                                           where p.ParagraphNo == 0
+                                           orderby p.PK_Seq ascending
                                            select p.Entry;
                     toc.AddRange(paragraphEntries);
                 }
@@ -80,6 +77,24 @@ namespace UbStandardObjects.Objects
             }
         }
 
+        [JsonIgnore]
+        public string Copyright
+        {
+            get
+            {
+                string year = (StartingYear == EndingYear) ? EndingYear.ToString() : StartingYear.ToString() + "," + EndingYear.ToString();
+                return "Copyright ©  " + year + " Urantia Foundation. All rights reserved.";
+            }
+        }
+
+        [JsonIgnore]
+        public string Identification
+        {
+            get
+            {
+                return LanguageID.ToString() + " - " + Description;
+            }
+        }
 
         public Translation()
         {
@@ -115,98 +130,15 @@ namespace UbStandardObjects.Objects
                     Paragraphs = new List<Paragraph>(jsonPaper.Paragraphs)
                 });
             }
-
-            //foreach(Paper paper in Papers)
-            //{
-            //    foreach (Paragraph p in paper.Paragraphs) p.TranslationId = LanguageID;
-            //}
-
         }
 
 
-        [JsonIgnore]
-        public string Copyright
-        {
-            get
-            {
-                string year = (StartingYear == EndingYear) ? EndingYear.ToString() : StartingYear.ToString() + "," + EndingYear.ToString();
-                return "Copyright ©  " + year + " Urantia Foundation. All rights reserved.";
-            }
-        }
-
-        [JsonIgnore]
-        public string Identification
-        {
-            get
-            {
-                return LanguageID.ToString() + " - " + Description;
-            }
-        }
 
 
         public Paper Paper(short PaperNo)
         {
             return Papers.Find(p => p.PaperNo == PaperNo);
         }
-
-
-        #region Annotations
-
-        private void DiskStore(List<UbAnnotationsStoreData> list)
-        {
-
-        }
-
-
-        private void PaperAnnotationsWork(UbAnnotationsStoreData data)
-        {
-            switch (data.Action)
-            {
-                case UbStoreContentAction.Insert:
-                    PaperAnnotations.Add(data);
-                    break;
-                case UbStoreContentAction.Delete:
-                    PaperAnnotations.Remove(data);
-                    break;
-            }
-            DiskStore(PaperAnnotations);
-        }
-
-        private void ParagraphAnnotationsWork(UbAnnotationsStoreData data)
-        {
-            switch (data.Action)
-            {
-                case UbStoreContentAction.Insert:
-                    ParagraphAnnotations.Add(data);
-                    break;
-                case UbStoreContentAction.Delete:
-                    ParagraphAnnotations.Remove(data);
-                    break;
-            }
-            DiskStore(ParagraphAnnotations);
-        }
-
-
-
-        public void GetAnnotations()
-        {
-
-        }
-
-        public void StoreAnnotations(UbAnnotationsStoreData data)
-        {
-            switch (data.AnnotationType)
-            {
-                case UbAnnotationType.Paper:
-                    PaperAnnotationsWork(data);
-                    break;
-                case UbAnnotationType.Paragraph:
-                    ParagraphAnnotationsWork(data);
-                    break;
-            }
-        }
-        #endregion
-
 
         public override string ToString()
         {

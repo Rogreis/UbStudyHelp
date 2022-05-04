@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Annotations;
 using System.Windows.Annotations.Storage;
 using System.Windows.Controls;
-using System.Xml;
-using System.Xml.Serialization;
+using UbStandardObjects;
 using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes.ContextMenuCode
 {
 
- 
+
     internal class UbAnnotations
     {
         // https://docs.microsoft.com/en-us/dotnet/api/system.windows.annotations.annotationservice.createtextstickynotecommand?view=windowsdesktop-6.0
@@ -20,99 +19,99 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         private AnnotationService _annotService = null;
         private XmlStreamStore _annotStore = null;
         private MemoryStream MemoryStreamAnnotations = null;
+        private List<Annotation> Annotations = new List<Annotation>();
 
         public UbAnnotationType AnnotationType { get; private set; }
         public TOC_Entry Entry { get; set; }
 
-        public string XmlAnnotations
+        private byte[] serializeAnnotation(Annotation annotation)
         {
-            private set
-            {
-                MemoryStreamAnnotations = new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
-            }
-
-            get
-            {
-                return Encoding.UTF8.GetString(MemoryStreamAnnotations.ToArray());
-            }
+            MemoryStream stream = new MemoryStream();
+            XmlStreamStore annotationStore = new XmlStreamStore(stream);
+            annotationStore.AddAnnotation(annotation);
+            annotationStore.Flush();
+            byte[] serializedAnnotation = stream.ToArray();
+            return serializedAnnotation;
         }
 
+        private Annotation deSerializeAnnotation(byte[] data)
+        {
+            MemoryStream mStream = new MemoryStream(data);
+            XmlStreamStore store = new XmlStreamStore(mStream);
+            return store.GetAnnotations().First();
+        }
+
+
+        private void _annotStore_StoreContentChanged(object sender, StoreContentChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case StoreContentAction.Added:
+                    AnnotationResource resource = new AnnotationResource();
+                    resource.Contents.Add(Entry.Xml);
+                    e.Annotation.Cargos.Add(resource);
+                    Annotations.Add(e.Annotation);
+                    break;
+
+                case StoreContentAction.Deleted:
+                    Annotations.Remove(e.Annotation);
+                    break;
+            }
+        }
 
         public UbAnnotations(UbAnnotationType annotationType)
         {
             AnnotationType = annotationType;
         }
 
-        // ------------------------ StartAnnotations --------------------------
-        /// <summary>
-        ///   Enables annotations and displays all that are viewable.</summary>
-        public AnnotationService StartAnnotations(FlowDocumentScrollViewer doc, string xmlAnnotations = "")
-        {
-            AnnotationService annotService = new AnnotationService(doc);
 
-            //_annotStorePath = MakeMyDocumentsAppFolder("UbStudyAidAnnotations.txt");
+        /// <summary>
+        /// Enables annotations and displays all that are viewable.</summary>
+        /// </summary>
+        /// <param name="docViewer"></param>
+        /// <param name="annotationsBytes"></param>
+        /// <returns></returns>
+        public AnnotationService StartAnnotations(FlowDocumentScrollViewer docViewer)
+        {
+            AnnotationService annotService = new AnnotationService(docViewer);
+            _annotService = annotService;
 
             // If the AnnotationService is currently enabled, disable it.
             if (annotService.IsEnabled == true)
                 annotService.Disable();
 
-            // Open a memory stream for restore/storing annotations.
-            XmlAnnotations = xmlAnnotations;
+            // Create an AnnotationStore using the file stream.
             MemoryStreamAnnotations = new MemoryStream();
-
-            // Create an AnnotationStore using the memory string with the annotations already stored
             _annotStore = new XmlStreamStore(MemoryStreamAnnotations);
-
             _annotStore.StoreContentChanged += _annotStore_StoreContentChanged;
 
+            UbAnnotationsStoreData data = StaticObjects.Book.GetUbAnnotationsStoreData(Entry, AnnotationType);
+
+            if (data != null && data.AnnotationsStrings.Count > 0)
+            {
+                foreach (string annotationString in data.AnnotationsStrings)
+                {
+                    Annotation annotation = deSerializeAnnotation(Encoding.UTF8.GetBytes(annotationString));
+                    _annotStore.AddAnnotation(annotation);
+                }
+            }
             // Enable the AnnotationService using the new store.
             annotService.Enable(_annotStore);
             return annotService;
         }// end:StartAnnotations()
 
 
-        private static XmlElement GetElement(string xml)
+        public void Store()
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xml);
-            return doc.DocumentElement;
-        }
-
-
-        private string XmlFromAnnotation(Annotation annotation)
-        {
-            XmlSerializer xsSubmit = new XmlSerializer(typeof(Annotation));
-            using (var sww = new StringWriter())
-            {
-                using (XmlWriter writer = XmlWriter.Create(sww))
-                {
-                    xsSubmit.Serialize(writer, this);
-                    return sww.ToString(); 
-                }
-            }
-        }
-
-
-        private void _annotStore_StoreContentChanged(object sender, StoreContentChangedEventArgs e)
-        {
-            AnnotationResource resource= new AnnotationResource();
-            resource.Contents.Add(Entry.Xml);
-            e.Annotation.Cargos.Add(resource);
             UbAnnotationsStoreData data = new UbAnnotationsStoreData()
             {
-                NoteXml = XmlFromAnnotation(e.Annotation),
                 AnnotationType = this.AnnotationType
             };
-
-            switch (e.Action)
+            foreach(Annotation annotation in Annotations)
             {
-                case StoreContentAction.Added:
-                    data.Action = UbStoreContentAction.Insert;
-                    break;
-                case StoreContentAction.Deleted:
-                    data.Action = UbStoreContentAction.Delete;
-                    break;
+                data.StoreAnnotation(serializeAnnotation(annotation));
             }
+            data.Entry = Entry;
             EventsControl.FireAnnotationChanged(data);
         }
 

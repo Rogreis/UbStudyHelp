@@ -2,15 +2,12 @@
 using System.IO;
 using System.Text.Json.Serialization;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace UbStandardObjects.Objects
 {
-	public class TOC_Entry
+    public class TOC_Entry
     {
-        private const int MaxSampleTextSize = 80;
-
         public short TranslationId { get; set; } = 0;
         public short Paper { get; set; } = 0;
         public short Section { get; set; } = 1;

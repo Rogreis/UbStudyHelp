@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace UbStandardObjects.Objects
 {
@@ -11,22 +12,29 @@ namespace UbStandardObjects.Objects
         Paragraph
     }
 
-    public enum UbStoreContentAction
-    {
-        Insert,
-        Delete,
-        Modify
-    }
 
     public class UbAnnotationsStoreData
     {
-        public short TranslationId { get; set; } = 0;
-        public short Paper { get; set; } = 0;
-        public short Section { get; set; } = 1;
-        public short ParagraphNo { get; set; } = 1;
+        public TOC_Entry Entry { get; set; }
 
-        public string NoteXml { get; set; }
-        public UbStoreContentAction Action { get; set; }
         public UbAnnotationType AnnotationType { get; set; }
+
+        public List<string> AnnotationsStrings { get; set; } = new List<string>();
+
+        public List<byte[]> GetAnnotationsBytes()
+        {
+            List<byte[]> annotationsBytes = new List<byte[]>();
+            foreach (var annotation in this.AnnotationsStrings)
+            {
+                annotationsBytes.Add(Encoding.UTF8.GetBytes(annotation));
+            }
+            return annotationsBytes;
+        }
+
+        public void StoreAnnotation(byte[] bytes)
+        {
+            var bytesAsString = Encoding.UTF8.GetString(bytes);
+            AnnotationsStrings.Add(bytesAsString);
+        }
     }
 }
