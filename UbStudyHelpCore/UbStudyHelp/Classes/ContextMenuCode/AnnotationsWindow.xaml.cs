@@ -31,7 +31,6 @@ namespace UbStudyHelp.Classes
 
             this.Loaded += AnnotationsWindow_Loaded;
             this.Unloaded += AnnotationsWindow_Unloaded;
-            UbAnnotationsObject.Entry = entry;
 
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
@@ -113,7 +112,7 @@ namespace UbStudyHelp.Classes
             RichTextBoxNote.ContextMenu.Items.Add(CreateMenuItem("Select all", ApplicationCommands.SelectAll));
 
 
-            UbAnnotationsObject.StartAnnotations(FlowDocument);
+            UbAnnotationsObject.StartAnnotations(FlowDocument, Entry);
 
             //ToolBarAnnotations.Items.Add(new Separator());
             //ToolBarAnnotations.Items.Add(CreateMenuItem("Copy", ApplicationCommands.Copy));
@@ -130,7 +129,6 @@ namespace UbStudyHelp.Classes
 
         private void AnnotationsWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            UbAnnotationsObject.Store();
             UbAnnotationsObject.StopAnnotations();
         }
 

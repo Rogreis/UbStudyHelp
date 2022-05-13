@@ -4,6 +4,7 @@ using System.Windows.Annotations;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using UbStandardObjects;
 using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
@@ -39,9 +40,10 @@ namespace UbStudyHelp.Classes
         {
             ShowAnnotations = showAnnotations;
             ShowSearch = showSearch;
-            this.ContextMenuOpening += UbParagraphContextMenu_ContextMenuOpening;
+            //this.ContextMenuOpening += UbParagraphContextMenu_ContextMenuOpening;
             Entry = entry;
             FlowDocument = flowDocument;
+            FlowDocument.ContextMenuOpening += UbParagraphContextMenu_ContextMenuOpening;
             CreateContextMenu();
         }
 
@@ -52,6 +54,19 @@ namespace UbStudyHelp.Classes
             {
                 return;
             }
+
+            try
+            {
+                Run r = e.OriginalSource as Run;
+                System.Windows.Documents.Paragraph p = r.Parent as System.Windows.Documents.Paragraph;
+                UbParagraphContextMenu cm = p.ContextMenu as UbParagraphContextMenu;
+                FlowDocument.Tag = cm.Entry;
+            }
+            catch 
+            {
+                FlowDocument.Tag = null;
+            }
+
 
             string[] parts = SplitSelectedText();
             if (parts != null && parts.Length > 0)
@@ -235,7 +250,7 @@ namespace UbStudyHelp.Classes
                 Items.Add(menuItemSearch);
                 Items.Add(new Separator());
             }
-            Items.Add(CreateMenuItem("New Window", ItemNewWindow_Click));
+            Items.Add(CreateMenuItem("New Paragraph Window", ItemNewWindow_Click));
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 
@@ -85,13 +86,59 @@ namespace UbStudyHelp.Classes
             return translation;
         }
 
-        public override void StorePaperAnnotations(short translationId, List<UbAnnotationsStoreData> list)
+        #region Store Annotations
+        private void StoreListAnnotations(List<UbAnnotationsStoreData> list, TOC_Entry entry)
         {
-            string path = TranslationAnnotationsJsonFilePath(translationId);
+            string path = TranslationAnnotationsJsonFilePath(entry.TranslationId);
             string jsonString = App.Serialize<List<UbAnnotationsStoreData>>(list);
             File.WriteAllText(path, jsonString);
         }
 
+        private void StoreParagraphAnnotations(UbAnnotationsStoreData data)
+        {
+            List<UbAnnotationsStoreData> list = LoadPaperAnnotations(data.Entry.TranslationId);
+            UbAnnotationsStoreData existingData = list.Find(a => a.Entry == data.Entry && data.AnnotationType == UbAnnotationType.Paragraph);
+            if (existingData != null)
+            {
+                list.Remove(existingData);
+            }
+            list.Add(data);
+            StoreListAnnotations(list, data.Entry);
+        }
+
+        private void StorePaperAnnotations(UbAnnotationsStoreData data)
+        {
+            List<UbAnnotationsStoreData> list = LoadPaperAnnotations(data.Entry.TranslationId);
+            UbAnnotationsStoreData existingData = list.Find(a => a.Entry == data.Entry && data.AnnotationType == UbAnnotationType.Paper);
+            if (existingData != null)
+            {
+                list.Remove(existingData);
+            }
+            list.Add(data);
+            StoreListAnnotations(list, data.Entry);
+        }
+
+
+        public override void StoreAnnotations(UbAnnotationsStoreSet annotationsSet)
+        {
+
+            if (annotationsSet.ParagraphAnnotations != null)
+            {
+                StoreParagraphAnnotations(annotationsSet.ParagraphAnnotations);
+            }
+            else
+            {
+                StorePaperAnnotations(annotationsSet.PaperLeftAnnotations);
+                StorePaperAnnotations(annotationsSet.PaperRightAnnotations);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Loads a list of all TOC/Annotation done for a paper
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
         public override List<UbAnnotationsStoreData> LoadPaperAnnotations(short translationId)
         {
             string path = TranslationAnnotationsJsonFilePath(translationId);

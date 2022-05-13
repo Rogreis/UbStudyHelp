@@ -19,22 +19,49 @@ namespace UbStudyHelp.Text
 
         #region Annotations
 
-        private void EventsControl_AnnotationChanged(UbAnnotationsStoreData data)
+        private void EventsControl_AnnotationChanged(UbAnnotationsStoreSet annotations)
         {
-            List<UbAnnotationsStoreData> list = dataFiles.LoadPaperAnnotations(data.Entry.TranslationId);
-            UbAnnotationsStoreData existingData= list.Find(d => d.Entry == data.Entry && data.AnnotationType == data.AnnotationType);
-            if (existingData != null)
-            {
-                list.Remove(existingData);
-            }
-            list.Add(data);
-            dataFiles.StorePaperAnnotations(data.Entry.TranslationId, list);
+            dataFiles.StoreAnnotations(annotations);
         }
 
-        public override UbAnnotationsStoreData GetUbAnnotationsStoreData(TOC_Entry entry, UbAnnotationType annotationType)
+        public override UbAnnotationsStoreSet GetParagraphAnnotations(TOC_Entry entry)
         {
-            List<UbAnnotationsStoreData> list = dataFiles.LoadPaperAnnotations(entry.TranslationId);
-            return list.Find(d => d.Entry == entry && d.AnnotationType == annotationType);
+            UbAnnotationsStoreSet annotationsSet = new UbAnnotationsStoreSet();
+            annotationsSet.ParagraphAnnotations= dataFiles.LoadPaperAnnotations(entry.TranslationId)
+                    //.Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paragraph) ?? new UbAnnotationsStoreData();
+                    .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID) ?? new UbAnnotationsStoreData();
+            annotationsSet.ParagraphAnnotations.Entry = entry;
+            annotationsSet.ParagraphAnnotations.Entry.Text = "";
+            return annotationsSet;
+        }
+
+
+        /// <summary>
+        /// Read stored annotations for this translation-paper
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns>Retuns only the annotations for both right and left paper</returns>
+        public override UbAnnotationsStoreSet GetPaperAnnotations(TOC_Entry entry)
+        {
+            UbAnnotationsStoreSet annotationsSet = new UbAnnotationsStoreSet();
+
+            annotationsSet.PaperLeftAnnotations =
+                dataFiles.LoadPaperAnnotations(StaticObjects.Book.LeftTranslation.LanguageID)
+                    .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paper) ?? new UbAnnotationsStoreData();
+            annotationsSet.PaperRightAnnotations =
+                dataFiles.LoadPaperAnnotations(StaticObjects.Book.RightTranslation.LanguageID)
+                    .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == RightTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paper) ?? new UbAnnotationsStoreData();
+            if (annotationsSet.PaperLeftAnnotations == null)
+            {
+                annotationsSet.PaperLeftAnnotations = new UbAnnotationsStoreData();
+            }
+            if (annotationsSet.PaperRightAnnotations == null)
+            {
+                annotationsSet.PaperRightAnnotations = new UbAnnotationsStoreData();
+            }
+            //annotationsSet.PaperLeftAnnotations.Entry = TOC_Entry.CreateEntry(entry, LeftTranslation.LanguageID);
+            //annotationsSet.PaperRightAnnotations.Entry = TOC_Entry.CreateEntry(entry, RightTranslation.LanguageID);
+            return annotationsSet;
         }
 
         #endregion

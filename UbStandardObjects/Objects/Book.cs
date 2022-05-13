@@ -39,7 +39,9 @@ namespace UbStandardObjects.Objects
 			}
 		}
 
-		public abstract UbAnnotationsStoreData GetUbAnnotationsStoreData(TOC_Entry entry, UbAnnotationType annotationType);
+		public abstract UbAnnotationsStoreSet GetPaperAnnotations(TOC_Entry entry);
+
+		public abstract UbAnnotationsStoreSet GetParagraphAnnotations(TOC_Entry entry);
 
 		public abstract bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID);
 

@@ -157,10 +157,10 @@ namespace UbStandardObjects.Objects
         public abstract List<Translation> GetTranslations();
 
         /// <summary>
-        /// Store annotations done for a paper
+        /// Store annotations all annotations
         /// </summary>
         /// <param name="jsonString"></param>
-        public abstract void StorePaperAnnotations(short translationId, List<UbAnnotationsStoreData> list);
+        public abstract void StoreAnnotations(UbAnnotationsStoreSet annotationsSet);
 
         /// <summary>
         /// Load annotations done for a paper

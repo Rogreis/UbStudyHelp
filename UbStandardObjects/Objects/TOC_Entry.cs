@@ -17,6 +17,11 @@ namespace UbStandardObjects.Objects
         public string Text { get; set; } = "";
         public bool IsExpanded { get; set; } = false;
 
+        public static TOC_Entry CreateEntry(TOC_Entry entry, short newTranslationId)
+        {
+            return new TOC_Entry(newTranslationId, entry.Paper, entry.Section, entry.ParagraphNo, entry.Page, entry.Line);
+        }
+
         [JsonIgnore]
         public string ParagraphID
         {
@@ -129,6 +134,10 @@ namespace UbStandardObjects.Objects
             return index.Paper == Paper && index.Section == Section && index.IsExpanded;
         }
 
+        public bool SameTranslationPaper(TOC_Entry index)
+        {
+            return index.Paper == Paper && index.TranslationId == TranslationId;
+        }
 
         public void CheckOldExpanded(List<TOC_Entry> listOldExpanded)
         {
