@@ -25,7 +25,8 @@ namespace UbStudyHelp.Controls
         /// <summary>
         /// Annootations is set for the page document scroll object, then must be global to the module
         /// </summary>
-        private UbAnnotations UbAnnotationsObject = new UbAnnotations(UbAnnotationType.Paper);
+        // ANNOTATIONS REMOVAL
+        //private UbAnnotations UbAnnotationsObject = new UbAnnotations(UbAnnotationType.Paper);
 
         public PageBrowser()
         {
@@ -54,8 +55,9 @@ namespace UbStudyHelp.Controls
         private void Show(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
             StaticObjects.Parameters.Entry = entry;
-            UbAnnotationsObject.StopAnnotations();
-            UbAnnotationsObject.StartAnnotations(TextFlowDocument, entry);
+            // ANNOTATIONS REMOVAL
+            //UbAnnotationsObject.StopAnnotations();
+            //UbAnnotationsObject.StartAnnotations(TextFlowDocument, entry);
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
             EventsControl.FireNewPaperShown();
         }

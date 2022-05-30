@@ -73,7 +73,17 @@ namespace UbStudyHelp.Classes
             {
                 menuItemSearch.Header = "Search for " + parts[0];
                 menuItemSearch.Tag = parts[0];
-                menuItemSearch.IsEnabled = true;
+                Items.Add(menuItemSearch);
+            }
+            else
+            {
+                try
+                {
+                    Items.Remove(menuItemSearch);
+                }
+                catch 
+                {
+                }
             }
         }
 
@@ -182,14 +192,15 @@ namespace UbStudyHelp.Classes
         //    }
         //}
 
-        protected void ItemNewWindow_Click(object sender, RoutedEventArgs e)
-        {
-            if (Entry != null)
-            {
-                AnnotationsWindow annotationsWindow = new AnnotationsWindow(Entry);
-                annotationsWindow.Show();
-            }
-        }
+        // ANNOTATIONS REMOVAL
+        //protected void ItemNewWindow_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (Entry != null)
+        //    {
+        //        AnnotationsWindow annotationsWindow = new AnnotationsWindow(Entry);
+        //        annotationsWindow.Show();
+        //    }
+        //}
 
         protected void ItemQuickSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -241,16 +252,18 @@ namespace UbStudyHelp.Classes
 
             Items.Add(CreateMenuItem("Copy", ApplicationCommands.Copy));
             Items.Add(CreateMenuItem("Select All", ApplicationCommands.SelectAll));
-            Items.Add(new Separator());
 
             if (ShowSearch)
             {
+                Items.Add(new Separator());
                 Items.Add(CreateMenuItem("Quick Search", ItemQuickSearch_Click));
                 menuItemSearch = CreateMenuItem("Search", ItemSearch_Click);
-                Items.Add(menuItemSearch);
-                Items.Add(new Separator());
+                //Items.Add(menuItemSearch);
             }
-            Items.Add(CreateMenuItem("New Paragraph Window", ItemNewWindow_Click));
+
+            // ANNOTATIONS REMOVAL
+            //Items.Add(new Separator());
+            //Items.Add(CreateMenuItem("New Paragraph Window", ItemNewWindow_Click));
         }
 
 

@@ -1,0 +1,94 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d"
+    x:Class="UbStudyHelp.Printing.UserControlPrintPreview"
+    x:Name="UserControl"
+    Background="Gray"
+    d:DesignWidth="640" d:DesignHeight="480">
+    
+    
+    <!--<Control.Resources>
+        <ObjectDataProvider x:Key="ViewStyles" MethodName="GetValues" ObjectType="{x:Type sys:Enum}" >
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="l:ViewType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <l:EnumMatchVisibilityConverter x:Key="EnumVisibilityConverter" />
+    </Control.Resources>
+    <Control.Template>
+        <ControlTemplate>
+            <ControlTemplate.Triggers>
+                <Trigger Property="l:DocumentPreviewer.ViewType">
+                    <Trigger.Value>
+                        <l:ViewType>Actual</l:ViewType>
+                    </Trigger.Value>
+                    <Trigger.Setters>
+                        <Setter TargetName="ScrollViewer" Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+                        <Setter TargetName="ScrollViewer" Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+                        <Setter TargetName="Viewbox" Property="Viewbox.Stretch" Value="None" />
+                    </Trigger.Setters>
+                </Trigger>
+                <Trigger Property="l:DocumentPreviewer.ViewType">
+                    <Trigger.Value>
+                        <l:ViewType>Fit</l:ViewType>
+                    </Trigger.Value>
+                    <Trigger.Setters>
+                        <Setter TargetName="ScrollViewer" Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                        <Setter TargetName="ScrollViewer" Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                        <Setter TargetName="Viewbox" Property="Viewbox.Stretch" Value="Uniform" />
+                    </Trigger.Setters>
+                </Trigger>
+                <Trigger Property="l:DocumentPreviewer.ViewType">
+                    <Trigger.Value>
+                        <l:ViewType>Wide</l:ViewType>
+                    </Trigger.Value>
+                    <Trigger.Setters>
+                        <Setter TargetName="ScrollViewer" Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                        <Setter TargetName="ScrollViewer" Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+                        <Setter TargetName="Viewbox" Property="Viewbox.Stretch" Value="UniformToFill" />
+                    </Trigger.Setters>
+                </Trigger>
+            </ControlTemplate.Triggers>
+            <DockPanel>
+                <ToolBar DockPanel.Dock="Top">
+                    <Button Command="{x:Static ApplicationCommands.Print}" CommandTarget="{Binding ElementName=PageViewer}" Content="Print..." />
+                    <Separator />
+                    <Button Command="{x:Static NavigationCommands.PreviousPage}" CommandTarget="{Binding ElementName=PageViewer}" Content="&lt; Previous" />
+                    <Button Command="{x:Static NavigationCommands.NextPage}" CommandTarget="{Binding ElementName=PageViewer}" Content="Next &gt;" />
+                    <Separator />
+                </ToolBar>
+                <ScrollViewer x:Name="ScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                    <Border
+                            BorderBrush="Black"
+                            BorderThickness="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Background="White"
+                            Margin="10">
+                        <Viewbox x:Name="Viewbox" Stretch="Uniform">
+                            <FlowDocumentPageViewer
+                                x:Name="PageViewer"
+                                Document="{Binding Document, ElementName=UserControl}"
+                                Zoom="100"
+                                MinZoom="20"
+                                MaxZoom="200">
+                                <FlowDocumentPageViewer.Template>
+                                    <ControlTemplate TargetType="{x:Type FlowDocumentPageViewer}">
+                                        <AdornerDecorator>
+                                            <DocumentPageView FlowDocumentPageViewer.IsMasterPage="True" />
+                                        </AdornerDecorator>
+                                    </ControlTemplate>
+                                </FlowDocumentPageViewer.Template>
+                            </FlowDocumentPageViewer>
+                        </Viewbox>
+                    </Border>
+                </ScrollViewer>
+            </DockPanel>
+        </ControlTemplate>
+    </Control.Template>-->
+</UserControl>
+    

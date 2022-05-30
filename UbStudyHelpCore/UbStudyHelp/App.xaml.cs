@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 using UbStandardObjects;
+using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Text;
 using static System.Environment;
@@ -72,6 +73,12 @@ namespace UbStudyHelp
             // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
 
+            //TOC_Entry entry = new TOC_Entry(0, 1, 1, 1, 1, 1);
+            //entry.Text = "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ";
+            //AnnotationsWindow annotationsWindow = new AnnotationsWindow(entry);
+            //annotationsWindow.Show();
+            //return;
+
             StaticObjects.Logger = new LogCore();
             StaticObjects.Logger.Initialize(pathLog, false);
 
@@ -84,6 +91,8 @@ namespace UbStudyHelp
 
             ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();
+
+
 
             BaseTubFilesPath = MakeProgramDataFolder("TUB_Files");
 
