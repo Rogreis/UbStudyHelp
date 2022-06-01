@@ -32,12 +32,20 @@ namespace UbStudyHelp.Classes
             try
             {
                 string json = "";
+                string translationJsonFilePath = TranslationJsonFilePath(translationId);
+                if (File.Exists(translationJsonFilePath))
+                {
+                    json = File.ReadAllText(translationJsonFilePath);
+                    return json;
+                }
+
                 string translationStartupPath = TranslationFilePath(translationId);
                 if (File.Exists(translationStartupPath))
                 {
                     StaticObjects.Logger.Info("File exists: " + translationStartupPath);
                     byte[] bytes = File.ReadAllBytes(translationStartupPath);
                     json = BytesToString(bytes, isZip);
+                    File.WriteAllText(translationJsonFilePath, json);
                     return json;
                 }
                 else

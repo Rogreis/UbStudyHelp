@@ -54,6 +54,16 @@ namespace UbStandardObjects.Objects
         /// </summary>
         /// <param name="translationId"></param>
         /// <returns></returns>
+        protected string TranslationJsonFilePath(short translationId)
+        {
+            return Path.Combine(StoreFolder, $"TR{translationId:000}.json");
+        }
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
         protected string TranslationAnnotationsJsonFilePath(short translationId)
         {
             return Path.Combine(StoreFolder, $"{translationAnnotationsFileName}_{translationId:000}.json");
