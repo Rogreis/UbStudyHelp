@@ -59,11 +59,11 @@ namespace UbStandardObjects
 
 		public double SpliterDistance { get; set; } = 550;  // BUG: Default value needs to be proportional to user screen resolution
 
-		public List<string> SearchIndexEntries = new List<string>();
+		public List<string> SearchIndexEntries { get; set; } = new List<string>();
 
-		public List<TOC_Entry> TrackEntries = new List<TOC_Entry>();
+		public List<TOC_Entry> TrackEntries { get; set; } = new List<TOC_Entry>();
 
-		public string LastTrackFileSaved = "";
+		public string LastTrackFileSaved { get; set; } = "";
 
 
 		/// <summary>

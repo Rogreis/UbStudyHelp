@@ -96,8 +96,8 @@ namespace UbStudyHelp.Pages
             paragraphTop.Inlines.Add(runPageShown);
 
 
-            document.Blocks.Add(ParagraphLineBreak());
-            document.Blocks.Add(ParagraphLineBreak());
+            //document.Blocks.Add(ParagraphLineBreak());
+            //document.Blocks.Add(ParagraphLineBreak());
 
 
             int fistItem = (nrPage - 1) * pageSize;
