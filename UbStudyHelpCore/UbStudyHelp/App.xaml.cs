@@ -10,11 +10,14 @@ using static System.Environment;
 
 namespace UbStudyHelp
 {
+
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
+
         // Styles based on https://mahapps.com/docs/guides/quick-start
         private static string pathParameters;
 
@@ -72,6 +75,7 @@ namespace UbStudyHelp
         {
             // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» Startup");
 
             //TOC_Entry entry = new TOC_Entry(0, 1, 1, 1, 1, 1);
             //entry.Text = "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ";

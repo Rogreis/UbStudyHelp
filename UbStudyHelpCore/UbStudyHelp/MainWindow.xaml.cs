@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using UbStandardObjects;
 using UbStudyHelp.Classes;
@@ -20,6 +21,8 @@ namespace UbStudyHelp
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.NewPaperShown += EventsControl_NewPaperShown;
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» MainWindow constructor");
+
         }
 
         private void EventsControl_NewPaperShown()
@@ -78,6 +81,7 @@ namespace UbStudyHelp
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
             StatusBarVersion.Text = "v 2.1";
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» MainWindow formText_Loaded");
         }
 
 
@@ -88,15 +92,10 @@ namespace UbStudyHelp
             {
                 double width = this.ActualWidth;
                 double height = gridMain.ActualHeight - StatusBarMainWindow.ActualHeight - SystemParameters.CaptionHeight;
-                
-                //Debug.WriteLine($"{this.ActualWidth}   {this.ActualHeight} Splitter= {GridTexts.ColumnDefinitions[0].ActualWidth}");
-                //Debug.WriteLine($"{gridMain.ActualWidth}   {gridMain.ActualHeight}  {StatusBarMainWindow.ActualWidth}  {StatusBarMainWindow.ActualHeight}");
-
                 EventsControl.FireMainWindowSizeChanged(width, height);
             }
             catch // Ignore errors
             {
-                //Debug.WriteLine("Error");
             }
 
 

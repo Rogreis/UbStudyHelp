@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,8 @@ namespace UbStudyHelp.Pages
         public UbTocPage()
         {
             InitializeComponent();
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» UbTocPage constructor");
+            this.Loaded += UbTocPage_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
@@ -28,6 +31,10 @@ namespace UbStudyHelp.Pages
             TOC_Right.SelectedItemChanged += TOC_Right_SelectedItemChanged;
         }
 
+        private void UbTocPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» UbTocPage Loaded");
+        }
 
         private void SetFontSize()
         {
@@ -52,6 +59,12 @@ namespace UbStudyHelp.Pages
         private void FillTreeView(TreeView tree, bool useLeftTranslation)
         {
             Translation translation = useLeftTranslation ? StaticObjects.Book.LeftTranslation : StaticObjects.Book.RightTranslation;
+            if (tree.Tag == translation)
+            {
+                return;
+            }
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» UbTocPage FillTreeView");
+
             tree.Tag = translation;
             TreeViewItemUB itemPaper = null;
 

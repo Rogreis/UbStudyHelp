@@ -18,6 +18,8 @@ namespace UbStudyHelp.Classes
         {
             Entry = entry;
             Header = entry.Ident;
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            VerticalAlignment = System.Windows.VerticalAlignment.Top;
         }
     }
 }

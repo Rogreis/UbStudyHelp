@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,7 +32,8 @@ namespace UbStudyHelp.Controls
         public PageBrowser()
         {
             InitializeComponent();
-            this.Loaded += PageBrowser_Loaded;
+            Loaded += PageBrowser_Loaded;
+            TextFlowDocument.LayoutUpdated += TextFlowDocument_LayoutUpdated;
 
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
@@ -42,6 +44,8 @@ namespace UbStudyHelp.Controls
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+
+            TextFlowDocument.ContextMenu = new UbParagraphContextMenu(TextFlowDocument, null, false, true);
 
         }
 
@@ -67,7 +71,7 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
             {
                 Padding = new Thickness(5),
-                ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry, true, true),
+                //ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry, true, true),
                 Tag = entry,
             };
 
@@ -134,7 +138,7 @@ namespace UbStudyHelp.Controls
 
 
 
-        private void HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entryLeft, TOC_Entry entryRight, string LeftText, string RightText,
+        private TableRow HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entryLeft, TOC_Entry entryRight, string LeftText, string RightText,
                                              enHtmlType htmlType = enHtmlType.NormalParagraph,
                                              bool highlighted = false,
                                              List<string> words = null)
@@ -173,12 +177,15 @@ namespace UbStudyHelp.Controls
                     FormatIdent(cellRight, entryRight, RightText, highlighted, words);
                     break;
             }
+            return row;
         }
 
+        // Table row that must be in view
+        private TableRow upRow = null;
 
         private void ShowShowBilingualFlowDocument(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            
+
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
 
             Table table = new Table();
@@ -197,36 +204,36 @@ namespace UbStudyHelp.Controls
             HtmlSingleBilingualLine(tableRowGroup, null, null, titleLeft, titleRight, enHtmlType.PaperTitle);
 
             int indParagraph = 0;
+            upRow = null;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)
             {
                 Paragraph parRight = paperRight.Paragraphs[indParagraph];
                 indParagraph++;
                 bool highlighted = shouldHighlightText && (parLeft.Entry == entry);
-                HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
+                TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
+                if (highlighted)
+                {
+                    upRow = row;
+                    upRow.Loaded += Row_Loaded;
+                }
             }
             TextFlowDocument.Tag = entry;
             TextFlowDocument.Document = MainDocument;
+        }
 
-            if (entry != null && tableRowGroup != null)
-            {
-                //Paragraph pragraph1 = Annotation / Textrange / Paragraph, etc...  
-                //paragraph1.BringIntoView();
-                TableRow row = tableRowGroup.Rows.ToList().Find(r => (r.Tag as TOC_Entry) * entry);
-                
-                if (row != null)
-                {
-                    if (row.IsLoaded)
-                    {
-                        row.BringIntoView();
-                    }
-                    else
-                    {
-                        row.Loaded += Row_Loaded;
-                    }
-                }
-            }
-
-
+        private void TextFlowDocument_LayoutUpdated(object sender, System.EventArgs e)
+        {
+            //if (upRow != null)
+            //{
+            //    if (upRow.IsLoaded)
+            //    {
+            //        upRow.BringIntoView();
+            //    }
+            //    else
+            //    {
+            //        upRow.Loaded += Row_Loaded;
+            //    }
+            //}
         }
 
         private void Row_Loaded(object sender, RoutedEventArgs e)
@@ -247,6 +254,7 @@ namespace UbStudyHelp.Controls
 
         private void PageBrowser_Loaded(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» PageBrowser Loaded");
             Show(StaticObjects.Parameters.Entry);
         }
 

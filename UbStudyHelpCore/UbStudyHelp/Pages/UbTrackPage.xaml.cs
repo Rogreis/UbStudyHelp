@@ -39,8 +39,13 @@ namespace UbStudyHelp.Pages
             EventsControl.SearchClicked += EventsControl_SeachClicked;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
+            Loaded += UbTrackPage_Loaded;
         }
 
+        private void UbTrackPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            ShowTrackData();
+        }
 
         public void Initialize()
         {
@@ -56,6 +61,12 @@ namespace UbStudyHelp.Pages
         private void ShowTrackData()
         {
             FlowDocument document = new FlowDocument();
+
+            if (!IsVisible)
+            {
+                return;
+            }
+
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
             foreach (TOC_Entry entry in StaticObjects.Parameters.TrackEntries)

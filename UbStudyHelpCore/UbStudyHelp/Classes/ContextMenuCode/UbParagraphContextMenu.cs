@@ -60,7 +60,10 @@ namespace UbStudyHelp.Classes
                 Run r = e.OriginalSource as Run;
                 System.Windows.Documents.Paragraph p = r.Parent as System.Windows.Documents.Paragraph;
                 UbParagraphContextMenu cm = p.ContextMenu as UbParagraphContextMenu;
-                FlowDocument.Tag = cm.Entry;
+                if (cm != null)
+                {
+                    FlowDocument.Tag = cm.Entry;
+                }
             }
             catch 
             {
@@ -73,7 +76,10 @@ namespace UbStudyHelp.Classes
             {
                 menuItemSearch.Header = "Search for " + parts[0];
                 menuItemSearch.Tag = parts[0];
-                Items.Add(menuItemSearch);
+                if (!Items.Contains(menuItemSearch))
+                {
+                    Items.Add(menuItemSearch);
+                }
             }
             else
             {
@@ -93,6 +99,8 @@ namespace UbStudyHelp.Classes
             MenuItem item = new MenuItem();
             item.Header = header;
             item.Command = command;
+            item.VerticalAlignment = VerticalAlignment.Top;
+            item.HorizontalAlignment = HorizontalAlignment.Left;
             return item;
         }
 
@@ -101,6 +109,8 @@ namespace UbStudyHelp.Classes
             MenuItem item = new MenuItem();
             item.Header = header;
             item.Click += command;
+            item.VerticalAlignment = VerticalAlignment.Top;
+            item.HorizontalAlignment = HorizontalAlignment.Left;
             return item;
         }
 
