@@ -62,10 +62,10 @@ namespace UbStudyHelp.Pages
         {
             FlowDocument document = new FlowDocument();
 
-            if (!IsVisible)
-            {
-                return;
-            }
+            //if (!IsVisible)
+            //{
+            //    return;
+            //}
 
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
