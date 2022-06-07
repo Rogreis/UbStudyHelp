@@ -21,19 +21,23 @@ namespace UbStudyHelp.Pages
         public UbTocPage()
         {
             InitializeComponent();
-            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» UbTocPage constructor");
-            this.Loaded += UbTocPage_Loaded;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
+            EventsControl.NewPaperShown += EventsControl_NewPaperShown;
+
             TOC_Left.SelectedItemChanged += TOC_Left_SelectedItemChanged;
             TOC_Right.SelectedItemChanged += TOC_Right_SelectedItemChanged;
         }
 
-        private void UbTocPage_Loaded(object sender, RoutedEventArgs e)
+        private void EventsControl_NewPaperShown()
         {
-            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» UbTocPage Loaded");
+            if (TOC_Left.Tag != null && TOC_Right.Tag != null)
+            {
+                SelectItem(TOC_Left, StaticObjects.Parameters.Entry);
+                SelectItem(TOC_Right, StaticObjects.Parameters.Entry);
+            }
         }
 
         private void SetFontSize()
@@ -41,7 +45,6 @@ namespace UbStudyHelp.Pages
             App.Appearance.SetFontSize(TOC_Left);
             App.Appearance.SetFontSize(TOC_Right);
         }
-
 
         private void SetAppearence()
         {
@@ -63,7 +66,6 @@ namespace UbStudyHelp.Pages
             {
                 return;
             }
-            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» UbTocPage FillTreeView");
 
             tree.Tag = translation;
             TreeViewItemUB itemPaper = null;
@@ -76,12 +78,14 @@ namespace UbStudyHelp.Pages
                     itemPaper = new TreeViewItemUB(entry);
                     SetItemEvents(itemPaper);
                     tree.Items.Add(itemPaper);
+                    itemPaper.IsSelected = (entry * StaticObjects.Parameters.Entry);
                 }
                 else if (entry.ParagraphNo == 0)
                 {
                     TreeViewItemUB itemSection = new TreeViewItemUB(entry);
                     SetItemEvents(itemSection);
                     itemPaper.Items.Add(itemSection);
+                    itemPaper.IsSelected = (entry * StaticObjects.Parameters.Entry);
                 }
             }
         }
@@ -121,10 +125,14 @@ namespace UbStudyHelp.Pages
         private void SelectItem(TreeView tree, TOC_Entry entry)
         {
             TreeViewItemUB item = FindItem(tree.Items, entry);
-            InternalChange = true;
-            item.IsSelected = true;
-            DoEvents();
-            InternalChange = false;
+            if (item != null)
+            {
+                InternalChange = true;
+                item.IsSelected = true;
+                item.BringIntoView();
+                DoEvents();
+                InternalChange = false;
+            }
         }
 
 
@@ -148,8 +156,11 @@ namespace UbStudyHelp.Pages
             try
             {
                 TreeViewItemUB item = TOC_Right.SelectedItem as TreeViewItemUB;
-                SelectItem(TOC_Left, item.Entry);
-                EventsControl.FireTOCClicked(item.Entry);
+                if (item != null)
+                {
+                    SelectItem(TOC_Left, item.Entry);
+                    EventsControl.FireTOCClicked(item.Entry);
+                }
             }
             catch { }  // Errors are ignored
         }
@@ -163,8 +174,11 @@ namespace UbStudyHelp.Pages
             try
             {
                 TreeViewItemUB item = TOC_Left.SelectedItem as TreeViewItemUB;
-                SelectItem(TOC_Right, item.Entry);
-                EventsControl.FireTOCClicked(item.Entry);
+                if (item != null)
+                {
+                    SelectItem(TOC_Right, item.Entry);
+                    EventsControl.FireTOCClicked(item.Entry);
+                }
             }
             catch { }  // Errors are ignored
         }

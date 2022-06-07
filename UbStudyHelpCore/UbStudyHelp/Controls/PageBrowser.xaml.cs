@@ -211,9 +211,12 @@ namespace UbStudyHelp.Controls
                 indParagraph++;
                 bool highlighted = shouldHighlightText && (parLeft.Entry == entry);
                 TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
-                if (highlighted)
+                if (parLeft.Entry == entry)
                 {
+                    Debug.WriteLine("");
+                    Debug.WriteLine($"Page Browser - upRow set {entry}");
                     upRow = row;
+                    upRow.Tag = entry;
                     upRow.Loaded += Row_Loaded;
                 }
             }
@@ -223,25 +226,31 @@ namespace UbStudyHelp.Controls
 
         private void TextFlowDocument_LayoutUpdated(object sender, System.EventArgs e)
         {
-            //if (upRow != null)
-            //{
-            //    if (upRow.IsLoaded)
-            //    {
-            //        upRow.BringIntoView();
-            //    }
-            //    else
-            //    {
-            //        upRow.Loaded += Row_Loaded;
-            //    }
-            //}
+            if (upRow != null)
+            {
+                TOC_Entry entry= upRow.Tag as TOC_Entry;
+                if (upRow.IsLoaded)
+                {
+                    Debug.WriteLine($"Page Browser - BringIntoView {entry}");
+                    upRow.BringIntoView();
+                }
+                else
+                {
+                    Debug.WriteLine($"Page Browser - Row_Loaded set {entry}");
+                    upRow.Loaded += Row_Loaded;
+                }
+            }
         }
 
         private void Row_Loaded(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("Page Browser - Row_Loaded called");
             TableRow row = (sender as TableRow);
+            TOC_Entry entry = upRow.Tag as TOC_Entry;
             System.Windows.Documents.Paragraph paragraph = row.Cells[0].Blocks.FirstBlock as System.Windows.Documents.Paragraph;
             if (paragraph != null)
             {
+                Debug.WriteLine($"Page Browser - Row_Loaded BringIntoView {entry}");
                 paragraph.BringIntoView();
             }
         }
