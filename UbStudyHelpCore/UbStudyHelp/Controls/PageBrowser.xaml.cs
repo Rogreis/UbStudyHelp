@@ -23,6 +23,9 @@ namespace UbStudyHelp.Controls
 
         private FlowDocumentFormat format = new FlowDocumentFormat();
 
+        // Last highlighted paragraph to force it to ne shown in the screen
+        private System.Windows.Documents.Paragraph currentParagraph = null;
+
         /// <summary>
         /// Annootations is set for the page document scroll object, then must be global to the module
         /// </summary>
@@ -66,6 +69,7 @@ namespace UbStudyHelp.Controls
             EventsControl.FireNewPaperShown();
         }
 
+
         private System.Windows.Documents.Paragraph CreateParagraph(TOC_Entry entry, bool highlighted)
         {
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
@@ -80,6 +84,11 @@ namespace UbStudyHelp.Controls
                 paragraph.BorderThickness = new Thickness(1);
                 paragraph.BorderBrush = App.Appearance.GetHighlightColorBrush();
             };
+
+            if (highlighted && entry.TranslationId == StaticObjects.Parameters.Entry.TranslationId)
+            {
+                currentParagraph = paragraph;
+            }
 
 
             paragraph.Style = App.Appearance.ForegroundStyle;
@@ -180,8 +189,6 @@ namespace UbStudyHelp.Controls
             return row;
         }
 
-        // Table row that must be in view
-        private TableRow upRow = null;
 
         private void ShowShowBilingualFlowDocument(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
@@ -204,21 +211,12 @@ namespace UbStudyHelp.Controls
             HtmlSingleBilingualLine(tableRowGroup, null, null, titleLeft, titleRight, enHtmlType.PaperTitle);
 
             int indParagraph = 0;
-            upRow = null;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)
             {
                 Paragraph parRight = paperRight.Paragraphs[indParagraph];
                 indParagraph++;
                 bool highlighted = shouldHighlightText && (parLeft.Entry == entry);
                 TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
-                if (parLeft.Entry == entry)
-                {
-                    Debug.WriteLine("");
-                    Debug.WriteLine($"Page Browser - upRow set {entry}");
-                    upRow = row;
-                    upRow.Tag = entry;
-                    upRow.Loaded += Row_Loaded;
-                }
             }
             TextFlowDocument.Tag = entry;
             TextFlowDocument.Document = MainDocument;
@@ -226,34 +224,13 @@ namespace UbStudyHelp.Controls
 
         private void TextFlowDocument_LayoutUpdated(object sender, System.EventArgs e)
         {
-            if (upRow != null)
+            if (currentParagraph != null)
             {
-                TOC_Entry entry= upRow.Tag as TOC_Entry;
-                if (upRow.IsLoaded)
-                {
-                    Debug.WriteLine($"Page Browser - BringIntoView {entry}");
-                    upRow.BringIntoView();
-                }
-                else
-                {
-                    Debug.WriteLine($"Page Browser - Row_Loaded set {entry}");
-                    upRow.Loaded += Row_Loaded;
-                }
+                currentParagraph.BringIntoView();
+                currentParagraph = null;
             }
         }
 
-        private void Row_Loaded(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("Page Browser - Row_Loaded called");
-            TableRow row = (sender as TableRow);
-            TOC_Entry entry = upRow.Tag as TOC_Entry;
-            System.Windows.Documents.Paragraph paragraph = row.Cells[0].Blocks.FirstBlock as System.Windows.Documents.Paragraph;
-            if (paragraph != null)
-            {
-                Debug.WriteLine($"Page Browser - Row_Loaded BringIntoView {entry}");
-                paragraph.BringIntoView();
-            }
-        }
 
         private void Refresh()
         {
@@ -263,7 +240,6 @@ namespace UbStudyHelp.Controls
 
         private void PageBrowser_Loaded(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» PageBrowser Loaded");
             Show(StaticObjects.Parameters.Entry);
         }
 
