@@ -83,12 +83,12 @@ namespace UbStudyHelp.Controls
             {
                 paragraph.BorderThickness = new Thickness(1);
                 paragraph.BorderBrush = App.Appearance.GetHighlightColorBrush();
+                currentParagraph = paragraph;
             };
 
-            if (highlighted && entry.TranslationId == StaticObjects.Parameters.Entry.TranslationId)
-            {
-                currentParagraph = paragraph;
-            }
+            //if (highlighted && entry * StaticObjects.Parameters.Entry)
+            //{
+            //}
 
 
             paragraph.Style = App.Appearance.ForegroundStyle;
@@ -215,7 +215,7 @@ namespace UbStudyHelp.Controls
             {
                 Paragraph parRight = paperRight.Paragraphs[indParagraph];
                 indParagraph++;
-                bool highlighted = shouldHighlightText && (parLeft.Entry == entry);
+                bool highlighted = shouldHighlightText && (parLeft.Entry * entry);
                 TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
             }
             TextFlowDocument.Tag = entry;

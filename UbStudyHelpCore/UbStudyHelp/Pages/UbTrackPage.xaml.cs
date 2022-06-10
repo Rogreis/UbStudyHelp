@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -55,17 +56,24 @@ namespace UbStudyHelp.Pages
         }
 
 
+        private TOC_Entry lastEntryShown = null;
+
         /// <summary>
         /// Show track data
         /// </summary>
         private void ShowTrackData()
         {
-            FlowDocument document = new FlowDocument();
 
-            //if (!IsVisible)
-            //{
-            //    return;
-            //}
+            // Already shown?
+            if (lastEntryShown != null && StaticObjects.Parameters.TrackEntries.Count > 0 && lastEntryShown == StaticObjects.Parameters.TrackEntries[0])
+            {
+                return;
+            }
+
+            lastEntryShown= StaticObjects.Parameters.TrackEntries[0];
+            Debug.WriteLine($"»»»»»»»»»»»»» ShowTrackData {lastEntryShown}");
+
+            FlowDocument document = new FlowDocument();
 
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 

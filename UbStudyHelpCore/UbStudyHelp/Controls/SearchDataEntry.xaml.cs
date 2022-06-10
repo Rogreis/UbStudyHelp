@@ -29,8 +29,8 @@ namespace UbStudyHelp.Controls
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
             EventsControl.DirectSearch += EventsControl_DirectSearch;
-        }
 
+        }
 
         public void Initialize()
         {
