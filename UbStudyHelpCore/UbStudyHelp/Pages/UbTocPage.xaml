@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:UbStudyHelp.Pages"
+      xmlns:classes="clr-namespace:UbStudyHelp.Classes"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="UbTocPage">
@@ -17,12 +18,34 @@
         <TabControl Grid.Row="1" Margin="10, 10, 10, 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <TabItem Name="TabItemLeft" Header="Left">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                    <TreeView Name="TOC_Left" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch"  BorderThickness="0" />
+                    <TreeView Name="TOC_Left" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch"  BorderThickness="0" 
+                              VirtualizingPanel.IsVirtualizing="False">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <!-- This Setter applies an attached behavior to all TreeViewItems.  -->
+                                <Setter 
+                                  Property="classes:TreeViewItemBehavior.IsBroughtIntoViewWhenSelected" 
+                                  Value="True" 
+                                  />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
                 </ScrollViewer>
             </TabItem>
             <TabItem Name="TabItemRight" Header="Right">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                    <TreeView Name="TOC_Right" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch"  BorderThickness="0"/>
+                    <TreeView Name="TOC_Right" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch"  BorderThickness="0"
+                              VirtualizingPanel.IsVirtualizing="False">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <!-- This Setter applies an attached behavior to all TreeViewItems.  -->
+                                <Setter 
+                                  Property="classes:TreeViewItemBehavior.IsBroughtIntoViewWhenSelected" 
+                                  Value="True" 
+                                  />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
                 </ScrollViewer>
             </TabItem>
         </TabControl>

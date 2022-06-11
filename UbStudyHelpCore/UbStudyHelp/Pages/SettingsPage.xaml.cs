@@ -9,6 +9,8 @@ using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Text;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace UbStudyHelp.Pages
 {
@@ -22,42 +24,45 @@ namespace UbStudyHelp.Pages
         public SettingsPage()
         {
             InitializeComponent();
-            EventsControl.FontChanged += EventsControl_FontChanged;
-            EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
-            EventsControl.UpdateAvailable += EventsControl_UpdateAvailable;
 
-            ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
-            ToggleSwitchShowParIdent.Toggled += ToggleSwitchShowParIdent_Toggled;
-            ToggleSwitchBilingual.Toggled += ToggleSwitchBilingual_Toggled;
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                EventsControl.FontChanged += EventsControl_FontChanged;
+                EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+                EventsControl.UpdateAvailable += EventsControl_UpdateAvailable;
 
+                ToggleSwitchThemme.Toggled += ToggleSwitchThemme_Toggled;
+                ToggleSwitchShowParIdent.Toggled += ToggleSwitchShowParIdent_Toggled;
+                ToggleSwitchBilingual.Toggled += ToggleSwitchBilingual_Toggled;
 
+                ThemmeColors.Add("Green");
+                ThemmeColors.Add("Blue");
+                ThemmeColors.Add("Purple");
+                ThemmeColors.Add("Orange");
+                ThemmeColors.Add("Lime");
+                ThemmeColors.Add("Emerald");
+                ThemmeColors.Add("Teal");
+                ThemmeColors.Add("Cyan");
+                ThemmeColors.Add("Cobalt");
+                ThemmeColors.Add("Indigo");
+                ThemmeColors.Add("Violet");
+                ThemmeColors.Add("Pink");
+                ThemmeColors.Add("Red");
+                ThemmeColors.Add("Magenta");
+                ThemmeColors.Add("Crimson");
+                ThemmeColors.Add("Amber");
+                ThemmeColors.Add("Yellow");
+                ThemmeColors.Add("Brown");
+                ThemmeColors.Add("Olive");
+                ThemmeColors.Add("Steel");
+                ThemmeColors.Add("Mauve");
+                ThemmeColors.Add("Taupe");
+                ThemmeColors.Add("Sienna");
+                ThemmeColors.Sort();
+                ComboTheme.ItemsSource = ThemmeColors;
+                ComboTheme.SelectedItem = ((ParametersCore)StaticObjects.Parameters).ThemeColor;
+            }
 
-            ThemmeColors.Add("Green");
-            ThemmeColors.Add("Blue");
-            ThemmeColors.Add("Purple");
-            ThemmeColors.Add("Orange");
-            ThemmeColors.Add("Lime");
-            ThemmeColors.Add("Emerald");
-            ThemmeColors.Add("Teal");
-            ThemmeColors.Add("Cyan");
-            ThemmeColors.Add("Cobalt");
-            ThemmeColors.Add("Indigo");
-            ThemmeColors.Add("Violet");
-            ThemmeColors.Add("Pink");
-            ThemmeColors.Add("Red");
-            ThemmeColors.Add("Magenta");
-            ThemmeColors.Add("Crimson");
-            ThemmeColors.Add("Amber");
-            ThemmeColors.Add("Yellow");
-            ThemmeColors.Add("Brown");
-            ThemmeColors.Add("Olive");
-            ThemmeColors.Add("Steel");
-            ThemmeColors.Add("Mauve");
-            ThemmeColors.Add("Taupe");
-            ThemmeColors.Add("Sienna");
-            ThemmeColors.Sort();
-            ComboTheme.ItemsSource = ThemmeColors;
-            ComboTheme.SelectedItem = ((ParametersCore)StaticObjects.Parameters).ThemeColor;
         }
 
 
@@ -148,17 +153,39 @@ namespace UbStudyHelp.Pages
         /// <param name="updateList"></param>
         private void EventsControl_UpdateAvailable()
         {
-            ButtonUpdateAvailable.Visibility = Visibility.Visible;
+            //ButtonUpdateAvailable.Visibility = Visibility.Visible;
         }
+
+
+        // https://www.urantia.org/MultiLanguageBook
+        // https://github.com/Rogreis/UbStudyHelp
 
         private void ButtonUpdateAvailable_Click(object sender, RoutedEventArgs e)
         {
+            // Not implemented yet
         }
 
         private void ButtonShowLog_Click(object sender, RoutedEventArgs e)
         {
-            //Log.Show();
+            StaticObjects.Logger.ShowLog();
         }
+
+        private void ButtonCheckNewVersion_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/Rogreis/UbStudyHelp/releases") { UseShellExecute = true });
+        }
+
+        private void ButtonSupport_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://www.facebook.com/groups/3162754254046527") { UseShellExecute = true });
+        }
+
+        private void ButtonBugsButtonBugs_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/Rogreis/UbStudyHelp/issues") { UseShellExecute = true });
+        }
+
+
 
         #endregion
 

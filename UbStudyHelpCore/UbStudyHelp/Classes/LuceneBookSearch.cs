@@ -68,7 +68,6 @@ namespace UbStudyHelp.Classes
         public Translation Translation { get; set; } = null;
         public string ErrorMessage = "";
 
-        public short TranslationId { get; private set; } = -1;
 
         public LuceneBookSearch(string basePathForFiles, Translation translation)
         {
@@ -158,7 +157,8 @@ namespace UbStudyHelp.Classes
                 Query searchQuery = parser.Parse(searchData.QueryString);
 
                 // Store information to highlight searched words
-                searchData.SetSearchString(FieldText + ":", searchQuery.ToString());
+                searchData.ExtractTerms(searchQuery);
+                //searchData.SetSearchString(FieldText + ":", searchQuery.ToString());
 
                 var reader = DirectoryReader.Open(FSDirectory.Open(indexPath));
                 IndexSearcher searcher = new IndexSearcher(reader);
@@ -183,9 +183,9 @@ namespace UbStudyHelp.Classes
 
                     short section = Convert.ToInt16(doc.GetField(FieldSection).GetStringValue());
                     short paragraphNo = Convert.ToInt16(doc.GetField(FieldParagraph).GetStringValue());
-                    TOC_Entry entry = new TOC_Entry(paper, section, paragraphNo, 0, 0);
-                    string text = doc.GetField(FieldText).GetStringValue();
-                    SearchResult searchResult = new SearchResult(entry, text);
+                    TOC_Entry entry = new TOC_Entry(Translation.LanguageID, paper, section, paragraphNo, 0, 0);
+                    entry.Text = doc.GetField(FieldText).GetStringValue();
+                    SearchResult searchResult = new SearchResult(entry);
                     searchResult.OriginalPosition = i;  // used to restore relevancy order after a sort by paragraph
                     searchData.SearchResults.Add(searchResult);
                 }

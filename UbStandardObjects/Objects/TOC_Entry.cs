@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace UbStandardObjects.Objects
 {
-	public class TOC_Entry
+    public class TOC_Entry
     {
-        private const int MaxSampleTextSize = 80;
-
+        public short TranslationId { get; set; } = 0;
         public short Paper { get; set; } = 0;
         public short Section { get; set; } = 1;
         public short ParagraphNo { get; set; } = 1;
@@ -15,6 +16,11 @@ namespace UbStandardObjects.Objects
         public short Line { get; set; }
         public string Text { get; set; } = "";
         public bool IsExpanded { get; set; } = false;
+
+        public static TOC_Entry CreateEntry(TOC_Entry entry, short newTranslationId)
+        {
+            return new TOC_Entry(newTranslationId, entry.Paper, entry.Section, entry.ParagraphNo, entry.Page, entry.Line);
+        }
 
         [JsonIgnore]
         public string ParagraphID
@@ -67,51 +73,71 @@ namespace UbStandardObjects.Objects
             }
         }
 
+        [JsonIgnore]
+        public string Description
+        {
+            get
+            {
+                Translation trans = StaticObjects.Book.Translations.Find(t => t.LanguageID == TranslationId);
+                return $"{trans} - {ToString()}";
+            }
+        }
 
+
+
+        /// <summary>
+        /// Provides a xml serialization
+        /// </summary>
+        [JsonIgnore]
+        public XmlElement Xml
+        {
+            get
+            {
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(TOC_Entry));
+                var xml = "";
+                using (var sww = new StringWriter())
+                {
+                    using (XmlWriter writer = XmlWriter.Create(sww))
+                    {
+                        xsSubmit.Serialize(writer, this);
+                        xml = sww.ToString(); // Your XML
+                    }
+                }
+
+                return GetElement(xml);
+            }
+        }
+
+        /// <summary>
+        /// Parameterless constructor used for xml serialization
+        /// </summary>
         public TOC_Entry()
         {
+
         }
 
-        public TOC_Entry(Paragraph par)
-        {
-            this.Paper = par.Paper;
-            this.Section = par.Section;
-            this.ParagraphNo = par.ParagraphNo;
-            this.Page = par.Page;
-            this.Line = par.Line;
-            Text = par.Text;
-            IsExpanded = false;
-        }
 
-        public TOC_Entry(short paper, short section, short paragraphNo, short page, short line)
+        public TOC_Entry(short translationId, short paper, short section, short paragraphNo, short page, short line)
         {
-            this.Paper = paper;
-            this.Section = section;
-            this.ParagraphNo = paragraphNo;
-            this.Page = page;
-            this.Line = line;
+            TranslationId = translationId;
+            Paper = paper;
+            Section = section;
+            ParagraphNo = paragraphNo;
+            Page = page;
+            Line = line;
             Text = "";
             IsExpanded = false;
         }
-
-        public TOC_Entry(TOC_Entry entry)
-        {
-            this.Paper = entry.Paper;
-            this.Section = entry.Section;
-            this.ParagraphNo = entry.ParagraphNo;
-            this.Page = entry.Page;
-            this.Line = entry.Line;
-            Text = entry.Text;
-            IsExpanded = entry.IsExpanded;
-        }
-
-
 
         protected bool SamePaperSection(TOC_Entry index)
         {
             return index.Paper == Paper && index.Section == Section && index.IsExpanded;
         }
 
+        public bool SameTranslationPaper(TOC_Entry index)
+        {
+            return index.Paper == Paper && index.TranslationId == TranslationId;
+        }
 
         public void CheckOldExpanded(List<TOC_Entry> listOldExpanded)
         {
@@ -119,12 +145,20 @@ namespace UbStandardObjects.Objects
         }
 
 
+        private static XmlElement GetElement(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return doc.DocumentElement;
+        }
+
         #region Operators
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
             TOC_Entry entry = obj as TOC_Entry;
             if (entry == null) return false;
+            if (entry.TranslationId != this.TranslationId) return false;
             if (entry.Paper != this.Paper) return false;
             if (entry.Section != Section) return false;
             if (entry.ParagraphNo != ParagraphNo) return false;
@@ -137,6 +171,23 @@ namespace UbStandardObjects.Objects
             if ((object)e1 == null || (object)e2 == null) return false;
             return e1.Equals(e2);
         }
+
+        /// <summary>
+        /// Special operator that ignores the translation Id
+        /// </summary>
+        /// <param name="e1"></param>
+        /// <param name="e2"></param>
+        /// <returns></returns>
+        public static bool operator * (TOC_Entry e1, TOC_Entry e2)
+        {
+            if (System.Object.ReferenceEquals(e1, e2)) return true;
+            if ((object)e1 == null || (object)e2 == null) return false;
+            if (e1.Paper != e2.Paper) return false;
+            if (e1.Section != e2.Section) return false;
+            if (e1.ParagraphNo != e2.ParagraphNo) return false;
+            return true;
+        }
+
 
         public static bool operator !=(TOC_Entry e1, TOC_Entry e2)
         {

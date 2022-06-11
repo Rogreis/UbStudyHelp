@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace UbStandardObjects.Objects
 {
@@ -9,6 +7,14 @@ namespace UbStandardObjects.Objects
     /// </summary>
     public abstract class Book
 	{
+
+		public string FilesPath { get; set; }
+
+		public Translation LeftTranslation { get; set; }
+
+		public Translation RightTranslation { get; set; }
+
+		public List<Translation> Translations { get; set; }
 
 		public Translation GetTranslation(short id)
 		{
@@ -22,13 +28,6 @@ namespace UbStandardObjects.Objects
 			return trans;
 		}
 
-		public string FilesPath { get; set; }
-
-		public Translation LeftTranslation { get; set; }
-
-		public Translation RightTranslation { get; set; }
-
-		public List<Translation> Translations { get; set; }
 
 		public List<Translation> ObservableTranslations
 		{
@@ -39,6 +38,10 @@ namespace UbStandardObjects.Objects
 				return list;
 			}
 		}
+
+		public abstract UbAnnotationsStoreSet GetPaperAnnotations(TOC_Entry entry);
+
+		public abstract UbAnnotationsStoreSet GetParagraphAnnotations(TOC_Entry entry);
 
 		public abstract bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID);
 

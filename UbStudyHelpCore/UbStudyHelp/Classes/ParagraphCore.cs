@@ -1,7 +1,4 @@
-﻿using System.Xml.Linq;
-using UbStandardObjects.Objects;
-
-namespace UbStudyHelp.Classes
+﻿namespace UbStudyHelp.Classes
 {
     public class ParagraphCore : UbStandardObjects.Objects.Paragraph
     {
@@ -19,6 +16,10 @@ namespace UbStudyHelp.Classes
                 TextWork.LoadText(value);
                 base.Text = TextWork.GetHtml();
             }
+        }
+
+        public ParagraphCore(short translationId) : base(translationId)
+        {
         }
 
     }

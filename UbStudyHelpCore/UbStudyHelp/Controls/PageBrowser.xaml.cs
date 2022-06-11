@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,6 +8,7 @@ using System.Windows.Media;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Controls
@@ -17,23 +19,24 @@ namespace UbStudyHelp.Controls
     public partial class PageBrowser : UserControl
     {
 
-        private Html_BaseClass commands = null;
-
         private bool lastShouldHighlightText = false;
-
-        private FlowDocument MainDocument = new FlowDocument();
 
         private FlowDocumentFormat format = new FlowDocumentFormat();
 
+        // Last highlighted paragraph to force it to ne shown in the screen
+        private System.Windows.Documents.Paragraph currentParagraph = null;
 
-        private PaperContextMenu PaperContext = null;
-
+        /// <summary>
+        /// Annootations is set for the page document scroll object, then must be global to the module
+        /// </summary>
+        // ANNOTATIONS REMOVAL
+        //private UbAnnotations UbAnnotationsObject = new UbAnnotations(UbAnnotationType.Paper);
 
         public PageBrowser()
         {
             InitializeComponent();
-            this.Loaded += PageBrowser_Loaded;
-            PaperContext = new PaperContextMenu(TextFlowDocument);
+            Loaded += PageBrowser_Loaded;
+            TextFlowDocument.LayoutUpdated += TextFlowDocument_LayoutUpdated;
 
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
@@ -44,6 +47,9 @@ namespace UbStudyHelp.Controls
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
+
+            TextFlowDocument.ContextMenu = new UbParagraphContextMenu(TextFlowDocument, null, false, true);
+
         }
 
 
@@ -55,31 +61,34 @@ namespace UbStudyHelp.Controls
         /// <param name="addToTrack"></param>
         private void Show(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            if (StaticObjects.Parameters.ShowBilingual)
-            {
-                commands = new HtmlBilingual();
-            }
-            else
-            {
-                commands = new HtmlSingle();
-            }
             StaticObjects.Parameters.Entry = entry;
+            // ANNOTATIONS REMOVAL
+            //UbAnnotationsObject.StopAnnotations();
+            //UbAnnotationsObject.StartAnnotations(TextFlowDocument, entry);
             ShowShowBilingualFlowDocument(entry, shouldHighlightText, Words);
             EventsControl.FireNewPaperShown();
         }
 
-        private System.Windows.Documents.Paragraph CreateParagraph(bool highlighted)
+
+        private System.Windows.Documents.Paragraph CreateParagraph(TOC_Entry entry, bool highlighted)
         {
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
             {
-                Padding = new Thickness(5)
+                Padding = new Thickness(5),
+                //ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry, true, true),
+                Tag = entry,
             };
 
             if (highlighted)
             {
                 paragraph.BorderThickness = new Thickness(1);
                 paragraph.BorderBrush = App.Appearance.GetHighlightColorBrush();
+                currentParagraph = paragraph;
             };
+
+            //if (highlighted && entry * StaticObjects.Parameters.Entry)
+            //{
+            //}
 
 
             paragraph.Style = App.Appearance.ForegroundStyle;
@@ -96,7 +105,7 @@ namespace UbStudyHelp.Controls
                                      bool highlighted = false,
                                      List<string> Words = null)
         {
-            System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
+            System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Tag = cell.Tag;
             paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
@@ -110,7 +119,7 @@ namespace UbStudyHelp.Controls
                                      bool highlighted = false,
                                      List<string> Words = null)
         {
-            System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
+            System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Margin = new Thickness(50, 20, 20, 0);
             paragraph.Tag = cell.Tag;
@@ -122,12 +131,12 @@ namespace UbStudyHelp.Controls
 
 
         private void FormatTitle(TableCell cell,
-                                 string text,
+                                 TOC_Entry entry, string text,
                                  bool highlighted = false,
                                  List<string> Words = null)
         {
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
-            System.Windows.Documents.Paragraph paragraph = CreateParagraph(highlighted);
+            System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             paragraph.FontWeight = FontWeights.Bold;
             paragraph.Foreground = accentBrush;
             paragraph.Tag = cell.Tag;
@@ -138,18 +147,18 @@ namespace UbStudyHelp.Controls
 
 
 
-        private void HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entry, string LeftText, string RightText,
+        private TableRow HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entryLeft, TOC_Entry entryRight, string LeftText, string RightText,
                                              enHtmlType htmlType = enHtmlType.NormalParagraph,
                                              bool highlighted = false,
                                              List<string> words = null)
         {
             TableRow row = new TableRow();
             tableRowGroup.Rows.Add(row);
-            row.Tag = entry;
+            row.Tag = entryLeft;
             TableCell cellLeft = new TableCell();
-            cellLeft.Tag = new ParagraphSearchData() { IsRightTranslation = false, Entry = entry };
+            cellLeft.Tag = new ParagraphSearchData() { IsRightTranslation = false, Entry = entryLeft };
             TableCell cellRight = new TableCell();
-            cellRight.Tag = new ParagraphSearchData() { IsRightTranslation = true, Entry = entry };
+            cellRight.Tag = new ParagraphSearchData() { IsRightTranslation = true, Entry = entryRight };
             row.Cells.Add(cellLeft);
             row.Cells.Add(cellRight);
 
@@ -157,36 +166,39 @@ namespace UbStudyHelp.Controls
             switch (htmlType)
             {
                 case enHtmlType.BookTitle:
-                    FormatTitle(cellLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
+                    FormatTitle(cellRight, entryRight, RightText, highlighted, words);
                     break;
                 case enHtmlType.PaperTitle:
-                    FormatTitle(cellLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
+                    FormatTitle(cellRight, entryRight, RightText, highlighted, words);
                     break;
                 case enHtmlType.SectionTitle:
-                    FormatTitle(cellLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
+                    FormatTitle(cellRight, entryRight, RightText, highlighted, words);
                     break;
                 case enHtmlType.NormalParagraph:
-                    FormatParagraph(cellLeft, entry, LeftText, highlighted, words);
-                    FormatParagraph(cellRight, entry, RightText, highlighted, words);
+                    FormatParagraph(cellLeft, entryLeft, LeftText, highlighted, words);
+                    FormatParagraph(cellRight, entryRight, RightText, highlighted, words);
                     break;
                 case enHtmlType.IdentedParagraph:
-                    FormatIdent(cellLeft, entry, LeftText, highlighted, words);
-                    FormatIdent(cellRight, entry, RightText, highlighted, words);
+                    FormatIdent(cellLeft, entryLeft, LeftText, highlighted, words);
+                    FormatIdent(cellRight, entryRight, RightText, highlighted, words);
                     break;
             }
+            return row;
         }
 
 
         private void ShowShowBilingualFlowDocument(TOC_Entry entry, bool shouldHighlightText = true, List<string> Words = null)
         {
-            
+
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
 
             Table table = new Table();
+            FlowDocument MainDocument = new FlowDocument();
             MainDocument.Blocks.Add(table);
+            
             TableRowGroup tableRowGroup = new TableRowGroup();
             table.RowGroups.Add(tableRowGroup);
 
@@ -196,50 +208,29 @@ namespace UbStudyHelp.Controls
             string titleLeft = StaticObjects.Book.LeftTranslation.PaperTranslation.Replace("1", paperLeft.PaperNo.ToString());
             string titleRight = StaticObjects.Book.RightTranslation.PaperTranslation.Replace("1", paperRight.PaperNo.ToString());
 
-            HtmlSingleBilingualLine(tableRowGroup, null, titleLeft, titleRight, enHtmlType.PaperTitle);
+            HtmlSingleBilingualLine(tableRowGroup, null, null, titleLeft, titleRight, enHtmlType.PaperTitle);
 
             int indParagraph = 0;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)
             {
                 Paragraph parRight = paperRight.Paragraphs[indParagraph];
                 indParagraph++;
-                bool highlighted = shouldHighlightText && (parLeft.Entry == entry);
-                HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
+                bool highlighted = shouldHighlightText && (parLeft.Entry * entry);
+                TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
             }
             TextFlowDocument.Tag = entry;
             TextFlowDocument.Document = MainDocument;
-
-            if (entry != null && tableRowGroup != null)
-            {
-                //Paragraph pragraph1 = Annotation / Textrange / Paragraph, etc...  
-                //paragraph1.BringIntoView();
-                TableRow row = tableRowGroup.Rows.ToList().Find(r => (r.Tag as TOC_Entry) == entry);
-                
-                if (row != null)
-                {
-                    if (row.IsLoaded)
-                    {
-                        row.BringIntoView();
-                    }
-                    else
-                    {
-                        row.Loaded += Row_Loaded;
-                    }
-                }
-            }
-
-
         }
 
-        private void Row_Loaded(object sender, RoutedEventArgs e)
+        private void TextFlowDocument_LayoutUpdated(object sender, System.EventArgs e)
         {
-            TableRow row = (sender as TableRow);
-            System.Windows.Documents.Paragraph paragraph = row.Cells[0].Blocks.FirstBlock as System.Windows.Documents.Paragraph;
-            if (paragraph != null)
+            if (currentParagraph != null)
             {
-                paragraph.BringIntoView();
+                currentParagraph.BringIntoView();
+                currentParagraph = null;
             }
         }
+
 
         private void Refresh()
         {

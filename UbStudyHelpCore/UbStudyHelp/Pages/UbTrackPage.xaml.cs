@@ -1,13 +1,14 @@
-﻿using Lucene.Net.Util;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using Lucene.Net.Util;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
@@ -39,6 +40,12 @@ namespace UbStudyHelp.Pages
             EventsControl.SearchClicked += EventsControl_SeachClicked;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
+            Loaded += UbTrackPage_Loaded;
+        }
+
+        private void UbTrackPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            ShowTrackData();
         }
 
         public void Initialize()
@@ -49,27 +56,36 @@ namespace UbStudyHelp.Pages
         }
 
 
+        private TOC_Entry lastEntryShown = null;
+
         /// <summary>
         /// Show track data
         /// </summary>
         private void ShowTrackData()
         {
+
+            // Already shown?
+            if (lastEntryShown != null && StaticObjects.Parameters.TrackEntries.Count > 0 && lastEntryShown == StaticObjects.Parameters.TrackEntries[0])
+            {
+                return;
+            }
+
+            lastEntryShown= StaticObjects.Parameters.TrackEntries[0];
+            Debug.WriteLine($"»»»»»»»»»»»»» ShowTrackData {lastEntryShown}");
+
             FlowDocument document = new FlowDocument();
+
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
             foreach (TOC_Entry entry in StaticObjects.Parameters.TrackEntries)
             {
                 System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
                 {
-                    Padding= new Thickness(5),
-                    Style = App.Appearance.ForegroundStyle
+                    Padding = new Thickness(5),
+                    Style = App.Appearance.ForegroundStyle,
+                    Tag = entry,
+                    ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry, true, false)
                 };
-    
-
-                //Bold link = new Bold();
-                //link.FontSize = StaticObjects.Parameters.FontSizeInfo;
-                //link.Foreground = accentBrush;
-                //link.Inlines.Add(entry.ParagraphID);
 
                 Hyperlink hyperlink = format.HyperlinkFullParagraph(entry, false, entry.Text);
                 hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
@@ -87,7 +103,6 @@ namespace UbStudyHelp.Pages
 
         private void SetFontSize()
         {
-            //App.Appearance.SetFontSize(TrackDataFlowDocument);
             ShowTrackData();
             App.Appearance.SetFontSize(ButtonTrackSort);
             App.Appearance.SetFontSize(ButtonTrackClear);
@@ -101,7 +116,6 @@ namespace UbStudyHelp.Pages
 
         private void SetAppearence()
         {
-            //App.Appearance.SetThemeInfo(TrackDataFlowDocument);
             ShowTrackData();
             App.Appearance.SetThemeInfo(ButtonTrackSort);
             App.Appearance.SetThemeInfo(ButtonTrackClear);
@@ -122,6 +136,7 @@ namespace UbStudyHelp.Pages
                 StaticObjects.Parameters.TrackEntries.RemoveAt(StaticObjects.Parameters.TrackEntries.Count - 1);
             }
 
+            // When text is empty 
             if (string.IsNullOrEmpty(entry.Text))
             {
                 Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
@@ -255,7 +270,12 @@ namespace UbStudyHelp.Pages
             {
                 if (result == true)
                 {
-                    var jsonString = JsonConvert.SerializeObject(StaticObjects.Parameters.TrackEntries, Formatting.Indented);
+                    var options = new JsonSerializerOptions
+                    {
+                        AllowTrailingCommas = true,
+                        WriteIndented = true,
+                    };
+                    var jsonString = JsonSerializer.Serialize<List<TOC_Entry>>(StaticObjects.Parameters.TrackEntries, options);
                     File.WriteAllText(saveFileDlg.FileName, jsonString);
                 }
             }
@@ -289,7 +309,7 @@ namespace UbStudyHelp.Pages
                 try
                 {
                     var jsonString = File.ReadAllText(openFileDlg.FileName);
-                    StaticObjects.Parameters.TrackEntries = JsonConvert.DeserializeObject<List<TOC_Entry>>(jsonString);
+                    StaticObjects.Parameters.TrackEntries = App.DeserializeObject<List<TOC_Entry>>(jsonString);
                 }
                 catch (Exception ex)
                 {

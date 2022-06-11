@@ -11,8 +11,6 @@ namespace UbStudyHelp.Classes
     {
         private TextWork TextWork = new TextWork();
 
-        private string _text = "";
-
         public TOC_Entry Entry { get; set; }
 
         public int OriginalPosition { get; set; } = -1;
@@ -21,32 +19,17 @@ namespace UbStudyHelp.Classes
         {
             get
             {
-                return _text;
-            }
-            set
-            {
-                TextWork.LoadText(value);
-                _text = TextWork.GetHtml();
+                return Entry.Text;
             }
         }
 
 
-        public SearchResult(TOC_Entry entry, string text)
+        public SearchResult(TOC_Entry entry)
         {
             Entry = entry;
-            Text = text;
         }
 
-        /// <summary>
-        /// Generate inlines collection from result text, highlighting found words
-        /// </summary>
-        /// <returns></returns>
-        public void GetInlinesText(InlineCollection Inlines, List<string> Words, bool useReducedText= false)
-        {
-            TextWork.GetInlinesText(Inlines, Words);
-        }
-
-    }
+     }
 
 
 }

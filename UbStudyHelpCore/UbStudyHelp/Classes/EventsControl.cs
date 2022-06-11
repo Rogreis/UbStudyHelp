@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Controls;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Classes
 {
@@ -32,7 +33,7 @@ namespace UbStudyHelp.Classes
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlDirectSearch(string textToSearch, bool useRightTranslation);
+    public delegate void dlDirectSearch(ParagraphSearchData data);
 
     /// <summary>
     /// Used to fire a click on index
@@ -98,6 +99,17 @@ namespace UbStudyHelp.Classes
     /// <param name="data"></param>
     public delegate void dlShowSearchResults(SearchData data);
 
+    /// <summary>
+    /// Fired when some annotations in included or removed for a pragraph
+    /// </summary>
+    /// <param name="data"></param>
+    public delegate void dsAnnotationChanged(UbAnnotationsStoreSet annotationsSet);
+
+
+
+    /// <summary>
+    /// Static class to control events inside the wpf application only
+    /// </summary>
     public static class EventsControl
     {
         public static event dlSearchClicked SearchClicked = null;
@@ -132,15 +144,17 @@ namespace UbStudyHelp.Classes
 
         public static event dlNewPaperShown NewPaperShown = null;
 
+        public static event dsAnnotationChanged AnnotationChanged = null;
+
 
         public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
         {
             SearchClicked?.Invoke(entry, Words);
         }
 
-        public static void FireDirectSearch(string textToSearch, bool useRightTranslation)
+        public static void FireDirectSearch(ParagraphSearchData data)
         {
-            DirectSearch?.Invoke(textToSearch, useRightTranslation);
+            DirectSearch?.Invoke(data);
         }
         
 
@@ -227,5 +241,10 @@ namespace UbStudyHelp.Classes
             NewPaperShown?.Invoke();
         }
 
+
+        public static void FireAnnotationChanged(UbAnnotationsStoreSet annotationsSet)
+        {
+            AnnotationChanged?.Invoke(annotationsSet);
+        }
     }
 }

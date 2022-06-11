@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using UbStandardObjects;
-using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {
@@ -58,7 +57,12 @@ namespace UbStudyHelp.Classes
         {
             try
             {
-                var jsonString = JsonConvert.SerializeObject(p, Formatting.Indented);
+                var options = new JsonSerializerOptions
+                {
+                    AllowTrailingCommas = true,
+                    WriteIndented = true,
+                };
+                var jsonString = JsonSerializer.Serialize<ParametersCore>(p, options);
                 File.WriteAllText(pathParameters, jsonString);
             }
             catch  {    }
@@ -74,7 +78,7 @@ namespace UbStudyHelp.Classes
             try
             {
                 var jsonString = File.ReadAllText(pathParameters);
-                return JsonConvert.DeserializeObject<ParametersCore>(jsonString);
+                return App.DeserializeObject<ParametersCore>(jsonString);
             }
             catch 
             {

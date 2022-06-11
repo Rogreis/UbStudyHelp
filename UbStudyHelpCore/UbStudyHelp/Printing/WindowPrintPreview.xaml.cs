@@ -10,14 +10,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace UbStudyHelp
+namespace UbStudyHelp.Printing
 {
     /// <summary>
-    /// Interaction logic for TestWindow.xaml
+    /// Interaction logic for WindowPrintPreview.xaml
     /// </summary>
-    public partial class TestWindow : Window
+    public partial class WindowPrintPreview : Window
     {
-        public TestWindow()
+        public WindowPrintPreview()
         {
             InitializeComponent();
         }

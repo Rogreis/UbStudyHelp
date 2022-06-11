@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Lucene.Net.Index;
+using Lucene.Net.Search;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace UbStudyHelp.Classes
 {
@@ -38,42 +42,68 @@ namespace UbStudyHelp.Classes
                     (Part4Included && PaperNo >= 120));
 
 
+        ///// <summary>
+        ///// Create the word list to be used when highlighting search text found
+        ///// </summary>
+        ///// <param name="textPrefix"></param>
+        ///// <param name="searchString"></param>
+        //public void SetSearchString(string textPrefix, string searchString)
+        //{
+        //    bool continues = true;
+        //    int lastStartPos = 0;
+
+        //    searchString = searchString.Replace('~', ' ');
+        //    searchString = searchString.Replace('^', ' ');
+
+        //    while (continues)
+        //    {
+        //        int pos = searchString.IndexOf(textPrefix, lastStartPos);
+        //        continues = pos >= 0 && lastStartPos < searchString.Length;
+        //        if (continues)
+        //        {
+        //            int startPos = pos + textPrefix.Length;
+        //            char divisor = searchString.ToCharArray()[startPos] == '"' ? '"' : ' ';
+        //            if (divisor == '"')
+        //            {
+        //                startPos += 1;
+        //            }
+        //            int endPos = searchString.IndexOf(divisor, startPos);
+        //            endPos = (endPos >= 0 ? endPos : searchString.Length);
+        //            int size = endPos - startPos;
+        //            Words.Add(searchString.Substring(startPos, size));
+        //            lastStartPos = endPos + 1;
+        //        }
+        //        else
+        //        {
+        //            break;
+        //        }
+        //        continues = lastStartPos < searchString.Length;
+        //    }
+        //}
+
         /// <summary>
-        /// Create the word list to be used when highlighting search text found
+        /// Create a list of words to highligh in the search
         /// </summary>
-        /// <param name="textPrefix"></param>
-        /// <param name="searchString"></param>
-        public void SetSearchString(string textPrefix, string searchString)
+        /// <param name="query"></param>
+        public void ExtractTerms(Query query)
         {
-            bool continues = true;
-            int lastStartPos = 0;
-
-            searchString = searchString.Replace('~', ' ');
-            searchString = searchString.Replace('^', ' ');
-
-            while (continues)
+            var terms = new HashSet<Term>();
+            try
             {
-                int pos = searchString.IndexOf(textPrefix, lastStartPos);
-                continues = pos >= 0 && lastStartPos < searchString.Length;
-                if (continues)
+                Words.Clear();
+
+                query.ExtractTerms(terms);
+                foreach (Term t in terms)
                 {
-                    int startPos = pos + textPrefix.Length;
-                    char divisor = searchString.ToCharArray()[startPos] == '"' ? '"' : ' ';
-                    if (divisor == '"')
-                    {
-                        startPos += 1;
-                    }
-                    int endPos = searchString.IndexOf(divisor, startPos);
-                    endPos = (endPos >= 0 ? endPos : searchString.Length);
-                    int size = endPos - startPos;
-                    Words.Add(searchString.Substring(startPos, size));
-                    lastStartPos = endPos + 1;
+                    Words.Add(t.Text());
                 }
-                else
-                {
-                    break;
-                }
-                continues = lastStartPos < searchString.Length;
+            }
+            catch 
+            {
+                // Try to get words when ExtractTerms is not implemented
+                string queryString = query.ToString().Replace("?", "").Replace("*", "").Replace("~", "").Replace("(", "").Replace(")", "");
+                string[] parts= queryString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                Words.AddRange(parts);
             }
         }
 

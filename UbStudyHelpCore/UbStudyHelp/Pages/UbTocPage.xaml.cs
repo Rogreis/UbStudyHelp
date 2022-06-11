@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,17 +25,26 @@ namespace UbStudyHelp.Pages
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
             EventsControl.BilingualChanged += EventsControl_BilingualChanged;
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
+            EventsControl.NewPaperShown += EventsControl_NewPaperShown;
+
             TOC_Left.SelectedItemChanged += TOC_Left_SelectedItemChanged;
             TOC_Right.SelectedItemChanged += TOC_Right_SelectedItemChanged;
         }
 
+        private void EventsControl_NewPaperShown()
+        {
+            if (TOC_Left.Tag != null && TOC_Right.Tag != null)
+            {
+                SelectItem(TOC_Left, StaticObjects.Parameters.Entry);
+                SelectItem(TOC_Right, StaticObjects.Parameters.Entry);
+            }
+        }
 
         private void SetFontSize()
         {
             App.Appearance.SetFontSize(TOC_Left);
             App.Appearance.SetFontSize(TOC_Right);
         }
-
 
         private void SetAppearence()
         {
@@ -52,6 +62,11 @@ namespace UbStudyHelp.Pages
         private void FillTreeView(TreeView tree, bool useLeftTranslation)
         {
             Translation translation = useLeftTranslation ? StaticObjects.Book.LeftTranslation : StaticObjects.Book.RightTranslation;
+            if (tree.Tag == translation)
+            {
+                return;
+            }
+
             tree.Tag = translation;
             TreeViewItemUB itemPaper = null;
 
@@ -63,12 +78,14 @@ namespace UbStudyHelp.Pages
                     itemPaper = new TreeViewItemUB(entry);
                     SetItemEvents(itemPaper);
                     tree.Items.Add(itemPaper);
+                    itemPaper.IsSelected = (entry * StaticObjects.Parameters.Entry);
                 }
                 else if (entry.ParagraphNo == 0)
                 {
                     TreeViewItemUB itemSection = new TreeViewItemUB(entry);
                     SetItemEvents(itemSection);
                     itemPaper.Items.Add(itemSection);
+                    itemPaper.IsSelected = (entry * StaticObjects.Parameters.Entry);
                 }
             }
         }
@@ -87,7 +104,7 @@ namespace UbStudyHelp.Pages
             }
             foreach (TreeViewItemUB item in collection)
             {
-                if (entry == item.Entry)
+                if (entry * item.Entry)
                 {
                     return item;
                 }
@@ -108,10 +125,14 @@ namespace UbStudyHelp.Pages
         private void SelectItem(TreeView tree, TOC_Entry entry)
         {
             TreeViewItemUB item = FindItem(tree.Items, entry);
-            InternalChange = true;
-            item.IsSelected = true;
-            DoEvents();
-            InternalChange = false;
+            if (item != null)
+            {
+                InternalChange = true;
+                item.IsSelected = true;
+                item.BringIntoView();
+                DoEvents();
+                InternalChange = false;
+            }
         }
 
 
@@ -135,8 +156,11 @@ namespace UbStudyHelp.Pages
             try
             {
                 TreeViewItemUB item = TOC_Right.SelectedItem as TreeViewItemUB;
-                SelectItem(TOC_Left, item.Entry);
-                EventsControl.FireTOCClicked(item.Entry);
+                if (item != null)
+                {
+                    SelectItem(TOC_Left, item.Entry);
+                    EventsControl.FireTOCClicked(item.Entry);
+                }
             }
             catch { }  // Errors are ignored
         }
@@ -150,8 +174,11 @@ namespace UbStudyHelp.Pages
             try
             {
                 TreeViewItemUB item = TOC_Left.SelectedItem as TreeViewItemUB;
-                SelectItem(TOC_Right, item.Entry);
-                EventsControl.FireTOCClicked(item.Entry);
+                if (item != null)
+                {
+                    SelectItem(TOC_Right, item.Entry);
+                    EventsControl.FireTOCClicked(item.Entry);
+                }
             }
             catch { }  // Errors are ignored
         }
@@ -186,10 +213,13 @@ namespace UbStudyHelp.Pages
                 TreeViewItemUB item = e.Source as TreeViewItemUB;
                 TreeView tree = item.Parent == TOC_Left ? TOC_Right : TOC_Left;
                 TreeViewItemUB itemNew = FindItem(tree.Items, item.Entry);
-                InternalChange = true;
-                itemNew.IsExpanded = true;
-                DoEvents();
-                InternalChange = false;
+                if (itemNew != null)
+                {
+                    InternalChange = true;
+                    itemNew.IsExpanded = true;
+                    DoEvents();
+                    InternalChange = false;
+                }
             }
             catch { } // Errors are ignored
         }
@@ -211,6 +241,8 @@ namespace UbStudyHelp.Pages
         private void EventsControl_TranslationsChanged()
         {
             InternalChange = true;
+            TabItemLeft.Header = StaticObjects.Book.LeftTranslation.Description;
+            TabItemRight.Header = StaticObjects.Book.RightTranslation.Description;
             FillTreeView(TOC_Left, true);
             FillTreeView(TOC_Right, false);
             InternalChange = false;
@@ -226,6 +258,8 @@ namespace UbStudyHelp.Pages
             SetAppearence();
             TOC_Right.Visibility = StaticObjects.Parameters.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
             TabItemRight.Visibility = StaticObjects.Parameters.ShowBilingual ? Visibility.Visible : Visibility.Hidden;
+            TabItemLeft.Header = StaticObjects.Book.LeftTranslation.Description;
+            TabItemRight.Header = StaticObjects.Book.RightTranslation.Description;
             FillTreeView(TOC_Left, true);
             FillTreeView(TOC_Right, false);
         }

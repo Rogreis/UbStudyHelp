@@ -9,10 +9,6 @@ using System.Linq;
 namespace UbStandardObjects.Objects
 {
 
-
-
-
-
     internal class JsonRootobject
     {
         public short LanguageID { get; set; }
@@ -57,8 +53,13 @@ namespace UbStandardObjects.Objects
         public string ExternalName { get; set; }
         public string PaperTranslation { get; set; }
 
+        [JsonIgnore]
+        private List<UbAnnotationsStoreData> Annotations { get; set; } = new List<UbAnnotationsStoreData>();
+
+        [JsonIgnore]
         public List<Paper> Papers { get; set; } = new List<Paper>();
 
+        [JsonIgnore]
         public List<TOC_Entry> TableOfContents
         {
             get
@@ -66,9 +67,9 @@ namespace UbStandardObjects.Objects
                 List<TOC_Entry> toc = new List<TOC_Entry>();
                 foreach (Paper paper in Papers)
                 {
-                    var paragraphEntries =   from p in paper.Paragraphs
-                                            where p.ParagraphNo == 0
-                                          orderby p.PK_Seq ascending
+                    var paragraphEntries = from p in paper.Paragraphs
+                                           where p.ParagraphNo == 0
+                                           orderby p.PK_Seq ascending
                                            select p.Entry;
                     toc.AddRange(paragraphEntries);
                 }
@@ -76,6 +77,24 @@ namespace UbStandardObjects.Objects
             }
         }
 
+        [JsonIgnore]
+        public string Copyright
+        {
+            get
+            {
+                string year = (StartingYear == EndingYear) ? EndingYear.ToString() : StartingYear.ToString() + "," + EndingYear.ToString();
+                return "Copyright ©  " + year + " Urantia Foundation. All rights reserved.";
+            }
+        }
+
+        [JsonIgnore]
+        public string Identification
+        {
+            get
+            {
+                return LanguageID.ToString() + " - " + Description;
+            }
+        }
 
         public Translation()
         {
@@ -111,37 +130,15 @@ namespace UbStandardObjects.Objects
                     Paragraphs = new List<Paragraph>(jsonPaper.Paragraphs)
                 });
             }
-
-
         }
 
 
-        [JsonIgnore]
-        public string Copyright
-        {
-            get
-            {
-                string year = (StartingYear == EndingYear) ? EndingYear.ToString() : StartingYear.ToString() + "," + EndingYear.ToString();
-                return "Copyright ©  " + year + " Urantia Foundation. All rights reserved.";
-            }
-        }
-
-        [JsonIgnore]
-        public string Identification
-        {
-            get
-            {
-                return LanguageID.ToString() + " - " + Description;
-            }
-        }
 
 
         public Paper Paper(short PaperNo)
         {
             return Papers.Find(p => p.PaperNo == PaperNo);
         }
-
-
 
         public override string ToString()
         {

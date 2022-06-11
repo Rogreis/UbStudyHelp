@@ -1,9 +1,6 @@
-﻿using ControlzEx.Standard;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
+using System.Text.Json;
 using System.Windows;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
@@ -13,11 +10,14 @@ using static System.Environment;
 
 namespace UbStudyHelp
 {
+
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
+
         // Styles based on https://mahapps.com/docs/guides/quick-start
         private static string pathParameters;
 
@@ -31,6 +31,33 @@ namespace UbStudyHelp
             string processName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
             return Path.Combine(commonpath, processName);
+        }
+
+        /// <summary>
+        /// Serialize an object to string using json
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string Serialize<T>(T obj)
+        {
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                WriteIndented = true,
+            };
+            return JsonSerializer.Serialize<T>(obj, options);
+        }
+
+        /// <summary>
+        /// Deserialize an object from a json string
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static T DeserializeObject<T>(string json)
+        {
+            return JsonSerializer.Deserialize<T>(json);
         }
 
 
@@ -48,6 +75,13 @@ namespace UbStudyHelp
         {
             // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
+            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» Startup");
+
+            //TOC_Entry entry = new TOC_Entry(0, 1, 1, 1, 1, 1);
+            //entry.Text = "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ";
+            //AnnotationsWindow annotationsWindow = new AnnotationsWindow(entry);
+            //annotationsWindow.Show();
+            //return;
 
             StaticObjects.Logger = new LogCore();
             StaticObjects.Logger.Initialize(pathLog, false);
@@ -61,6 +95,8 @@ namespace UbStudyHelp
 
             ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();
+
+
 
             BaseTubFilesPath = MakeProgramDataFolder("TUB_Files");
 

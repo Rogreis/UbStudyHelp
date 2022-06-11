@@ -7,6 +7,7 @@ using System.Windows.Media;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 using SearchResult = UbStudyHelp.Classes.SearchResult;
 
 namespace UbStudyHelp.Pages
@@ -19,7 +20,6 @@ namespace UbStudyHelp.Pages
         private SearchData lastSearchdata = null;
         private int NrPage, PageSize, TotalPages;
         private FlowDocumentFormat format = new FlowDocumentFormat();
-
 
         public UbSearchResults()
         {
@@ -40,6 +40,14 @@ namespace UbStudyHelp.Pages
             ShowSearchResults(lastSearchdata, NrPage, PageSize, TotalPages);
         }
 
+
+        private System.Windows.Documents.Paragraph ParagraphLineBreak()
+        {
+            System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph();
+            paragraph.Inlines.Add(new LineBreak());
+            return paragraph;
+        }
+
         public void ShowSearchResults(SearchData data, int nrPage, int pageSize, int totalPages)
         {
             if (data == null)
@@ -47,6 +55,7 @@ namespace UbStudyHelp.Pages
                 return;
             }
             FlowDocument document = new FlowDocument();
+
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
             lastSearchdata = data;
             NrPage = nrPage;
@@ -56,6 +65,8 @@ namespace UbStudyHelp.Pages
             System.Windows.Documents.Paragraph paragraphTop = new System.Windows.Documents.Paragraph();
             paragraphTop.Style = App.Appearance.ForegroundStyle;
             document.Blocks.Add(paragraphTop);
+
+
             if (data.SearchResults.Count == 0)
             {
                 paragraphTop.Inlines.Add(new Run("No paragraph found"));
@@ -84,8 +95,10 @@ namespace UbStudyHelp.Pages
             };
             paragraphTop.Inlines.Add(runPageShown);
 
-            paragraphTop.Inlines.Add(new LineBreak());
-            paragraphTop.Inlines.Add(new LineBreak());
+
+            //document.Blocks.Add(ParagraphLineBreak());
+            //document.Blocks.Add(ParagraphLineBreak());
+
 
             int fistItem = (nrPage - 1) * pageSize;
             if (fistItem >= data.SearchResults.Count)
@@ -101,8 +114,12 @@ namespace UbStudyHelp.Pages
             for (int i = fistItem; i < lastItem; i++)
             {
                 SearchResult result = data.SearchResults[i];
-                System.Windows.Documents.Paragraph paragraphSearchResult = new System.Windows.Documents.Paragraph();
-                paragraphSearchResult.Style = App.Appearance.ForegroundStyle;
+                System.Windows.Documents.Paragraph paragraphSearchResult = new System.Windows.Documents.Paragraph
+                {
+                    Style = App.Appearance.ForegroundStyle,
+                    Tag= result.Entry,
+                    ContextMenu = new UbParagraphContextMenu(SearchResultsFlowDocument, result.Entry, false, false)
+                };
                 document.Blocks.Add(paragraphSearchResult);
 
                 Hyperlink hyperlink = format.HyperlinkFullParagraph(result.Entry, false, result.Text);

@@ -1,0 +1,47 @@
+﻿<Window x:Class="UbStudyHelp.Classes.AnnotationsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UbStudyHelp.Classes"
+        mc:Ignorable="d"
+        Title="Paragraph Annotations" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!--<RowDefinition Height="Auto"></RowDefinition>-->
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!--<DockPanel Grid.Row="0">
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar Name="ToolBarAnnotations">
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>-->
+
+        <FlowDocumentScrollViewer Name="FlowDocument" Grid.Row="0"></FlowDocumentScrollViewer>
+        <ToolBar HorizontalAlignment="Left"  Height="40" Grid.Row="1" VerticalAlignment="Top" Width="Auto">
+            <Button x:Name="ButtonClear" ToolTip="Clear all note" Width="160" Height="36" Click="ButtonClear_Click">
+                <StackPanel Orientation="Horizontal" ToolTip="Clear all note" >
+                    <Image x:Name="ButtonClearImage"  Margin="5, 0, 25, 0"/>
+                    <TextBlock VerticalAlignment="Center">Clear</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="ButtonImage" ToolTip="Insert an imge" Click="ButtonImage_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ButtonImageImage"  Margin="5, 0, 25, 0"/>
+                    <TextBlock VerticalAlignment="Center">Insert Image</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="ButtonClose"  ToolTip="Close this window" Click="ButtonClose_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ButtonCloseImage"  Margin="5, 0, 25, 0"/>
+                    <TextBlock VerticalAlignment="Center">Close</TextBlock>
+                </StackPanel>
+            </Button>
+        </ToolBar>
+        <RichTextBox x:Name="RichTextBoxNote" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5" ></RichTextBox>
+    </Grid>
+</Window>

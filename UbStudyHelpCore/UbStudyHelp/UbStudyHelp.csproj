@@ -42,8 +42,8 @@
     <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00014" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SharpVectors" Version="1.7.7" />
+    <PackageReference Include="System.Text.Json" Version="6.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,6 +63,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -98,7 +103,14 @@
     <None Update="Images\UbStudyHelpIcon.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Update="TUB_Files\TR000.gz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TUB_Files\TR002.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TUB_Files\TR007.gz">

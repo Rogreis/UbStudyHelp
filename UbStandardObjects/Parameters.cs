@@ -26,7 +26,7 @@ namespace UbStandardObjects
 		/// <summary>
 		/// Last position in the text, default for first paragraph
 		/// </summary>
-		public TOC_Entry Entry { get; set; } = new TOC_Entry(0, 1, 0, 0, 0);
+		public TOC_Entry Entry { get; set; } = new TOC_Entry(0, 0, 1, 0, 0, 0);
 
 		public short LanguageIDLeftTranslation { get; set; } = 0;
 
@@ -59,11 +59,11 @@ namespace UbStandardObjects
 
 		public double SpliterDistance { get; set; } = 550;  // BUG: Default value needs to be proportional to user screen resolution
 
-		public List<string> SearchIndexEntries = new List<string>();
+		public List<string> SearchIndexEntries { get; set; } = new List<string>();
 
-		public List<TOC_Entry> TrackEntries = new List<TOC_Entry>();
+		public List<TOC_Entry> TrackEntries { get; set; } = new List<TOC_Entry>();
 
-		public string LastTrackFileSaved = "";
+		public string LastTrackFileSaved { get; set; } = "";
 
 
 		/// <summary>
@@ -84,6 +84,20 @@ namespace UbStandardObjects
 		public virtual double FontSizeInfo { get; set; } = 10;
 
 		public virtual ColorSerial HighlightColor { get; set; } = new ColorSerial(0, 0, 102, 255); // rgb(0, 102, 255)
+
+		// Quick search
+		public string SearchFor { get; set; } = "";
+
+		public string SimilarSearchFor { get; set; } = "";
+
+		public string CloseSearchDistance { get; set; } = "5";
+
+		public string CloseSearchFirstWord { get; set; } = "";
+
+		public string CloseSearchSecondWord { get; set; } = "";
+
+		public List<string> CloseSearchWords { get; set; } = new List<string>();
+
 
 	}
 }

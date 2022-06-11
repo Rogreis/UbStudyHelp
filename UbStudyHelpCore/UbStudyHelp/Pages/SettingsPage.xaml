@@ -4,8 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-      xmlns:local="clr-namespace:UbStudyHelp.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OptionsPage">
@@ -41,12 +39,20 @@
                 </StackPanel>
             </Button>
 
-            <Button Name="ButtonShowLog" ToolTip="Show log for debug" Margin="5" Width="200" Height="80" Click="ButtonShowLog_Click">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Show Log" Margin="10"></TextBlock>
-                </StackPanel>
-            </Button>
-
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Name="ButtonShowLog"         Grid.Row="0" Grid.Column="0" ToolTip="Show log for debug" Margin="5" Width="160" Height="32" Click="ButtonShowLog_Click" HorizontalAlignment="Center">Show Log</Button>
+                <Button Name="ButtonCheckNewVersion" Grid.Row="0" Grid.Column="1" ToolTip="Check for new version" Margin="5" Width="160" Height="32"  Click="ButtonCheckNewVersion_Click" HorizontalAlignment="Center">Check for New Version</Button>
+                <Button Name="ButtonSupport"         Grid.Row="1" Grid.Column="0" ToolTip="Information about how to use this tool" Margin="5" Width="160" Height="32" Click="ButtonSupport_Click" HorizontalAlignment="Center">Facebook</Button>
+                <Button Name="ButtonBugs"            Grid.Row="1" Grid.Column="1" ToolTip="Bugs - Sugestions" Margin="5" Width="160" Height="32"  Click="ButtonBugsButtonBugs_Click" HorizontalAlignment="Center">Bugs - Suggestions</Button>
+            </Grid>
 
         </StackPanel>
     </Grid>
