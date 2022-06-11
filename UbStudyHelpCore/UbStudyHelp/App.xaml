@@ -13,7 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/UbStudyHelp;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <Style TargetType="{x:Type ComboBoxItem}">
                 <Setter Property="Background" Value="White" />
                 <Setter Property="Foreground" Value="Black" />

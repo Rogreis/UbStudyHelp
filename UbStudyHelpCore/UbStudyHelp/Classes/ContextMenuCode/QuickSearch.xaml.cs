@@ -1,14 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using UbStandardObjects;
 using UbStudyHelp.Classes;
 
@@ -19,6 +11,8 @@ namespace UbStudyHelp
     /// </summary>
     public partial class QuickSearch : Window
     {
+        private List<string> _closeSearchWords = new List<string>();
+
         public QuickSearch()
         {
             InitializeComponent();
@@ -47,7 +41,8 @@ namespace UbStudyHelp
 
         private void QuickSearch_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadDefaultData();
+            //LoadDefaultData();
+            SetaInternalData();
         }
 
         private string SearchFor { get => TextBoxSearchFor.Text; set => TextBoxSearchFor.Text = value; }
@@ -59,7 +54,21 @@ namespace UbStudyHelp
         private string SecondWord { get => ComboSecondWord.Text; set => ComboSecondWord.Text = value; }
 
 
-        private List<string> _closeSearchWords = new List<string>();
+        private void SetaInternalData()
+        {
+            ComboFirstWord.ItemsSource = _closeSearchWords;
+            ComboSecondWord.ItemsSource = _closeSearchWords;
+            if (_closeSearchWords.Count > 0)
+            {
+                FirstWord = SearchFor = SimilarSearchFor = CloseSearchWords[0];
+            }
+            if (_closeSearchWords.Count > 1)
+            {
+                SecondWord = CloseSearchWords[1];
+            }
+        }
+
+
         private List<string> CloseSearchWords
         {
             get
@@ -69,16 +78,6 @@ namespace UbStudyHelp
             set
             {
                 _closeSearchWords = value;
-                ComboFirstWord.ItemsSource = _closeSearchWords;
-                ComboSecondWord.ItemsSource = _closeSearchWords;
-                if (_closeSearchWords.Count > 0)
-                {
-                    FirstWord = SearchFor = SimilarSearchFor = CloseSearchWords[0];
-                }
-                if (_closeSearchWords.Count > 1)
-                {
-                    SecondWord = CloseSearchWords[1];
-                }
             }
         }
 
