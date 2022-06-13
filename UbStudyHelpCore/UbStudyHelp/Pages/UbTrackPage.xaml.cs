@@ -70,6 +70,12 @@ namespace UbStudyHelp.Pages
                 return;
             }
 
+            // Anything to show?
+            if (StaticObjects.Parameters.TrackEntries.Count == 0)
+            {
+                return;
+            }
+
             lastEntryShown= StaticObjects.Parameters.TrackEntries[0];
             Debug.WriteLine($"»»»»»»»»»»»»» ShowTrackData {lastEntryShown}");
 

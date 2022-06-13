@@ -29,6 +29,7 @@ namespace UbStudyHelp.Controls
             ubTrackPage.Initialize();
             searchHelpPage.Initialize();
             optionsPage.Initialize();
+            StaticObjects.Logger.Info("»»»» LeftPainel created");
 
             EventsControl.DirectSearch += EventsControl_DirectSearch;
         }
@@ -48,6 +49,7 @@ namespace UbStudyHelp.Controls
         private void LeftPainel_Loaded(object sender, RoutedEventArgs e)
         {
             // Default page
+            StaticObjects.Logger.Info("»»»» LeftPainel_Loaded");
             FrameControl.Navigate(ubTocPage);
         }
 

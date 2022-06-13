@@ -48,6 +48,7 @@ namespace UbStudyHelp
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            StaticObjects.Logger.Info("»»»» MainWindow_Loaded");
             GridTexts.ColumnDefinitions[0].Width = new GridLength(StaticObjects.Parameters.SpliterDistance);
             FontChanged();
         }
@@ -82,7 +83,7 @@ namespace UbStudyHelp
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
             StatusBarVersion.Text = "v 2.1";
-            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» MainWindow formText_Loaded");
+            StaticObjects.Logger.Info("»»»» MainWindow formText_Loaded");
         }
 
 

@@ -75,7 +75,6 @@ namespace UbStudyHelp
         {
             // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
-            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» Startup");
 
             //TOC_Entry entry = new TOC_Entry(0, 1, 1, 1, 1, 1);
             //entry.Text = "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ";
@@ -85,6 +84,7 @@ namespace UbStudyHelp
 
             StaticObjects.Logger = new LogCore();
             StaticObjects.Logger.Initialize(pathLog, false);
+            StaticObjects.Logger.Info("»»»» Startup");
 
             pathParameters = MakeProgramDataFolder("UbStudyHelp.json");
             if (!File.Exists(pathParameters))
@@ -92,6 +92,7 @@ namespace UbStudyHelp
                 StaticObjects.Logger.Info("Parameters not found, creating a new one: " + pathParameters);
             }
             StaticObjects.Parameters= ParametersCore.Deserialize(pathParameters);
+
 
             ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();

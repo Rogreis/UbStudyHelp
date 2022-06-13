@@ -77,11 +77,13 @@ namespace UbStudyHelp.Classes
         {
             try
             {
+                StaticObjects.Logger.Info("»»»» Deserialize Parameters");
                 var jsonString = File.ReadAllText(pathParameters);
                 return App.DeserializeObject<ParametersCore>(jsonString);
             }
             catch 
             {
+                StaticObjects.Logger.Info("»»»» Deserialize Parameters creating default");
                 return new ParametersCore();
             }
         }

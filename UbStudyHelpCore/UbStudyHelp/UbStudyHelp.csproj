@@ -10,6 +10,8 @@
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <StartupObject>UbStudyHelp.App</StartupObject>
     <ApplicationIcon>UbStudyHelp.ico</ApplicationIcon>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <FileVersion>2.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
