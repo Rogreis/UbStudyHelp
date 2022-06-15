@@ -168,7 +168,7 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public void SetThemeInfo(Control control)
+        public void SetThemeInfo(Control control, bool reverse= false)
         {
             Style style = new Style
             {
@@ -179,13 +179,13 @@ namespace UbStudyHelp.Classes
             style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
             if (!(control is ComboBox || control is ListView))
             {
-                style.Setters.Add(new Setter(Control.BackgroundProperty, GetBackgroundColorBrush()));
-                style.Setters.Add(new Setter(Control.ForegroundProperty, GetForegroundColorBrush()));
+                style.Setters.Add(new Setter(Control.BackgroundProperty, reverse ? GetHighlightColorBrush() : GetBackgroundColorBrush()));
+                style.Setters.Add(new Setter(Control.ForegroundProperty, reverse ? GetBackgroundColorBrush() : GetForegroundColorBrush()));
             }
             control.Style = style;
         }
 
-        public void SetThemeInfo(TextBlock control)
+        public void SetThemeInfo(TextBlock control, bool reverse = false)
         {
 
             Style style = new Style
@@ -196,8 +196,8 @@ namespace UbStudyHelp.Classes
             style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
             style.Setters.Add(new Setter(TextBlock.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
 
-            style.Setters.Add(new Setter(TextBlock.BackgroundProperty, GetBackgroundColorBrush()));
-            style.Setters.Add(new Setter(TextBlock.ForegroundProperty, GetForegroundColorBrush()));
+            style.Setters.Add(new Setter(TextBlock.BackgroundProperty, reverse ? GetHighlightColorBrush() : GetBackgroundColorBrush()));
+            style.Setters.Add(new Setter(TextBlock.ForegroundProperty, reverse ? GetBackgroundColorBrush() : GetForegroundColorBrush()));
             control.Style = style;
         }
 

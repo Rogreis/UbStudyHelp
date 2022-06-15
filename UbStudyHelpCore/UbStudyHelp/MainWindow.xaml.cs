@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using UbStandardObjects;
@@ -22,9 +23,11 @@ namespace UbStudyHelp
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.NewPaperShown += EventsControl_NewPaperShown;
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
-            Debug.WriteLine("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»» MainWindow constructor");
 
+            // Objects in the status bar do not need theme update
+            //EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
         }
+
 
         private void EventsControl_NewPaperShown()
         {
@@ -33,13 +36,14 @@ namespace UbStudyHelp
             StatusBarPaper.Text = $"Paper { StaticObjects.Parameters.Entry.Paper}";
         }
 
-
         private void FontChanged()
         {
             App.Appearance.SetFontSize(StatusBarVersion);
             App.Appearance.SetFontSize(StatusBarPaper);
             App.Appearance.SetFontSize(StatusBarMessages);
+            App.Appearance.SetFontSize(ReferenceInputBox);
         }
+
 
         private void EventsControl_FontChanged(ControlsAppearance appearance)
         {
@@ -101,6 +105,42 @@ namespace UbStudyHelp
             }
 
 
+        }
+
+        private void ReferenceInputBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                string paragraphRef = ReferenceInputBox.Text;
+                TOC_Entry entry = null;
+                try
+                {
+                    char[] sep = { ':', '-' };
+                    string[] parts = paragraphRef.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+                    entry = new TOC_Entry(StaticObjects.Parameters.LanguageIDLeftTranslation, Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]), 0, 0);
+                }
+                catch 
+                {
+                    EventsControl.FireSendMessage($"Invalid paragraph reference {paragraphRef}. It should use the format 999:99-99");
+                    return;
+                }
+
+                try
+                {
+                    Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
+                    Paragraph par = paperLeft.GetParagraph(entry);
+                    entry.Text = par.Text;
+                    EventsControl.FireSendMessage($"Jumping to {paragraphRef}.");
+                    EventsControl.FireTOCClicked(entry);
+                }
+                catch
+                {
+                    EventsControl.FireSendMessage($"Paragraph not found {paragraphRef}. Try using an exiting paragraph reference");
+                    return;
+                }
+
+
+            }
         }
     }
 }
