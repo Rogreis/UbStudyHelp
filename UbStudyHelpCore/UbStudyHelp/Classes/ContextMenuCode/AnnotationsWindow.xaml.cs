@@ -28,14 +28,16 @@ namespace UbStudyHelp.Classes
         private TOC_Entry Entry = null;
         private FlowDocumentFormat format = new FlowDocumentFormat();
         private readonly UbAnnotations UbAnnotationsObject = new UbAnnotations(UbAnnotationType.Paragraph);
+        private bool ShowAnnotationsContextMenu = false;
 
 
-        public AnnotationsWindow(TOC_Entry entry)
+        public AnnotationsWindow(TOC_Entry entry, bool showAnnotationsContextMenu= false)
         {
             InitializeComponent();
 
             Loaded += AnnotationsWindow_Loaded;
             Unloaded += AnnotationsWindow_Unloaded;
+            ShowAnnotationsContextMenu= showAnnotationsContextMenu;
 
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
@@ -61,6 +63,8 @@ namespace UbStudyHelp.Classes
             //RichTextBoxNote.AppendText(entry.Description);
             SetFontSize();
             SetAppearence();
+
+            ButtonImage.IsEnabled = false;
         }
 
 
@@ -197,15 +201,19 @@ namespace UbStudyHelp.Classes
             contextMenu.Items.Add(CreateMenuItem("Select all", ApplicationCommands.SelectAll));
             //contextMenu.Items.Add(new Separator());
             //contextMenu.Items.Add(CreateMenuItem("Print Preview", ApplicationCommands.PrintPreview));
-            contextMenu.Items.Add(CreateMenuItem("Print", PrintCommand));
-            contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(CreateMenuItem("Add Highlight", AnnotationService.CreateHighlightCommand));
-            contextMenu.Items.Add(CreateMenuItem("Add Text Note", AnnotationService.CreateTextStickyNoteCommand));
-            contextMenu.Items.Add(CreateMenuItem("Add Ink Note", AnnotationService.CreateInkStickyNoteCommand));
-            contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(CreateMenuItem("Remove Highlights", AnnotationService.ClearHighlightsCommand));
-            contextMenu.Items.Add(CreateMenuItem("Remove Notes", AnnotationService.DeleteStickyNotesCommand));
-            contextMenu.Items.Add(CreateMenuItem("Remove Highlights & Notes", AnnotationService.DeleteAnnotationsCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Print", PrintCommand));
+            if (ShowAnnotationsContextMenu)
+            {
+                contextMenu.Items.Add(new Separator());
+                contextMenu.Items.Add(CreateMenuItem("Add Highlight", AnnotationService.CreateHighlightCommand));
+                contextMenu.Items.Add(CreateMenuItem("Add Text Note", AnnotationService.CreateTextStickyNoteCommand));
+                contextMenu.Items.Add(CreateMenuItem("Add Ink Note", AnnotationService.CreateInkStickyNoteCommand));
+                contextMenu.Items.Add(new Separator());
+                contextMenu.Items.Add(CreateMenuItem("Remove Highlights", AnnotationService.ClearHighlightsCommand));
+                contextMenu.Items.Add(CreateMenuItem("Remove Notes", AnnotationService.DeleteStickyNotesCommand));
+                contextMenu.Items.Add(CreateMenuItem("Remove Highlights & Notes", AnnotationService.DeleteAnnotationsCommand));
+            }
+
             return contextMenu;
         }
 
@@ -216,8 +224,8 @@ namespace UbStudyHelp.Classes
             contextMenu.Items.Add(CreateMenuItem("Cut", ApplicationCommands.Cut));
             contextMenu.Items.Add(CreateMenuItem("Paste", ApplicationCommands.Paste));
             contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(CreateMenuItem("Print", PrintCommand));
-            contextMenu.Items.Add(CreateMenuItem("Insert Image", Item_InsertImage));
+            //contextMenu.Items.Add(CreateMenuItem("Print", PrintCommand));
+            //contextMenu.Items.Add(CreateMenuItem("Insert Image", Item_InsertImage));
             contextMenu.Items.Add(CreateMenuItem("Select all", ApplicationCommands.SelectAll));
             //ToolBarAnnotations.Items.Add(CreateMenuItem("Find", ApplicationCommands.Find));
             //ToolBarAnnotations.Items.Add(CreateMenuItem("Undo", ApplicationCommands.Undo));
@@ -284,7 +292,10 @@ namespace UbStudyHelp.Classes
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
         {
-
+            if (MessageBox.Show("Clear all text?", "Ub Study Help", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                RichTextBoxNote.Document.Blocks.Clear();
+            }
         }
 
         private void ButtonImage_Click(object sender, RoutedEventArgs e)
@@ -294,7 +305,7 @@ namespace UbStudyHelp.Classes
 
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
-
+            Close();
         }
     }
 }

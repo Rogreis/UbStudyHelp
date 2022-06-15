@@ -90,7 +90,7 @@ namespace UbStudyHelp.Pages
                     Padding = new Thickness(5),
                     Style = App.Appearance.ForegroundStyle,
                     Tag = entry,
-                    ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry, true, false)
+                    ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry, false, false)
                 };
 
                 Hyperlink hyperlink = format.HyperlinkFullParagraph(entry, false, entry.Text);

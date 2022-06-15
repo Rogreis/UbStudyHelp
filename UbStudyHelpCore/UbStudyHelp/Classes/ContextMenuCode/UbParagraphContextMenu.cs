@@ -31,6 +31,7 @@ namespace UbStudyHelp.Classes
         protected FlowDocumentScrollViewer FlowDocument = null;
         protected TOC_Entry Entry = null;
         protected MenuItem menuItemSearch = null;
+        protected MenuItem menuItemOpenAnnotations = null;
         private const int MaxWordsForSearch = 20;
         private bool ShowAnnotations = true;
         private bool ShowSearch = true;
@@ -59,10 +60,11 @@ namespace UbStudyHelp.Classes
             {
                 Run r = e.OriginalSource as Run;
                 System.Windows.Documents.Paragraph p = r.Parent as System.Windows.Documents.Paragraph;
-                UbParagraphContextMenu cm = p.ContextMenu as UbParagraphContextMenu;
-                if (cm != null)
+                ParagraphSearchData paragraphSearchData= p.Tag as ParagraphSearchData;
+                if (paragraphSearchData != null)
                 {
-                    FlowDocument.Tag = cm.Entry;
+                    FlowDocument.Tag = paragraphSearchData.Entry;
+                    menuItemOpenAnnotations.Tag = paragraphSearchData.Entry;
                 }
             }
             catch 
@@ -202,15 +204,15 @@ namespace UbStudyHelp.Classes
         //    }
         //}
 
-        // ANNOTATIONS REMOVAL
-        //protected void ItemNewWindow_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (Entry != null)
-        //    {
-        //        AnnotationsWindow annotationsWindow = new AnnotationsWindow(Entry);
-        //        annotationsWindow.Show();
-        //    }
-        //}
+        protected void ItemOpenAnnotations_Click(object sender, RoutedEventArgs e)
+        {
+            TOC_Entry entry = menuItemOpenAnnotations.Tag as TOC_Entry;
+            if (entry != null)
+            {
+                AnnotationsWindow annotationsWindow = new AnnotationsWindow(entry);
+                annotationsWindow.Show();
+            }
+        }
 
         protected void ItemQuickSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -271,9 +273,9 @@ namespace UbStudyHelp.Classes
                 //Items.Add(menuItemSearch);
             }
 
-            // ANNOTATIONS REMOVAL
-            //Items.Add(new Separator());
-            //Items.Add(CreateMenuItem("New Paragraph Window", ItemNewWindow_Click));
+            Items.Add(new Separator());
+            menuItemOpenAnnotations = CreateMenuItem("Open Annotations", ItemOpenAnnotations_Click);
+            Items.Add(menuItemOpenAnnotations);
         }
 
 
