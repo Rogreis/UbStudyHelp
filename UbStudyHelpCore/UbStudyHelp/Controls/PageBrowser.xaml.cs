@@ -69,7 +69,12 @@ namespace UbStudyHelp.Controls
             EventsControl.FireNewPaperShown();
         }
 
-
+        /// <summary>
+        /// Common paragrph creation
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="highlighted"></param>
+        /// <returns></returns>
         private System.Windows.Documents.Paragraph CreateParagraph(TOC_Entry entry, bool highlighted)
         {
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
@@ -86,11 +91,6 @@ namespace UbStudyHelp.Controls
                 currentParagraph = paragraph;
             };
 
-            //if (highlighted && entry * StaticObjects.Parameters.Entry)
-            //{
-            //}
-
-
             paragraph.Style = App.Appearance.ForegroundStyle;
             paragraph.Margin = new Thickness(20, 10, 10, 0);
             paragraph.LineHeight = 26;
@@ -98,7 +98,51 @@ namespace UbStudyHelp.Controls
             return paragraph;
         }
 
+        private Hyperlink ReferenceAsHyperlink(TOC_Entry entry, bool includePage)
+        {
+            Hyperlink hyperlink = format.HyperlinkReference(entry, true);
+            hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
+            hyperlink.MouseEnter += Hyperlink_MouseEnter;
+            hyperlink.MouseLeave += Hyperlink_MouseLeave;
+            return hyperlink;
+        }
 
+        #region events for hyperlink
+        private void Hyperlink_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = null;
+        }
+
+        private void Hyperlink_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            hyperlink.TextDecorations = TextDecorations.Underline;
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Hyperlink hyperlink = sender as Hyperlink;
+            e.Handled = true;
+            if (hyperlink.Tag == null)
+            {
+                return;
+            }
+            TOC_Entry entry = hyperlink.Tag as TOC_Entry;
+            if (entry == null)
+            {
+                return;
+            }
+            EventsControl.FireTOCClicked(entry);
+
+            SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));
+            var run = hyperlink.Inlines.FirstOrDefault() as Bold;
+            if (run != null)
+            {
+                run.Foreground = accentBrush;
+            }
+        }
+        #endregion
 
         private void FormatParagraph(TableCell cell,
                                      TOC_Entry entry, string text,
@@ -108,7 +152,7 @@ namespace UbStudyHelp.Controls
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Tag = cell.Tag;
-            paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
+            paragraph.Inlines.Add(ReferenceAsHyperlink(entry, true));
             paragraph.Inlines.Add(new Run(" "));
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
@@ -123,7 +167,7 @@ namespace UbStudyHelp.Controls
             cell.Blocks.Add(paragraph);
             paragraph.Margin = new Thickness(50, 20, 20, 0);
             paragraph.Tag = cell.Tag;
-            paragraph.Inlines.Add(format.ParagraphIdentification(entry, true));
+            paragraph.Inlines.Add(ReferenceAsHyperlink(entry, true));
             paragraph.Inlines.Add(new Run(" "));
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);

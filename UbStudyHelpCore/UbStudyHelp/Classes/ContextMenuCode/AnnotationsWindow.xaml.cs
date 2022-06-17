@@ -42,7 +42,7 @@ namespace UbStudyHelp.Classes
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
 
-            Title = $"Paragraph Annotations for {entry.Description}";
+            Title = $"Annotations for {entry.ParagraphIDNoPage}";
 
             Entry= entry;
             BorderThickness = new Thickness(2.0);

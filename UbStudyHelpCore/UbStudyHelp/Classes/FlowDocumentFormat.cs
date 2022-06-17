@@ -25,7 +25,38 @@ namespace UbStudyHelp.Classes
             return new Run("");
         }
 
+        /// <summary>
+        /// Make the paragraph referece an hyperlink
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="includePage"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public Hyperlink HyperlinkReference(TOC_Entry entry, bool includePage)
+        {
+            Run runIdent = ParagraphIdentification(entry, includePage);
 
+            Hyperlink hyperlink = new Hyperlink(runIdent)
+            {
+                NavigateUri = new Uri("about:blank"),
+                TextDecorations = null,
+                //TextDecorations = TextDecorations.Underline,
+                Tag = entry
+            };
+
+            hyperlink.Inlines.Add(runIdent);
+            //hyperlink.Inlines.Add(new Run("  "));
+            return hyperlink;
+        }
+
+
+        /// <summary>
+        /// Make the whole paragraph an hiperlink
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="includePage"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public Hyperlink HyperlinkFullParagraph(TOC_Entry entry, bool includePage, string text)
         {
             Run runIdent = ParagraphIdentification(entry, includePage);
@@ -34,6 +65,7 @@ namespace UbStudyHelp.Classes
             {
                 NavigateUri = new Uri("about:blank"),
                 TextDecorations = null,
+                //TextDecorations = TextDecorations.Underline,
                 Tag = entry
             };
 
