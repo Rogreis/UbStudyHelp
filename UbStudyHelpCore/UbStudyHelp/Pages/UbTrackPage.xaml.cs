@@ -24,6 +24,10 @@ namespace UbStudyHelp.Pages
 
         private FlowDocumentFormat format = new FlowDocumentFormat();
 
+        private TOC_Entry lastEntryShown = null;
+
+        private int currentEntryIndexShown = -1;
+
         private enum TrachSortOrder
         {
             None,
@@ -41,11 +45,21 @@ namespace UbStudyHelp.Pages
             EventsControl.IndexClicked += EventsControl_IndexClicked;
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             Loaded += UbTrackPage_Loaded;
+
+            GeometryImages images = new GeometryImages();
+            ButtonTrackSortImage.Source = images.GetImage(GeometryImagesTypes.Sort);
+            ButtonTrackClearImage.Source = images.GetImage(GeometryImagesTypes.Clear);
+            ButtonTrackSaveImage.Source = images.GetImage(GeometryImagesTypes.Save);
+            ButtonTrackLoadImage.Source = images.GetImage(GeometryImagesTypes.Load);
+            ButtonTrackNextImage.Source = images.GetImage(GeometryImagesTypes.Next);
+            ButtonTrackPreviousImage.Source = images.GetImage(GeometryImagesTypes.Previous);
+
+
         }
 
         private void UbTrackPage_Loaded(object sender, RoutedEventArgs e)
         {
-            ShowTrackData();
+            Initialize();
         }
 
         public void Initialize()
@@ -56,7 +70,6 @@ namespace UbStudyHelp.Pages
         }
 
 
-        private TOC_Entry lastEntryShown = null;
 
         /// <summary>
         /// Show track data
@@ -77,7 +90,7 @@ namespace UbStudyHelp.Pages
             }
 
             lastEntryShown= StaticObjects.Parameters.TrackEntries[0];
-            Debug.WriteLine($"»»»»»»»»»»»»» ShowTrackData {lastEntryShown}");
+            currentEntryIndexShown = 0;
 
             FlowDocument document = new FlowDocument();
 
@@ -110,14 +123,10 @@ namespace UbStudyHelp.Pages
         private void SetFontSize()
         {
             ShowTrackData();
-            App.Appearance.SetFontSize(ButtonTrackSort);
-            App.Appearance.SetFontSize(ButtonTrackClear);
-            App.Appearance.SetFontSize(ButtonTrackSave);
-            App.Appearance.SetFontSize(ButtonTrackLoad);
-            App.Appearance.SetThemeInfo(ButtonTrackSort);
-            App.Appearance.SetThemeInfo(ButtonTrackClear);
-            App.Appearance.SetThemeInfo(ButtonTrackSave);
-            App.Appearance.SetThemeInfo(ButtonTrackLoad);
+            //App.Appearance.SetFontSize(ButtonTrackSort);
+            //App.Appearance.SetFontSize(ButtonTrackClear);
+            //App.Appearance.SetFontSize(ButtonTrackSave);
+            //App.Appearance.SetFontSize(ButtonTrackLoad);
         }
 
         private void SetAppearence()
@@ -127,12 +136,9 @@ namespace UbStudyHelp.Pages
             App.Appearance.SetThemeInfo(ButtonTrackClear);
             App.Appearance.SetThemeInfo(ButtonTrackSave);
             App.Appearance.SetThemeInfo(ButtonTrackLoad);
+            App.Appearance.SetThemeInfo(ButtonTrackNext);
+            App.Appearance.SetThemeInfo(ButtonTrackPrevious);
 
-            GeometryImages images = new GeometryImages();
-            ButtonTrackSortImage.Source = images.GetImage(GeometryImagesTypes.Sort);
-            ButtonTrackClearImage.Source = images.GetImage(GeometryImagesTypes.Clear);
-            ButtonTrackSaveImage.Source = images.GetImage(GeometryImagesTypes.Save);
-            ButtonTrackLoadImage.Source = images.GetImage(GeometryImagesTypes.Load);
         }
 
         private void AddEntry(TOC_Entry entry)
@@ -140,6 +146,11 @@ namespace UbStudyHelp.Pages
             if (StaticObjects.Parameters.TrackEntries.Count == StaticObjects.Parameters.MaxExpressionsStored)
             {
                 StaticObjects.Parameters.TrackEntries.RemoveAt(StaticObjects.Parameters.TrackEntries.Count - 1);
+            }
+
+            if (StaticObjects.Parameters.TrackEntries.Count > 0 && StaticObjects.Parameters.TrackEntries[0] * entry)
+            {
+                return;
             }
 
             // When text is empty 
@@ -153,6 +164,17 @@ namespace UbStudyHelp.Pages
             StaticObjects.Parameters.TrackEntries.Insert(0, entry);
             ShowTrackData();
         }
+
+        /// <summary>
+        /// Force an entry to be shown
+        /// </summary>
+        /// <param name="entry"></param>
+        private void ShowEntry(TOC_Entry entry)
+        {
+            EventsControl.FireTrackSelected(entry);
+            currentEntryIndexShown= StaticObjects.Parameters.TrackEntries.IndexOf(entry);
+        }
+
 
         #region events
         private void EventsControl_TOCClicked(TOC_Entry entry)
@@ -216,7 +238,7 @@ namespace UbStudyHelp.Pages
             {
                 return;
             }
-            EventsControl.FireTrackSelected(entry);
+            ShowEntry(entry);
 
             SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetGrayColor(2));
             var run = hyperlink.Inlines.FirstOrDefault() as Bold;
@@ -325,6 +347,25 @@ namespace UbStudyHelp.Pages
                 ShowTrackData();
             }
 
+        }
+
+
+        private void ButtonTrackPrevious_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentEntryIndexShown > 0)
+            {
+                currentEntryIndexShown--;
+                ShowEntry(StaticObjects.Parameters.TrackEntries[currentEntryIndexShown]);
+            }
+        }
+
+        private void ButtonTrackNext_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentEntryIndexShown < StaticObjects.Parameters.TrackEntries.Count - 1)
+            {
+                currentEntryIndexShown++;
+                ShowEntry(StaticObjects.Parameters.TrackEntries[currentEntryIndexShown]);
+            }
         }
     }
 }

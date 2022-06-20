@@ -33,8 +33,10 @@
         </Grid>
 
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"  Margin="5">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -61,10 +63,22 @@
                 </StackPanel>
             </Button>
 
-            <Button x:Name="ButtonTrackLoad" Grid.Column="3" Click="ButtonTrackLoad_Click" ToolTip="Load a saved tgrack list" Width="32" Height="32">
+            <Button x:Name="ButtonTrackLoad" Grid.Column="3" Click="ButtonTrackLoad_Click" ToolTip="Load a saved track list" Width="32" Height="32">
                 <StackPanel Orientation="Horizontal">
                     <Image x:Name="ButtonTrackLoadImage" Margin="5"></Image>
                     <!--<TextBlock x:Name="ButtonTrackLoadText">Load</TextBlock>-->
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="ButtonTrackPrevious" Grid.Column="4" Click="ButtonTrackPrevious_Click"  ToolTip="Previous track record" Width="32" Height="32">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ButtonTrackPreviousImage" Margin="5"></Image>
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="ButtonTrackNext" Grid.Column="5" Click="ButtonTrackNext_Click"  ToolTip="Next track record" Width="32" Height="32">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="ButtonTrackNextImage" Margin="5"></Image>
                 </StackPanel>
             </Button>
 
