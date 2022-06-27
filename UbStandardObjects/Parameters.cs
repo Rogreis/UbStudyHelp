@@ -98,6 +98,7 @@ namespace UbStandardObjects
 
 		public List<string> CloseSearchWords { get; set; } = new List<string>();
 
+		public short CurrentTranslation = 0;
 
 	}
 }

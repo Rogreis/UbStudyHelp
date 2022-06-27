@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
 using System.Xml;
@@ -128,6 +129,45 @@ namespace UbStandardObjects.Objects
             Text = "";
             IsExpanded = false;
         }
+
+        public static TOC_Entry FromReference(string reference, ref string aMessage)
+        {
+            TOC_Entry entry = null;
+
+            try
+            {
+                char[] sep = { ':', '-', '.', ' ' };
+                string[] parts = reference.Split(sep, StringSplitOptions.RemoveEmptyEntries);
+                entry = new TOC_Entry();
+                entry.TranslationId = StaticObjects.Parameters.CurrentTranslation;
+                entry.Paper = Convert.ToInt16(parts[0]);
+                entry.Section = Convert.ToInt16(parts[1]);
+                entry.ParagraphNo = Convert.ToInt16(parts[2]);
+                entry.Page = 0;
+                entry.Line = 0;
+                entry.Text = "";
+                entry.IsExpanded = false;
+            }
+            catch
+            {
+                aMessage = $"Invalid paragraph reference {reference}. It should type a valid combination of Paper/Section/Paragrap, separated by : . - or spaces";
+                return null;
+            }
+
+            try
+            {
+                Paragraph par = StaticObjects.Book.GetTranslation(StaticObjects.Parameters.CurrentTranslation).Paper(entry.Paper).GetParagraph(entry);
+                entry.Text = par.Text;
+                aMessage = $"Jumping to {reference}.";
+                return entry;
+            }
+            catch
+            {
+                aMessage = $"Paragraph not found {reference}. Try using an exiting paragraph reference";
+                return null;
+            }
+        }
+
 
         protected bool SamePaperSection(TOC_Entry index)
         {

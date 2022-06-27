@@ -12,10 +12,15 @@
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="48"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Controls:LeftMenuTop x:Name="LeftMenuTop" Grid.Row="0" ImageSourceName="TocLogo" />
-        <TabControl Grid.Row="1" Margin="10, 10, 10, 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock x:Name="ReferenceText" Text="Reference:" Margin="5, 0, 0, 0" VerticalAlignment="Center"></TextBlock>
+            <TextBox x:Name="ReferenceInputBox" Margin="5,0,5,0" KeyUp="ReferenceInputBox_KeyUp" Width="120" Height="32"/>
+        </StackPanel>
+        <TabControl x:Name="TabControlTranslations" Grid.Row="2" Margin="10, 10, 10, 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SelectionChanged="TabControlTranslations_SelectionChanged">
             <TabItem Name="TabItemLeft" Header="Left">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                     <TreeView Name="TOC_Left" Grid.Column="0" Margin="0,4,0,0" HorizontalAlignment="Stretch"  BorderThickness="0" 

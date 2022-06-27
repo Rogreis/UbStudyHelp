@@ -44,12 +44,16 @@ namespace UbStudyHelp.Pages
         {
             App.Appearance.SetFontSize(TOC_Left);
             App.Appearance.SetFontSize(TOC_Right);
+            App.Appearance.SetFontSize(ReferenceText);
+            App.Appearance.SetFontSize(ReferenceInputBox);
         }
 
         private void SetAppearence()
         {
             App.Appearance.SetThemeInfo(TOC_Left);
             App.Appearance.SetThemeInfo(TOC_Right);
+            App.Appearance.SetThemeInfo(ReferenceText);
+            App.Appearance.SetThemeInfo(ReferenceInputBox);
         }
 
         private void SetItemEvents(TreeViewItemUB item)
@@ -199,7 +203,7 @@ namespace UbStudyHelp.Pages
                 DoEvents();
                 InternalChange = false;
             }
-            catch  { } // Errors are ignored
+            catch { } // Errors are ignored
         }
 
         private void Item_Expanded(object sender, RoutedEventArgs e)
@@ -264,6 +268,28 @@ namespace UbStudyHelp.Pages
             FillTreeView(TOC_Right, false);
         }
 
+        private void ReferenceInputBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                string paragraphRef = ReferenceInputBox.Text;
+                string aMessage = "";
+                TOC_Entry entry = TOC_Entry.FromReference(paragraphRef, ref aMessage);
+                if (entry != null)  
+                {
+                    EventsControl.FireSendMessage($"Jumping to {paragraphRef}.");
+                    EventsControl.FireTOCClicked(entry);
+                }
+                else
+                {
+                    EventsControl.FireSendMessage($"Invalid paragraph reference {paragraphRef}. It should use the format 999:99-99");
+                }
+            }
+        }
 
+        private void TabControlTranslations_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StaticObjects.Parameters.CurrentTranslation= TabControlTranslations.SelectedIndex == 0 ? StaticObjects.Parameters.LanguageIDLeftTranslation : StaticObjects.Parameters.LanguageIDRightTranslation;  
+        }
     }
 }

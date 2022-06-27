@@ -112,34 +112,17 @@ namespace UbStudyHelp
             if (e.Key == System.Windows.Input.Key.Enter)
             {
                 string paragraphRef = ReferenceInputBox.Text;
-                TOC_Entry entry = null;
-                try
+                string aMessage = "";
+                TOC_Entry entry = TOC_Entry.FromReference(paragraphRef, ref aMessage);
+                if (entry != null)
                 {
-                    char[] sep = { ':', '-' };
-                    string[] parts = paragraphRef.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-                    entry = new TOC_Entry(StaticObjects.Parameters.LanguageIDLeftTranslation, Convert.ToInt16(parts[0]), Convert.ToInt16(parts[1]), Convert.ToInt16(parts[2]), 0, 0);
-                }
-                catch 
-                {
-                    EventsControl.FireSendMessage($"Invalid paragraph reference {paragraphRef}. It should use the format 999:99-99");
-                    return;
-                }
-
-                try
-                {
-                    Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
-                    Paragraph par = paperLeft.GetParagraph(entry);
-                    entry.Text = par.Text;
-                    EventsControl.FireSendMessage($"Jumping to {paragraphRef}.");
+                    EventsControl.FireSendMessage(aMessage);
                     EventsControl.FireTOCClicked(entry);
                 }
-                catch
+                else
                 {
-                    EventsControl.FireSendMessage($"Paragraph not found {paragraphRef}. Try using an exiting paragraph reference");
-                    return;
+                    EventsControl.FireSendMessage(aMessage);
                 }
-
-
             }
         }
     }
