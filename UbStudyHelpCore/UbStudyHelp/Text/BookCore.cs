@@ -27,11 +27,18 @@ namespace UbStudyHelp.Text
         public override UbAnnotationsStoreSet GetParagraphAnnotations(TOC_Entry entry)
         {
             UbAnnotationsStoreSet annotationsSet = new UbAnnotationsStoreSet();
-            annotationsSet.ParagraphAnnotations= dataFiles.LoadPaperAnnotations(entry.TranslationId)
-                    //.Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paragraph) ?? new UbAnnotationsStoreData();
-                    .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID) ?? new UbAnnotationsStoreData();
-            annotationsSet.ParagraphAnnotations.Entry = entry;
-            annotationsSet.ParagraphAnnotations.Entry.Text = "";
+            try
+            {
+                annotationsSet.ParagraphAnnotations = dataFiles.LoadPaperAnnotations(entry.TranslationId)
+                        //.Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paragraph) ?? new UbAnnotationsStoreData();
+                        .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID) ?? new UbAnnotationsStoreData();
+                annotationsSet.ParagraphAnnotations.Entry = entry;
+                annotationsSet.ParagraphAnnotations.Entry.Text = "";
+            }
+            catch (Exception ex)
+            {
+                StaticObjects.Logger.Error("Error restoring paragraph annotations -  creating an empty one", ex);
+            }
             return annotationsSet;
         }
 
@@ -41,28 +48,28 @@ namespace UbStudyHelp.Text
         /// </summary>
         /// <param name="entry"></param>
         /// <returns>Retuns only the annotations for both right and left paper</returns>
-        public override UbAnnotationsStoreSet GetPaperAnnotations(TOC_Entry entry)
-        {
-            UbAnnotationsStoreSet annotationsSet = new UbAnnotationsStoreSet();
+        //public override UbAnnotationsStoreSet GetPaperAnnotations(TOC_Entry entry)
+        //{
+        //    UbAnnotationsStoreSet annotationsSet = new UbAnnotationsStoreSet();
 
-            annotationsSet.PaperLeftAnnotations =
-                dataFiles.LoadPaperAnnotations(StaticObjects.Book.LeftTranslation.LanguageID)
-                    .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paper) ?? new UbAnnotationsStoreData();
-            annotationsSet.PaperRightAnnotations =
-                dataFiles.LoadPaperAnnotations(StaticObjects.Book.RightTranslation.LanguageID)
-                    .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == RightTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paper) ?? new UbAnnotationsStoreData();
-            if (annotationsSet.PaperLeftAnnotations == null)
-            {
-                annotationsSet.PaperLeftAnnotations = new UbAnnotationsStoreData();
-            }
-            if (annotationsSet.PaperRightAnnotations == null)
-            {
-                annotationsSet.PaperRightAnnotations = new UbAnnotationsStoreData();
-            }
-            //annotationsSet.PaperLeftAnnotations.Entry = TOC_Entry.CreateEntry(entry, LeftTranslation.LanguageID);
-            //annotationsSet.PaperRightAnnotations.Entry = TOC_Entry.CreateEntry(entry, RightTranslation.LanguageID);
-            return annotationsSet;
-        }
+        //    annotationsSet.PaperLeftAnnotations =
+        //        dataFiles.LoadPaperAnnotations(StaticObjects.Book.LeftTranslation.LanguageID)
+        //            .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == LeftTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paper) ?? new UbAnnotationsStoreData();
+        //    annotationsSet.PaperRightAnnotations =
+        //        dataFiles.LoadPaperAnnotations(StaticObjects.Book.RightTranslation.LanguageID)
+        //            .Find(d => d.Entry.Paper == entry.Paper && d.Entry.TranslationId == RightTranslation.LanguageID && d.AnnotationType == UbAnnotationType.Paper) ?? new UbAnnotationsStoreData();
+        //    if (annotationsSet.PaperLeftAnnotations == null)
+        //    {
+        //        annotationsSet.PaperLeftAnnotations = new UbAnnotationsStoreData();
+        //    }
+        //    if (annotationsSet.PaperRightAnnotations == null)
+        //    {
+        //        annotationsSet.PaperRightAnnotations = new UbAnnotationsStoreData();
+        //    }
+        //    //annotationsSet.PaperLeftAnnotations.Entry = TOC_Entry.CreateEntry(entry, LeftTranslation.LanguageID);
+        //    //annotationsSet.PaperRightAnnotations.Entry = TOC_Entry.CreateEntry(entry, RightTranslation.LanguageID);
+        //    return annotationsSet;
+        //}
 
         #endregion
 
@@ -75,30 +82,52 @@ namespace UbStudyHelp.Text
                 dataFiles = new GetDataFilesCore();
                 Translations = dataFiles.GetTranslations();
                 LeftTranslation = dataFiles.GetTranslation(leftTranslationId);
+                if (!LeftTranslation.CheckData()) return false;
                 RightTranslation = dataFiles.GetTranslation(rightTranslationID);
+                if (!RightTranslation.CheckData()) return false;
                 return true;
             }
             catch (Exception ex)
             {
                 string message = $"General error getting translations: {ex.Message}. May be you do not have the correct data to use this tool.";
                 StaticObjects.Logger.Error(message, ex);
+                StaticObjects.Logger.FatalError(message);
                 return false;
             }
         }
 
         public void SetNewTranslation(Translation translation, bool isLeft = true)
         {
-            if (isLeft)
+            try
             {
-                StaticObjects.Parameters.LanguageIDLeftTranslation = translation.LanguageID;
-                LeftTranslation = dataFiles.GetTranslation(translation.LanguageID);
+                if (isLeft)
+                {
+                    StaticObjects.Parameters.LanguageIDLeftTranslation = translation.LanguageID;
+                    LeftTranslation = dataFiles.GetTranslation(translation.LanguageID);
+                    StaticObjects.Logger.IsNull(LeftTranslation, $"Invalid of non existing translation: {translation.LanguageID}");
+                    if (!LeftTranslation.CheckData())
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    StaticObjects.Parameters.LanguageIDRightTranslation = translation.LanguageID;
+                    RightTranslation = dataFiles.GetTranslation(translation.LanguageID);
+                    StaticObjects.Logger.IsNull(RightTranslation, $"Invalid of non existing translation: {translation.LanguageID}");
+                    if (!RightTranslation.CheckData())
+                    {
+                        return;
+                    }
+                }
+                EventsControl.FireTranslationsChanged();
             }
-            else
+            catch (Exception ex)
             {
-                StaticObjects.Parameters.LanguageIDRightTranslation = translation.LanguageID;
-                RightTranslation = dataFiles.GetTranslation(translation.LanguageID);
+                string message = $"General error changing translation: {ex.Message}. May be you do not have the correct data to use this tool.";
+                StaticObjects.Logger.Error(message, ex);
+                StaticObjects.Logger.FatalError(message);
             }
-            EventsControl.FireTranslationsChanged();
         }
 
     }

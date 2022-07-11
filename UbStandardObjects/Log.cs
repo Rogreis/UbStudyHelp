@@ -25,6 +25,17 @@ namespace UbStandardObjects
 
 		public abstract void ShowLog();
 
+		public void IsNull(object obj, string message)
+		{
+			if (obj == null)
+				FatalError(message);
+		}
+
+		public void InInterval(short value, short minValue, short maxValue, string message)
+		{
+			if (value < minValue || value > maxValue )
+				FatalError(message);
+		}
 
 		protected void FireShowMessage(string message, bool isError = false, bool isFatal = false)
         {

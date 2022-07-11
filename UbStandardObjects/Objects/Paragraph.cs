@@ -22,6 +22,13 @@ namespace UbStandardObjects.Objects
         public short Line { get; set; }
         public virtual string Text { get; set; } = "";
         public int FormatInt { get; set; }
+
+        /// <summary>
+        /// Status is not to be exported yo json files for UbStudyHelp
+        /// </summary>
+        [JsonIgnore]
+        public int Status { get; set; }
+
         public enHtmlType Format
         {
             get
@@ -59,6 +66,35 @@ namespace UbStandardObjects.Objects
                 return string.Format("U{0}_{1}_{2}", Paper, Section, ParagraphNo); ;
             }
         }
+
+        [JsonIgnore]
+        public bool IsPaperTitle
+        {
+            get
+            {
+                return Section == 0 && ParagraphNo == 0;
+            }
+        }
+
+        [JsonIgnore]
+        public bool IsSectionTitle
+        {
+            get
+            {
+                return ParagraphNo == 0;
+            }
+        }
+
+        [JsonIgnore]
+        public string ParaIdent
+        {
+            get
+            {
+                return Paper.ToString("000") + PK_Seq.ToString("000");
+            }
+        }
+
+
 
         public Paragraph()
         {

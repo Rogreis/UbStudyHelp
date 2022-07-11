@@ -71,6 +71,8 @@ namespace UbStandardObjects
 		/// </summary>
 		public string RepositoryOutputFolder { get; set; } = "";
 
+		public string RepositoryOutputPTAlternativeFolder { get; set; } = "";
+
 		public string InputHtmlFilesPath { get; set; } = "";
 
 		public string IndexDownloadedFiles { get; set; } = "";

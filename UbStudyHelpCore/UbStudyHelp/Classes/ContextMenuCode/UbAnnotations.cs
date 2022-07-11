@@ -168,9 +168,9 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             switch (AnnotationType)
             {
                 case UbAnnotationType.Paper:
-                    ubAnnotationsStoreSet = StaticObjects.Book.GetPaperAnnotations(Entry);
-                    UbAnnotationsLeft = new UbAnnotationsStoreDataCore(ubAnnotationsStoreSet.PaperLeftAnnotations, _annotStore);
-                    UbAnnotationsRight = new UbAnnotationsStoreDataCore(ubAnnotationsStoreSet.PaperRightAnnotations, _annotStore);
+                    //ubAnnotationsStoreSet = StaticObjects.Book.GetPaperAnnotations(Entry);
+                    //UbAnnotationsLeft = new UbAnnotationsStoreDataCore(ubAnnotationsStoreSet.PaperLeftAnnotations, _annotStore);
+                    //UbAnnotationsRight = new UbAnnotationsStoreDataCore(ubAnnotationsStoreSet.PaperRightAnnotations, _annotStore);
 
                     break;
                 case UbAnnotationType.Paragraph:

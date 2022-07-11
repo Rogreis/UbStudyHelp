@@ -39,7 +39,7 @@ namespace UbStandardObjects.Objects
 			}
 		}
 
-		public abstract UbAnnotationsStoreSet GetPaperAnnotations(TOC_Entry entry);
+		//public abstract UbAnnotationsStoreSet GetPaperAnnotations(TOC_Entry entry);
 
 		public abstract UbAnnotationsStoreSet GetParagraphAnnotations(TOC_Entry entry);
 

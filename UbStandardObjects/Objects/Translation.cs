@@ -133,6 +133,27 @@ namespace UbStandardObjects.Objects
         }
 
 
+        /// <summary>
+        /// Verify is all mandatory data is ok
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckData()
+        {
+            try
+            {
+                StaticObjects.Logger.InInterval(LanguageID, 0, 196, $"Invalid translation number: {LanguageID}");
+                StaticObjects.Logger.IsNull(PaperTranslation, $"Paper name is missing for translation {LanguageID}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                StaticObjects.Logger.FatalError($"Fatal error in translation data {ex.Message}");
+                return false;
+            }
+
+        }
+
+
 
 
         public Paper Paper(short PaperNo)

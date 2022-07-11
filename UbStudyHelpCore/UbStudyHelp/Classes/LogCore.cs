@@ -165,13 +165,15 @@ namespace UbStudyHelp.Classes
         public override void FatalError(string message)
         {
             Logger.Error(message);
-            if (MessageBox.Show(message + ".\n\nWe are sorry, but Ub Study Help needs to be closed.\n\nOpen log file?", "Ub Study Help",
+            if (MessageBox.Show($"We are sorry, but the fatal error\n\n({message})\n\nis forcing Ub Study Help to close.\n\nOpen log file?", "Ub Study Help",
                 MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
             {
                 ShowLog();
             }
             Environment.Exit(1);
         }
+
+
 
         /// <summary>
         /// Shoe log file

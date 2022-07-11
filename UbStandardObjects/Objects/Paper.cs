@@ -13,6 +13,18 @@ namespace UbStandardObjects.Objects
         public Paragraph[] Paragraphs { get; set; }
     }
 
+    /// <summary>
+    /// Represents the translation status of each paragraph being worked.
+    /// </summary>
+    public enum ParagraphStatus
+    {
+        Started = 0,
+        Working = 1,
+        Doubt = 2,
+        Ok = 3,
+        Closed = 4
+    }
+
 
 
     public enum enHtmlType
@@ -61,7 +73,10 @@ namespace UbStandardObjects.Objects
 
         public List<Paragraph> Paragraphs { get; set; } = new List<Paragraph>();
 
-
+        /// <summary>
+        /// Constructor from a json string 
+        /// </summary>
+        /// <param name="jsonString"></param>
         public Paper(string jsonString)
         {
             var options = new JsonSerializerOptions
@@ -74,9 +89,13 @@ namespace UbStandardObjects.Objects
             fullPaper = null;
         }
 
+        /// <summary>
+        /// Constructor parameterless
+        /// </summary>
         internal Paper()
         {
         }
+
 
         public Paragraph GetParagraph(TOC_Entry entry)
         {

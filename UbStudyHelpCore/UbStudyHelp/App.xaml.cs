@@ -76,12 +76,6 @@ namespace UbStudyHelp
             // Log for errors
             string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
 
-            //TOC_Entry entry = new TOC_Entry(0, 1, 1, 1, 1, 1);
-            //entry.Text = "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ";
-            //AnnotationsWindow annotationsWindow = new AnnotationsWindow(entry);
-            //annotationsWindow.Show();
-            //return;
-
             StaticObjects.Logger = new LogCore();
             StaticObjects.Logger.Initialize(pathLog, false);
             StaticObjects.Logger.Info("»»»» Startup");
@@ -105,18 +99,9 @@ namespace UbStudyHelp
 
             if (!StaticObjects.Book.Inicialize(BaseTubFilesPath, StaticObjects.Parameters.LanguageIDLeftTranslation, StaticObjects.Parameters.LanguageIDRightTranslation))
             {
-                StaticObjects.Logger.Error("Data not loaded!");
-                if(MessageBox.Show("Data not loaded!\n\nOpen log file?", "Ub Study Help", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    Process.Start("notepad.exe", pathLog);
-                }
+                StaticObjects.Logger.FatalError("Data not loaded!");
                 return;
             }
-
-            //frmNewVersion frm = new frmNewVersion();
-            //frm.ShowDialog();
-            //return;
-
 
             base.OnStartup(e);
         }
