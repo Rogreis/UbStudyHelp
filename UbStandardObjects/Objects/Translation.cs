@@ -53,6 +53,9 @@ namespace UbStandardObjects.Objects
         public string ExternalName { get; set; }
         public string PaperTranslation { get; set; }
 
+        /// <summary>
+        /// List of available anootations for this translation
+        /// </summary>
         [JsonIgnore]
         private List<UbAnnotationsStoreData> Annotations { get; set; } = new List<UbAnnotationsStoreData>();
 
@@ -129,6 +132,11 @@ namespace UbStandardObjects.Objects
                 {
                     Paragraphs = new List<Paragraph>(jsonPaper.Paragraphs)
                 });
+                // Fix the translation number not set in json file for each paragraph
+                foreach (Paragraph p in jsonPaper.Paragraphs)
+                {
+                    p.Entry.TranslationId = LanguageID;
+                }
             }
         }
 
@@ -154,12 +162,52 @@ namespace UbStandardObjects.Objects
         }
 
 
-
-
         public Paper Paper(short PaperNo)
         {
             return Papers.Find(p => p.PaperNo == PaperNo);
         }
+
+        /// <summary>
+        /// Get an annotation object for this entry
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public UbAnnotationsStoreData GetAnnotation(TOC_Entry entry)
+        {
+            UbAnnotationsStoreData data= Annotations.FirstOrDefault(a => a.Entry == entry);
+            if (data == null)
+            {
+                data = new UbAnnotationsStoreData();
+            }
+            return data;
+        }
+
+        public List<UbAnnotationsStoreData> GetAnnotations()
+        {
+            return Annotations;
+        }
+
+        public void GetAnnotations(List<UbAnnotationsStoreData> data)
+        {
+            foreach (UbAnnotationsStoreData annotationsStoreData in data)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Store a created or modified annotation
+        /// </summary>
+        /// <param name="annotation"></param>
+        public void StoreAnnotation(UbAnnotationsStoreData annotation)
+        {
+            if (Annotations.Exists(a => a.Entry == annotation.Entry))
+            {
+                Annotations.Remove(Annotations.Find(a => a.Entry == annotation.Entry));
+            }
+            Annotations.Add(annotation);
+        }
+
 
         public override string ToString()
         {
@@ -168,7 +216,7 @@ namespace UbStandardObjects.Objects
 
     }
 
-
+    #region Classes to import json file
 
     internal class TranslationsRoot
     {
@@ -194,7 +242,7 @@ namespace UbStandardObjects.Objects
             return list;
         }
     }
-
+    #endregion
 
 
 }

@@ -22,123 +22,84 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         private XmlStreamStore _annotStore = null;
         private MemoryStream MemoryStreamAnnotations = null;
 
-        // Stores the local annotations list
-
-        private UbAnnotationsStoreDataCore UbAnnotationsLeft = null;
-        private UbAnnotationsStoreDataCore UbAnnotationsRight = null;
-        private UbAnnotationsStoreDataCore UbAnnotationsParagraph = null;
-
         private FlowDocumentScrollViewer CurrentDocViewer = null;
 
-        // True when a new anootration is created
-        private bool NewAnnotation = true;
+        private bool OkToRun { get; set; } = true;
 
-        public UbAnnotationType AnnotationType { get; private set; }
         private TOC_Entry Entry { get; set; }
 
+        // Stores the local annotations list
+        public UbAnnotationsStoreDataCore AnnotationsStoreDataCore { get; private set; }
 
-        private TOC_Entry GetCurrentEntry()
+
+        //private TOC_Entry GetCurrentEntry()
+        //{
+        //    try
+        //    {
+        //        TextPointer pointer = CurrentDocViewer.Selection.Start;
+        //        System.Windows.Documents.Paragraph p = pointer.Paragraph;
+        //        if (p == null) return null;
+        //        ParagraphSearchData data = p.Tag as ParagraphSearchData;
+        //        return data.Entry;
+        //    }
+        //    catch
+        //    {
+        //        return null;
+        //    }
+        //}
+
+
+        public UbAnnotations(UbAnnotationsStoreDataCore annotationsStoreDataCore, TOC_Entry entry)
         {
-            try
+            if (annotationsStoreDataCore == null)
             {
-                TextPointer pointer = CurrentDocViewer.Selection.Start;
-                System.Windows.Documents.Paragraph p = pointer.Paragraph;
-                if (p == null) return null;
-                ParagraphSearchData data = p.Tag as ParagraphSearchData;
-                return data.Entry;
+                StaticObjects.Logger.Warn("UbAnnotationsStoreData null while construction UbAnnotations object");
+                OkToRun = false;
+                return;
             }
-            catch
+            if (entry == null)
             {
-                return null;
+                StaticObjects.Logger.Warn("Entry null while construction UbAnnotations object");
+                OkToRun = false;
+                return;
             }
+            OkToRun = true;
+            AnnotationsStoreDataCore = annotationsStoreDataCore;
+            Entry = TOC_Entry.CreateEntry(entry, entry.TranslationId);
+            Entry.Text = ""; // Text is not needed
         }
 
 
-        /// <summary>
-        /// Send all annotations to be stored
-        /// </summary>
-        private void Store()
-        {
-            if (NewAnnotation)
-            {
-                UbAnnotationsStoreSet UbAnnotationsStoreSet = new UbAnnotationsStoreSet();
-                switch (AnnotationType)
-                {
-                    case UbAnnotationType.Paper:
-                        UbAnnotationsLeft.Serialize();
-                        UbAnnotationsRight.Serialize();
-                        UbAnnotationsStoreSet.PaperLeftAnnotations = UbAnnotationsLeft;
-                        UbAnnotationsStoreSet.PaperRightAnnotations = UbAnnotationsRight;
-                        break;
-                    case UbAnnotationType.Paragraph:
-                        UbAnnotationsParagraph.Serialize();
-                        UbAnnotationsStoreSet.ParagraphAnnotations = UbAnnotationsParagraph;
-                        break;
-                }
-
-                EventsControl.FireAnnotationChanged(UbAnnotationsStoreSet);
-            }
-        }
+        #region Store annotations
 
         private void _annotStore_StoreContentChanged(object sender, StoreContentChangedEventArgs e)
         {
+            if (!OkToRun)
+            {
+                return;
+            }
+
             switch (e.Action)
             {
                 case StoreContentAction.Added:
                     // A single annotation list is kept in this object
-                    AnnotationResource resource = new AnnotationResource();
-                    TOC_Entry entry = null;
-                    switch (AnnotationType)
-                    {
-                        case UbAnnotationType.Paper:
-                            // For a paper we need to get the curret paragraph
-                            entry = GetCurrentEntry();
-                            break;
-                        case UbAnnotationType.Paragraph:
-                            // For a paragraph, the entry is informed is the start anootations
-                            entry= Entry;
-                            break;
-                    }
-                    if (entry == null)
-                    {
-                        throw new Exception("entry null in _annotStore_StoreContentChanged");
-                    }
-                    entry.Text = ""; // Text is not needed
-                    resource.Contents.Add(entry.Xml);
+                    AnnotationResource resource = new AnnotationResource("Entry");
+                    resource.Contents.Add(Entry.Xml);
                     e.Annotation.Cargos.Add(resource);
-
-                    switch (AnnotationType)
-                    {
-                        case UbAnnotationType.Paper:
-                            if (entry.TranslationId == StaticObjects.Book.LeftTranslation.LanguageID)
-                            {
-                                UbAnnotationsLeft.Annotations.Add(e.Annotation);
-                            }
-                            else
-                            {
-                                UbAnnotationsRight.Annotations.Add(e.Annotation);
-                            }
-                            break;
-                        case UbAnnotationType.Paragraph:
-                            UbAnnotationsParagraph.Annotations.Add(e.Annotation);
-                            break;
-                    }
-
+                    AnnotationsStoreDataCore.StoreAnnotation(e.Annotation);
                     break;
 
                 case StoreContentAction.Deleted:
-                    UbAnnotationsLeft.Annotations.Remove(e.Annotation);
+                    AnnotationsStoreDataCore.Annotations.Remove(e.Annotation);
                     break;
             }
-            Store();
         }
 
-        public UbAnnotations(UbAnnotationType annotationType)
-        {
-            AnnotationType = annotationType;
-        }
+        #endregion
 
 
+
+        #region Start - Stop Annotations
         /// <summary>
         /// Enables annotations and displays all that are viewable.</summary>
         /// </summary>
@@ -163,32 +124,15 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             _annotStore = new XmlStreamStore(MemoryStreamAnnotations);
 
             // Restore the stored annotations
-            NewAnnotation = false;
-            UbAnnotationsStoreSet ubAnnotationsStoreSet = null;
-            switch (AnnotationType)
-            {
-                case UbAnnotationType.Paper:
-                    //ubAnnotationsStoreSet = StaticObjects.Book.GetPaperAnnotations(Entry);
-                    //UbAnnotationsLeft = new UbAnnotationsStoreDataCore(ubAnnotationsStoreSet.PaperLeftAnnotations, _annotStore);
-                    //UbAnnotationsRight = new UbAnnotationsStoreDataCore(ubAnnotationsStoreSet.PaperRightAnnotations, _annotStore);
-
-                    break;
-                case UbAnnotationType.Paragraph:
-                    ubAnnotationsStoreSet = StaticObjects.Book.GetParagraphAnnotations(Entry);
-                    UbAnnotationsParagraph = new UbAnnotationsStoreDataCore(ubAnnotationsStoreSet.ParagraphAnnotations, _annotStore);
-                    break;
-            }
-            NewAnnotation = true;
+            AnnotationsStoreDataCore.GetAnnotationStream(_annotStore);
 
             // This event only can be set after loading the existing annotations
             _annotStore.StoreContentChanged += _annotStore_StoreContentChanged;
-
 
             // Enable the AnnotationService using the new store.
             annotService.Enable(_annotStore);
             return annotService;
         }// end:StartAnnotations()
-
 
         // ------------------------ StopAnnotations ---------------------------
         /// <summary>
@@ -214,5 +158,10 @@ namespace UbStudyHelp.Classes.ContextMenuCode
                 }
             }
         }// end:StopAnnotations()
+
+        #endregion
+
+
+
     }
 }

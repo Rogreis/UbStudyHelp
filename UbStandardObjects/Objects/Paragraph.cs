@@ -23,6 +23,9 @@ namespace UbStandardObjects.Objects
         public virtual string Text { get; set; } = "";
         public int FormatInt { get; set; }
 
+        [JsonIgnore]
+        private TOC_Entry entry = null;
+
         /// <summary>
         /// Status is not to be exported yo json files for UbStudyHelp
         /// </summary>
@@ -42,8 +45,11 @@ namespace UbStandardObjects.Objects
         {
             get
             {
-                TOC_Entry entry = new TOC_Entry(TranslationId, Paper, Section, ParagraphNo, Page, Line);
-                entry.Text = Text;
+                if (entry == null)  
+                {
+                    entry = new TOC_Entry(TranslationId, Paper, Section, ParagraphNo, Page, Line);
+                    entry.Text = Text;
+                }
                 return entry;
             }
         }

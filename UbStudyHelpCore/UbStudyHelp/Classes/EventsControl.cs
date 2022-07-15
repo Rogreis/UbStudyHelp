@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Annotations;
 using System.Windows.Controls;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
@@ -100,10 +101,10 @@ namespace UbStudyHelp.Classes
     public delegate void dlShowSearchResults(SearchData data);
 
     /// <summary>
-    /// Fired when some annotations in included or removed for a pragraph
+    /// Fired before to store an annotation
     /// </summary>
-    /// <param name="data"></param>
-    public delegate void dsAnnotationChanged(UbAnnotationsStoreSet annotationsSet);
+    /// <param name="resource"></param>
+    public delegate void dsGetAnnotationData(ref string xamlNotes);
 
 
 
@@ -143,8 +144,6 @@ namespace UbStudyHelp.Classes
         public static event dlMainWindowSizeChanged MainWindowSizeChanged = null;
 
         public static event dlNewPaperShown NewPaperShown = null;
-
-        public static event dsAnnotationChanged AnnotationChanged = null;
 
 
         public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
@@ -241,10 +240,5 @@ namespace UbStudyHelp.Classes
             NewPaperShown?.Invoke();
         }
 
-
-        public static void FireAnnotationChanged(UbAnnotationsStoreSet annotationsSet)
-        {
-            AnnotationChanged?.Invoke(annotationsSet);
-        }
     }
 }

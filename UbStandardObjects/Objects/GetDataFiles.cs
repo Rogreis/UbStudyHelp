@@ -19,6 +19,10 @@ namespace UbStandardObjects.Objects
 
         protected const string paragraphAnnotationsFileName = "TranslationParagraphAnnotations";
 
+        private string currentAnnotationsFileNAme = "Annotations";
+
+
+
         /// <summary>
         /// Folder for existing files (translations)
         /// </summary>
@@ -48,6 +52,12 @@ namespace UbStandardObjects.Objects
         {
             return Path.Combine(SourceFolder, $"TR{translationId:000}.gz");
         }
+
+        public string AnnotationsFilePath(TOC_Entry entry)
+        {
+            return Path.Combine(StoreFolder, $"{currentAnnotationsFileNAme}-{entry.TranslationId:000}.json");
+        }
+
 
         /// <summary>
         /// Generates the translation full path
@@ -169,14 +179,14 @@ namespace UbStandardObjects.Objects
         /// <summary>
         /// Store annotations all annotations
         /// </summary>
-        /// <param name="jsonString"></param>
-        public abstract void StoreAnnotations(UbAnnotationsStoreSet annotationsSet);
+        /// <param name="annotations"></param>
+        public abstract void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations);
 
         /// <summary>
         /// Load annotations done for a paper
         /// </summary>
         /// <param name="jsonString"></param>
-        public abstract List<UbAnnotationsStoreData> LoadPaperAnnotations(short translationId);
+        public abstract List<UbAnnotationsStoreData> LoadAnnotations(short translationId);
 
     }
 

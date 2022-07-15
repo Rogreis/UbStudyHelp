@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
+using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Classes
 {
@@ -91,72 +92,54 @@ namespace UbStudyHelp.Classes
             }
             string json = GetFile(translatioId, true);
             translation.GetData(json);
+
+            // Load the annotations converting them to a core object
+            List<UbAnnotationsStoreData> annotationsList = LoadAnnotations(translatioId);
+            if (annotationsList != null)
+            {
+                foreach (UbAnnotationsStoreData annotation in annotationsList)
+                {
+                    UbAnnotationsStoreDataCore annotationsStoreDataCore = new UbAnnotationsStoreDataCore(annotation);
+                    translation.StoreAnnotation(annotationsStoreDataCore);
+                }
+            }
             return translation;
         }
 
-        #region Store Annotations
-        private void StoreListAnnotations(List<UbAnnotationsStoreData> list, TOC_Entry entry)
+        #region Load & Store Annotations
+        public override void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations)
         {
             string path = TranslationAnnotationsJsonFilePath(entry.TranslationId);
-            string jsonString = App.Serialize<List<UbAnnotationsStoreData>>(list);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            if (annotations.Count == 0)
+            {
+                return;
+            }
+            string jsonString = App.Serialize<List<UbAnnotationsStoreData>>(annotations);
             File.WriteAllText(path, jsonString);
         }
-
-        private void StoreParagraphAnnotations(UbAnnotationsStoreData data)
-        {
-            List<UbAnnotationsStoreData> list = LoadPaperAnnotations(data.Entry.TranslationId);
-            UbAnnotationsStoreData existingData = list.Find(a => a.Entry == data.Entry && data.AnnotationType == UbAnnotationType.Paragraph);
-            if (existingData != null)
-            {
-                list.Remove(existingData);
-            }
-            list.Add(data);
-            StoreListAnnotations(list, data.Entry);
-        }
-
-        private void StorePaperAnnotations(UbAnnotationsStoreData data)
-        {
-            List<UbAnnotationsStoreData> list = LoadPaperAnnotations(data.Entry.TranslationId);
-            UbAnnotationsStoreData existingData = list.Find(a => a.Entry == data.Entry && data.AnnotationType == UbAnnotationType.Paper);
-            if (existingData != null)
-            {
-                list.Remove(existingData);
-            }
-            list.Add(data);
-            StoreListAnnotations(list, data.Entry);
-        }
-
-
-        public override void StoreAnnotations(UbAnnotationsStoreSet annotationsSet)
-        {
-
-            if (annotationsSet.ParagraphAnnotations != null)
-            {
-                StoreParagraphAnnotations(annotationsSet.ParagraphAnnotations);
-            }
-            else
-            {
-                StorePaperAnnotations(annotationsSet.PaperLeftAnnotations);
-                StorePaperAnnotations(annotationsSet.PaperRightAnnotations);
-            }
-        }
-        #endregion
 
         /// <summary>
         /// Loads a list of all TOC/Annotation done for a paper
         /// </summary>
         /// <param name="translationId"></param>
         /// <returns></returns>
-        public override List<UbAnnotationsStoreData> LoadPaperAnnotations(short translationId)
+        public override List<UbAnnotationsStoreData> LoadAnnotations(short translationId)
         {
-            string path = TranslationAnnotationsJsonFilePath(translationId);
-            if (File.Exists(path))
+            string pathAnnotationsFile = TranslationAnnotationsJsonFilePath(translationId);
+            if (File.Exists(pathAnnotationsFile))
             {
-                string json = File.ReadAllText(path);
+                string json = File.ReadAllText(pathAnnotationsFile);
                 return App.DeserializeObject<List<UbAnnotationsStoreData>>(json);
             }
             return new List<UbAnnotationsStoreData>();
         }
+
+        #endregion
+
 
     }
 

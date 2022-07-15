@@ -252,7 +252,12 @@ namespace UbStudyHelp.Controls
             string titleLeft = StaticObjects.Book.LeftTranslation.PaperTranslation.Replace("1", paperLeft.PaperNo.ToString());
             string titleRight = StaticObjects.Book.RightTranslation.PaperTranslation.Replace("1", paperRight.PaperNo.ToString());
 
-            HtmlSingleBilingualLine(tableRowGroup, null, null, titleLeft, titleRight, enHtmlType.PaperTitle);
+            // Entry informations goes to each paragraph without text
+            TOC_Entry entryLeft = TOC_Entry.CreateEntry(entry, StaticObjects.Book.LeftTranslation.LanguageID);
+            TOC_Entry entryRight = TOC_Entry.CreateEntry(entry, StaticObjects.Book.RightTranslation.LanguageID);
+            entryLeft.Text = entryRight.Text = "";
+
+            HtmlSingleBilingualLine(tableRowGroup, entryLeft, entryRight, titleLeft, titleRight, enHtmlType.PaperTitle);
 
             int indParagraph = 0;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)

@@ -209,7 +209,7 @@ namespace UbStudyHelp.Classes
             TOC_Entry entry = menuItemOpenAnnotations.Tag as TOC_Entry;
             if (entry != null)
             {
-                AnnotationsWindow annotationsWindow = new AnnotationsWindow(entry);
+                AnnotationsWindow annotationsWindow = new AnnotationsWindow(entry, true);
                 annotationsWindow.Show();
             }
         }

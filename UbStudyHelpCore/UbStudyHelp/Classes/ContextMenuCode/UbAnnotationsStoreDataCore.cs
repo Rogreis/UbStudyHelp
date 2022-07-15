@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Windows.Annotations;
 using System.Windows.Annotations.Storage;
 using UbStandardObjects.Objects;
@@ -10,7 +11,9 @@ namespace UbStudyHelp.Classes.ContextMenuCode
 {
     internal class UbAnnotationsStoreDataCore : UbAnnotationsStoreData
     {
+        [JsonIgnore]
         public List<Annotation> Annotations { get; set; } = new List<Annotation>();
+
 
         public UbAnnotationsStoreDataCore(TOC_Entry entry, UbAnnotationType annotationType)
         {
@@ -18,19 +21,21 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             AnnotationType = annotationType;
         }
 
-
         // UbAnnotationsStoreData data
-        public UbAnnotationsStoreDataCore(UbAnnotationsStoreData data, XmlStreamStore annotStore)
+        public UbAnnotationsStoreDataCore(UbAnnotationsStoreData data)
         {
             Entry = data.Entry;
             AnnotationType = data.AnnotationType;
-            foreach (string annotationString in data.AnnotationsStrings)
+            XamlNotes = data.XamlNotes;
+            Entry = data.Entry;
+            Title = data.Title;
+            AnnotationsInfo = data.AnnotationsInfo;
+            foreach (UbAnnotationInfo annotationInfo in data.AnnotationsInfo)
             {
                 try
                 {
-                    Annotation annotation = DeSerializeAnnotation(annotationString);
+                    Annotation annotation = DeSerializeAnnotation(annotationInfo.AnnotationsString);
                     Annotations.Add(annotation);
-                    annotStore.AddAnnotation(annotation);
                 }
                 catch // Ignore errors
                 { }
@@ -55,14 +60,44 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         }
 
 
-        public void Serialize()
+        //public void Serialize()
+        //{
+        //    AnnotationsInfo = new List<string>();
+        //    foreach (Annotation annotation in Annotations)
+        //    {
+        //        StoreAnnotationBytes(SerializeAnnotation(annotation));
+        //    }
+        //}
+
+        #region Store one annotation
+        public void StoreAnnotation(Annotation annotation)
         {
-            AnnotationsStrings = new List<string>();
-            foreach (Annotation annotation in Annotations)
+            StoreAnnotationBytes(annotation.Id.ToString(), SerializeAnnotation(annotation));
+        }
+
+        public void RemoveAnnotation(Annotation annotation)
+        {
+            RemoveAnnotation(annotation.Id.ToString());
+        }
+        #endregion
+
+        #region Store/get all annotations
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/dotnet/desktop/wpf/controls/how-to-save-load-and-print-richtextbox-content?view=netframeworkdesktop-4.8
+        /// </summary>
+        /// <param name="streamStore"></param>
+        public void GetAnnotationStream(XmlStreamStore streamStore)
+        {
+            foreach (UbAnnotationInfo annotationInfo in AnnotationsInfo)
             {
-                StoreAnnotation(SerializeAnnotation(annotation));
+                MemoryStream mStream = new MemoryStream(Encoding.UTF8.GetBytes(annotationInfo.AnnotationsString));
+                XmlStreamStore store = new XmlStreamStore(mStream);
+                streamStore.AddAnnotation(store.GetAnnotations().First());
             }
         }
+
+        #endregion
+
 
     }
 }

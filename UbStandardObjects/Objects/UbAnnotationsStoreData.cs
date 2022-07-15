@@ -6,8 +6,17 @@ namespace UbStandardObjects.Objects
 
     public enum UbAnnotationType
     {
-        Paper,
-        Paragraph
+        Paper = 0,
+        Paragraph = 1
+    }
+
+    /// <summary>
+    /// Class used to store an anootation with its id in clear text
+    /// </summary>
+    public class UbAnnotationInfo
+    {
+        public string Id { get; set; } = "";
+        public string AnnotationsString { get; set; } = "";
     }
 
     /// <summary>
@@ -15,27 +24,34 @@ namespace UbStandardObjects.Objects
     /// </summary>
     public class UbAnnotationsStoreData
     {
+
+        public string Title { get; set; } = "";
+
         public TOC_Entry Entry { get; set; }
 
         public UbAnnotationType AnnotationType { get; set; }
 
-        public List<string> AnnotationsStrings { get; set; } = new List<string>();
+        public List<UbAnnotationInfo> AnnotationsInfo { get; set; } = new List<UbAnnotationInfo>();
 
-        protected void StoreAnnotation(byte[] bytes)
+        public string XamlNotes { get; set; } = "";
+
+        protected void StoreAnnotationBytes(string id, byte[] bytes)
         {
             var bytesAsString = Encoding.UTF8.GetString(bytes);
-            AnnotationsStrings.Add(bytesAsString);
+            UbAnnotationInfo info = new UbAnnotationInfo
+            {
+                Id = id,
+                AnnotationsString = bytesAsString
+            };
+            AnnotationsInfo.Add(info);
         }
-    }
 
-    /// <summary>
-    /// Used to dynamic store the annotations for both shown papers
-    /// </summary>
-    public class UbAnnotationsStoreSet
-    {
-        public UbAnnotationsStoreData PaperLeftAnnotations { get; set; }
-        public UbAnnotationsStoreData PaperRightAnnotations { get; set; }
-        public UbAnnotationsStoreData ParagraphAnnotations { get; set; }
-    }
+        protected void RemoveAnnotation(string id)
+        {
+            AnnotationsInfo.Remove(AnnotationsInfo.Find(a => a.Id == id));
+        }
 
+
+    }
 }
+

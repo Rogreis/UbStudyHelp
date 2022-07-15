@@ -16,6 +16,9 @@ using UbStudyHelp.Printing;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 using System;
+using System.Xml;
+using System.Xml.Linq;
+using System.Text.Json;
 
 namespace UbStudyHelp.Classes
 {
@@ -27,29 +30,41 @@ namespace UbStudyHelp.Classes
 
         private TOC_Entry Entry = null;
         private FlowDocumentFormat format = new FlowDocumentFormat();
-        private readonly UbAnnotations UbAnnotationsObject = new UbAnnotations(UbAnnotationType.Paragraph);
+        private UbAnnotationsStoreDataCore AnnotationsStoreDataCore = null; 
+        private UbAnnotations UbAnnotationsObject =null;
         private bool ShowAnnotationsContextMenu = false;
 
+        private Translation CurrentTranslation = null;
 
-        public AnnotationsWindow(TOC_Entry entry, bool showAnnotationsContextMenu= false)
+
+        public AnnotationsWindow(TOC_Entry entry, bool showAnnotationsContextMenu = false)
         {
             InitializeComponent();
 
             Loaded += AnnotationsWindow_Loaded;
             Unloaded += AnnotationsWindow_Unloaded;
-            ShowAnnotationsContextMenu= showAnnotationsContextMenu;
+            ShowAnnotationsContextMenu = showAnnotationsContextMenu;
+
+            CurrentTranslation = StaticObjects.Book.LeftTranslation.LanguageID == entry.TranslationId ? StaticObjects.Book.LeftTranslation : StaticObjects.Book.RightTranslation;
+            UbAnnotationsStoreData ubAnnotationsStoreData= CurrentTranslation.GetAnnotation(entry);
+
+            // Force the annotation store object to be for paragraph in case it was just created
+            ubAnnotationsStoreData.AnnotationType = UbAnnotationType.Paragraph;
+            AnnotationsStoreDataCore = new UbAnnotationsStoreDataCore(ubAnnotationsStoreData);
+            UbAnnotationsObject = new UbAnnotations(AnnotationsStoreDataCore, entry);
+            SetRichTextNote(AnnotationsStoreDataCore.XamlNotes);
 
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
 
             Title = $"Annotations for {entry.ParagraphIDNoPage}";
 
-            Entry= entry;
+            Entry = entry;
             BorderThickness = new Thickness(2.0);
             BorderBrush = App.Appearance.GetHighlightColorBrush();
             ShowInTaskbar = false;
             WindowStyle = WindowStyle.ToolWindow;
-            
+
             Owner = Application.Current.MainWindow;
 
             FlowDocument document = new FlowDocument();
@@ -286,7 +301,54 @@ namespace UbStudyHelp.Classes
 
         private void AnnotationsWindow_Unloaded(object sender, RoutedEventArgs e)
         {
+            // Stop annotatios and persist them
             UbAnnotationsObject.StopAnnotations();
+            AnnotationsStoreDataCore.XamlNotes = GetRichTextNote();
+            AnnotationsStoreDataCore.Title= Guid.NewGuid().ToString();
+            AnnotationsStoreDataCore.Entry = Entry;
+
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                WriteIndented = true,
+            };
+            CurrentTranslation.StoreAnnotation(AnnotationsStoreDataCore);
+            StaticObjects.Book.StoreAnnotations(Entry, CurrentTranslation.GetAnnotations());
+        }
+
+        private string GetRichTextNote()
+        {
+            using (MemoryStream outputStream = new MemoryStream())
+            {
+                TextRange range = new TextRange(RichTextBoxNote.Document.ContentStart, RichTextBoxNote.Document.ContentEnd);
+                range.Save(outputStream, DataFormats.XamlPackage);
+                outputStream.Flush();
+                return Convert.ToBase64String(outputStream.ToArray());
+            }
+        }
+
+        private void SetRichTextNote(string xamlNote)
+        {
+            if (string.IsNullOrWhiteSpace(xamlNote))
+            { 
+                return;
+            }
+
+            //TextRange range;
+            //FileStream fStream;
+            //if (File.Exists(_fileName))
+            //{
+            //    range = new TextRange(richTB.Document.ContentStart, richTB.Document.ContentEnd);
+            //    fStream = new FileStream(_fileName, FileMode.OpenOrCreate);
+            //    range.Load(fStream, DataFormats.XamlPackage);
+            //    fStream.Close();
+            //}
+
+            using (MemoryStream outputStream = new MemoryStream(Convert.FromBase64String(xamlNote)))
+            {
+                TextRange range = new TextRange(RichTextBoxNote.Document.ContentStart, RichTextBoxNote.Document.ContentEnd);
+                range.Load(outputStream, DataFormats.XamlPackage);
+            }
         }
 
 
