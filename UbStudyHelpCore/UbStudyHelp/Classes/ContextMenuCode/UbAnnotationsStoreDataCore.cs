@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,32 +15,15 @@ namespace UbStudyHelp.Classes.ContextMenuCode
         [JsonIgnore]
         public List<Annotation> Annotations { get; set; } = new List<Annotation>();
 
+        public UbAnnotationsStoreDataCore()
+        {
+            Title = "Notes " + DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
+        }
 
         public UbAnnotationsStoreDataCore(TOC_Entry entry, UbAnnotationType annotationType)
         {
             Entry = entry;
             AnnotationType = annotationType;
-        }
-
-        // UbAnnotationsStoreData data
-        public UbAnnotationsStoreDataCore(UbAnnotationsStoreData data)
-        {
-            Entry = data.Entry;
-            AnnotationType = data.AnnotationType;
-            XamlNotes = data.XamlNotes;
-            Entry = data.Entry;
-            Title = data.Title;
-            AnnotationsInfo = data.AnnotationsInfo;
-            foreach (UbAnnotationInfo annotationInfo in data.AnnotationsInfo)
-            {
-                try
-                {
-                    Annotation annotation = DeSerializeAnnotation(annotationInfo.AnnotationsString);
-                    Annotations.Add(annotation);
-                }
-                catch // Ignore errors
-                { }
-            }
         }
 
         private byte[] SerializeAnnotation(Annotation annotation)
@@ -59,19 +43,18 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             return store.GetAnnotations().First();
         }
 
-
-        //public void Serialize()
-        //{
-        //    AnnotationsInfo = new List<string>();
-        //    foreach (Annotation annotation in Annotations)
-        //    {
-        //        StoreAnnotationBytes(SerializeAnnotation(annotation));
-        //    }
-        //}
+        public bool IsEmpty
+        {
+            get
+            {
+                return AnnotationsInfo.Count == 0 && string.IsNullOrEmpty(XamlNotes);
+            }
+        }
 
         #region Store one annotation
-        public void StoreAnnotation(Annotation annotation)
+        public override void StoreAnnotation(object obj)
         {
+            Annotation annotation = obj as Annotation;
             StoreAnnotationBytes(annotation.Id.ToString(), SerializeAnnotation(annotation));
         }
 
@@ -95,8 +78,24 @@ namespace UbStudyHelp.Classes.ContextMenuCode
                 streamStore.AddAnnotation(store.GetAnnotations().First());
             }
         }
-
         #endregion
+
+        /// <summary>
+        /// MRebuild annotations using core object, from the stored strings
+        /// </summary>
+        public void FillAnnotations()
+        {
+            foreach (UbAnnotationInfo annotationInfo in AnnotationsInfo)
+            {
+                try
+                {
+                    Annotation annotation = DeSerializeAnnotation(annotationInfo.AnnotationsString);
+                    Annotations.Add(annotation);
+                }
+                catch // Ignore errors
+                { }
+            }
+        }
 
 
     }

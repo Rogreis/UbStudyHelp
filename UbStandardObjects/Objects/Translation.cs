@@ -57,7 +57,7 @@ namespace UbStandardObjects.Objects
         /// List of available anootations for this translation
         /// </summary>
         [JsonIgnore]
-        private List<UbAnnotationsStoreData> Annotations { get; set; } = new List<UbAnnotationsStoreData>();
+        public List<UbAnnotationsStoreData> Annotations { get; set; } = new List<UbAnnotationsStoreData>();
 
         [JsonIgnore]
         public List<Paper> Papers { get; set; } = new List<Paper>();
@@ -174,26 +174,9 @@ namespace UbStandardObjects.Objects
         /// <returns></returns>
         public UbAnnotationsStoreData GetAnnotation(TOC_Entry entry)
         {
-            UbAnnotationsStoreData data= Annotations.FirstOrDefault(a => a.Entry == entry);
-            if (data == null)
-            {
-                data = new UbAnnotationsStoreData();
-            }
-            return data;
+            return Annotations.FirstOrDefault(a => a.Entry == entry);
         }
 
-        public List<UbAnnotationsStoreData> GetAnnotations()
-        {
-            return Annotations;
-        }
-
-        public void GetAnnotations(List<UbAnnotationsStoreData> data)
-        {
-            foreach (UbAnnotationsStoreData annotationsStoreData in data)
-            {
-
-            }
-        }
 
         /// <summary>
         /// Store a created or modified annotation

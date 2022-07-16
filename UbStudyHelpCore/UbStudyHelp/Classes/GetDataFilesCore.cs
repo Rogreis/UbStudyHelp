@@ -93,16 +93,9 @@ namespace UbStudyHelp.Classes
             string json = GetFile(translatioId, true);
             translation.GetData(json);
 
-            // Load the annotations converting them to a core object
-            List<UbAnnotationsStoreData> annotationsList = LoadAnnotations(translatioId);
-            if (annotationsList != null)
-            {
-                foreach (UbAnnotationsStoreData annotation in annotationsList)
-                {
-                    UbAnnotationsStoreDataCore annotationsStoreDataCore = new UbAnnotationsStoreDataCore(annotation);
-                    translation.StoreAnnotation(annotationsStoreDataCore);
-                }
-            }
+            // Loading annotations
+            translation.Annotations= LoadAnnotations(translatioId);
+
             return translation;
         }
 
@@ -127,15 +120,15 @@ namespace UbStudyHelp.Classes
         /// </summary>
         /// <param name="translationId"></param>
         /// <returns></returns>
-        public override List<UbAnnotationsStoreData> LoadAnnotations(short translationId)
+        protected override List<UbAnnotationsStoreData> LoadAnnotations(short translationId)
         {
             string pathAnnotationsFile = TranslationAnnotationsJsonFilePath(translationId);
             if (File.Exists(pathAnnotationsFile))
             {
                 string json = File.ReadAllText(pathAnnotationsFile);
-                return App.DeserializeObject<List<UbAnnotationsStoreData>>(json);
+                return (App.DeserializeObject<List<UbAnnotationsStoreDataCore>>(json)).ToList<UbAnnotationsStoreData>();
             }
-            return new List<UbAnnotationsStoreData>();
+            return new List<UbAnnotationsStoreDataCore>().ToList<UbAnnotationsStoreData>();
         }
 
         #endregion

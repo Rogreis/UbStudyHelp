@@ -22,7 +22,7 @@ namespace UbStandardObjects.Objects
     /// <summary>
     /// Base class to store annotations for a paper or paragraph
     /// </summary>
-    public class UbAnnotationsStoreData
+    public abstract class UbAnnotationsStoreData
     {
 
         public string Title { get; set; } = "";
@@ -34,6 +34,11 @@ namespace UbStandardObjects.Objects
         public List<UbAnnotationInfo> AnnotationsInfo { get; set; } = new List<UbAnnotationInfo>();
 
         public string XamlNotes { get; set; } = "";
+
+        public UbAnnotationsStoreData()
+        {
+
+        }
 
         protected void StoreAnnotationBytes(string id, byte[] bytes)
         {
@@ -51,6 +56,7 @@ namespace UbStandardObjects.Objects
             AnnotationsInfo.Remove(AnnotationsInfo.Find(a => a.Id == id));
         }
 
+        public abstract void StoreAnnotation(object annotation);
 
     }
 }

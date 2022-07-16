@@ -100,7 +100,11 @@ namespace UbStandardObjects
 
 		public List<string> CloseSearchWords { get; set; } = new List<string>();
 
-		public short CurrentTranslation = 0;
+		public short CurrentTranslation { get; set; } = 0;
+
+		public double AnnotationWindowWidth { get; set; } = 800;
+
+		public double AnnotationWindowHeight { get; set; } = 450;
 
 	}
 }

@@ -162,6 +162,12 @@ namespace UbStandardObjects.Objects
             }
         }
 
+        /// <summary>
+        /// Load annotations done for a paper
+        /// </summary>
+        /// <param name="jsonString"></param>
+        protected abstract List<UbAnnotationsStoreData> LoadAnnotations(short translationId);
+
 
         /// <summary>
         /// Get a translation
@@ -182,11 +188,6 @@ namespace UbStandardObjects.Objects
         /// <param name="annotations"></param>
         public abstract void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations);
 
-        /// <summary>
-        /// Load annotations done for a paper
-        /// </summary>
-        /// <param name="jsonString"></param>
-        public abstract List<UbAnnotationsStoreData> LoadAnnotations(short translationId);
 
     }
 

@@ -10,38 +10,54 @@
         <Grid.RowDefinitions>
             <!--<RowDefinition Height="Auto"></RowDefinition>-->
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <!--<DockPanel Grid.Row="0">
+        <DockPanel Grid.Row="0">
             <ToolBarTray DockPanel.Dock="Top">
-                <ToolBar Name="ToolBarAnnotations">
+                <ToolBar Name="ToolBarAnnotations" HorizontalAlignment="Stretch">
+                    <Button x:Name="ButtonClearAll" ToolTip="Clear all note" Height="36" Click="ButtonClearAll_Click">
+                        <StackPanel Orientation="Horizontal" ToolTip="Clear text note and highlights" >
+                            <TextBlock VerticalAlignment="Center">Clear All</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ButtonClearHighlights" ToolTip="Clear all note" Height="36" Click="ButtonClearHighlights_Click">
+                        <StackPanel Orientation="Horizontal" ToolTip="Clear only highlights" >
+                            <TextBlock VerticalAlignment="Center">Clear Highlights</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ButtonClearText" ToolTip="Clear text only" Height="36" Click="ButtonClearText_Click">
+                        <StackPanel Orientation="Horizontal" ToolTip="Clear only text notes" >
+                            <TextBlock VerticalAlignment="Center">Clear Text</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ButtonImage" ToolTip="Insert an imge" Click="ButtonImage_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center">Insert Image</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ButtonClose"  ToolTip="Close this window" Click="ButtonClose_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center">Close</TextBlock>
+                        </StackPanel>
+                    </Button>
                 </ToolBar>
             </ToolBarTray>
-        </DockPanel>-->
+        </DockPanel>
 
-        <FlowDocumentScrollViewer Name="FlowDocument" Grid.Row="0"></FlowDocumentScrollViewer>
-        <ToolBar HorizontalAlignment="Left"  Height="40" Grid.Row="1" VerticalAlignment="Top" Width="Auto">
-            <Button x:Name="ButtonClear" ToolTip="Clear all note" Width="160" Height="36" Click="ButtonClear_Click">
-                <StackPanel Orientation="Horizontal" ToolTip="Clear all note" >
-                    <Image x:Name="ButtonClearImage"  Margin="5, 0, 25, 0"/>
-                    <TextBlock VerticalAlignment="Center">Clear</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button x:Name="ButtonImage" ToolTip="Insert an imge" Click="ButtonImage_Click">
-                <StackPanel Orientation="Horizontal">
-                    <Image x:Name="ButtonImageImage"  Margin="5, 0, 25, 0"/>
-                    <TextBlock VerticalAlignment="Center">Insert Image</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button x:Name="ButtonClose"  ToolTip="Close this window" Click="ButtonClose_Click">
-                <StackPanel Orientation="Horizontal">
-                    <Image x:Name="ButtonCloseImage"  Margin="5, 0, 25, 0"/>
-                    <TextBlock VerticalAlignment="Center">Close</TextBlock>
-                </StackPanel>
-            </Button>
-        </ToolBar>
-        <RichTextBox x:Name="RichTextBoxNote" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5" ></RichTextBox>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" x:Name="TextBlockTitle" Padding="5" VerticalAlignment="Center" >Title:</TextBlock>
+                <TextBox Grid.Column="1" x:Name="TextBoxTitle"  HorizontalAlignment="Stretch" Padding="5" Width="400"></TextBox>
+            </Grid>
+        </StackPanel>
+        <FlowDocumentScrollViewer Name="FlowDocument" Grid.Row="2" VerticalAlignment="Stretch"></FlowDocumentScrollViewer>
+        <RichTextBox x:Name="RichTextBoxNote" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5" ></RichTextBox>
     </Grid>
 </Window>

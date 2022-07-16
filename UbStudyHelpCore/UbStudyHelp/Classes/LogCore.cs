@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Shapes;
 using UbStandardObjects;
@@ -162,6 +163,7 @@ namespace UbStudyHelp.Classes
             Logger.Error(message, ex);
         }
 
+
         public override void FatalError(string message)
         {
             Logger.Error(message);
@@ -170,7 +172,8 @@ namespace UbStudyHelp.Classes
             {
                 ShowLog();
             }
-            Environment.Exit(1);
+            //Thread.Sleep(5);
+            //Environment.Exit(1);
         }
 
 
