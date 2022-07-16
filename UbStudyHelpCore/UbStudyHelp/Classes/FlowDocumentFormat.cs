@@ -76,6 +76,9 @@ namespace UbStudyHelp.Classes
             return hyperlink;
         }
 
+
+
+
         public System.Windows.Documents.Paragraph FullParagraph(TOC_Entry entry, bool includePage, string text)
         {
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()

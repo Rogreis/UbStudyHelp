@@ -34,7 +34,7 @@ namespace UbStudyHelp.Classes
     /// Used to fire a click on some seach result entry
     /// </summary>
     /// <param name="loc"></param>
-    public delegate void dlDirectSearch(ParagraphSearchData data);
+    internal delegate void dlDirectSearch(ParagraphSearchData data);
 
     /// <summary>
     /// Used to fire a click on index
@@ -106,6 +106,11 @@ namespace UbStudyHelp.Classes
     /// <param name="resource"></param>
     public delegate void dsGetAnnotationData(ref string xamlNotes);
 
+    /// <summary>
+    /// Inform about changes in the annotations list
+    /// </summary>
+    public delegate void dlAnnotationsChanges();
+
 
 
     /// <summary>
@@ -115,7 +120,7 @@ namespace UbStudyHelp.Classes
     {
         public static event dlSearchClicked SearchClicked = null;
 
-        public static event dlDirectSearch DirectSearch = null;
+        internal static event dlDirectSearch DirectSearch = null;
 
         public static event dlIndexClicked IndexClicked = null;
 
@@ -145,13 +150,15 @@ namespace UbStudyHelp.Classes
 
         public static event dlNewPaperShown NewPaperShown = null;
 
+        internal static event dlAnnotationsChanges AnnotationsChanges = null;
+
 
         public static void FireSearchClicked(TOC_Entry entry, List<string> Words)
         {
             SearchClicked?.Invoke(entry, Words);
         }
 
-        public static void FireDirectSearch(ParagraphSearchData data)
+        internal static void FireDirectSearch(ParagraphSearchData data)
         {
             DirectSearch?.Invoke(data);
         }
@@ -234,10 +241,14 @@ namespace UbStudyHelp.Classes
             AppearanceChanged?.Invoke(App.Appearance);
         }
 
-        // 
         public static void FireNewPaperShown()
         {
             NewPaperShown?.Invoke();
+        }
+
+        public static void FireAnnotationsChanges()
+        {
+            AnnotationsChanges?.Invoke();
         }
 
     }

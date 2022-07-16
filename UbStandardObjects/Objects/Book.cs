@@ -43,5 +43,6 @@ namespace UbStandardObjects.Objects
 
         public abstract void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations);
 
+        public abstract void DeleteAnnotations(TOC_Entry entry);
     }
 }

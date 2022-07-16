@@ -246,11 +246,11 @@ namespace UbStudyHelp.Classes
         {
             // Stop annotatios and persist them
             UbAnnotationsObject.StopAnnotations();
+            AnnotationsStoreDataCore.XamlNotes = GetRichTextNote();
+            AnnotationsStoreDataCore.Entry = Entry;
+            AnnotationsStoreDataCore.Title = TextBoxTitle.Text;
             if (!AnnotationsStoreDataCore.IsEmpty)
             {
-                AnnotationsStoreDataCore.XamlNotes = GetRichTextNote();
-                AnnotationsStoreDataCore.Entry = Entry;
-                AnnotationsStoreDataCore.Title = TextBoxTitle.Text;
 
                 var options = new JsonSerializerOptions
                 {
@@ -259,6 +259,7 @@ namespace UbStudyHelp.Classes
                 };
                 CurrentTranslation.StoreAnnotation(AnnotationsStoreDataCore);
                 StaticObjects.Book.StoreAnnotations(Entry, CurrentTranslation.Annotations);
+                EventsControl.FireAnnotationsChanges();
             }
         }
 

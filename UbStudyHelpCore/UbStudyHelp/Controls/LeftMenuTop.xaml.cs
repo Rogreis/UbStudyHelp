@@ -74,9 +74,14 @@ namespace UbStudyHelp.Controls
                         toolTip = "Table of contents";
                         textToDisplay = "Table of Contents - papers and sections";
                         break;
+                    case "NotesLogo":
+                        SvgImage.Source = new Uri("Images/Notes.svg", UriKind.Relative);
+                        toolTip = "Notes";
+                        textToDisplay = "Notes over paragraphs";
+                        break;
                 }
-                this.Resources["TextToDisplay"] = textToDisplay;
-                this.Resources["ToolTip"] = toolTip;
+                Resources["TextToDisplay"] = textToDisplay;
+                Resources["ToolTip"] = toolTip;
             }
         }
 
