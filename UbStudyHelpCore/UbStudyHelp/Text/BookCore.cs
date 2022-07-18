@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
@@ -81,7 +82,7 @@ namespace UbStudyHelp.Text
 
         public override void DeleteAnnotations(TOC_Entry entry)
         {
-            UbAnnotationsStoreData data= LeftTranslation.Annotations.Find(a => a.Entry == entry);
+            UbAnnotationsStoreData data = LeftTranslation.Annotations.Find(a => a.Entry == entry);
             if (data != null)
             {
                 LeftTranslation.Annotations.Remove(data);
@@ -96,7 +97,6 @@ namespace UbStudyHelp.Text
                 EventsControl.FireAnnotationsChanges();
                 return;
             }
-
         }
 
 

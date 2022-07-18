@@ -35,7 +35,8 @@ namespace UbStudyHelp.Classes
         private bool ShowAnnotationsContextMenu = false;
 
         private Translation CurrentTranslation = null;
-
+        private bool ExistingNote = true;   // indicate the existence of the note before starts editing
+        private bool DeletingNote = false;  // indicate that the note is being deleted
 
         public AnnotationsWindow(TOC_Entry entry, bool showAnnotationsContextMenu = false)
         {
@@ -57,6 +58,7 @@ namespace UbStudyHelp.Classes
             if (AnnotationsStoreDataCore == null)
             {
                 AnnotationsStoreDataCore = new UbAnnotationsStoreDataCore();
+                ExistingNote = false;
             }
 
             // Force the annotation store object to be for paragraph in case it was just created
@@ -213,6 +215,13 @@ namespace UbStudyHelp.Classes
             }
         }
 
+        private bool IsTextEmpty(RichTextBox rtb)
+        {
+            var start = rtb.Document.ContentStart;
+            var end = rtb.Document.ContentEnd;
+            int dif = start.GetOffsetToPosition(end);
+            return dif <= 4;
+        }
 
         #endregion
 
@@ -242,14 +251,19 @@ namespace UbStudyHelp.Classes
             StaticObjects.Parameters.AnnotationWindowWidth = e.NewSize.Width;
         }
 
+
         private void AnnotationsWindow_Unloaded(object sender, RoutedEventArgs e)
         {
             // Stop annotatios and persist them
             UbAnnotationsObject.StopAnnotations();
+            if (DeletingNote)
+            {
+                return;
+            }
             AnnotationsStoreDataCore.XamlNotes = GetRichTextNote();
             AnnotationsStoreDataCore.Entry = Entry;
             AnnotationsStoreDataCore.Title = TextBoxTitle.Text;
-            if (!AnnotationsStoreDataCore.IsEmpty)
+            if (ExistingNote || !(AnnotationsStoreDataCore.Annotations.Count == 0 && IsTextEmpty(RichTextBoxNote)))
             {
 
                 var options = new JsonSerializerOptions
@@ -333,6 +347,16 @@ namespace UbStudyHelp.Classes
             }
         }
 
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show($"Delete notes for {Entry.ParagraphID} - {TextBoxTitle.Text} ?", "Ub Study Help", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                DeletingNote = true;
+                StaticObjects.Book.DeleteAnnotations(Entry);
+                Close();
+            }
+        }
+
         private void ButtonClearHighlights_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Clear all highlights?", "Ub Study Help", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -342,5 +366,6 @@ namespace UbStudyHelp.Classes
         }
 
         #endregion
+
     }
 }

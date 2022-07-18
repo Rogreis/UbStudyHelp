@@ -49,7 +49,10 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             TOC_Entry entry = menuItem.Tag as TOC_Entry;
             if (entry != null)
             {
-                StaticObjects.Book.DeleteAnnotations(entry);
+                if (MessageBox.Show($"Delete notes for {entry.ParagraphID}?", "Ub Study Help", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    StaticObjects.Book.DeleteAnnotations(entry);
+                }
             }
         }
 

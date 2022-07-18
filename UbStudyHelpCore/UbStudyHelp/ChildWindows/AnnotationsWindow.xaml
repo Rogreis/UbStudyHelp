@@ -23,7 +23,7 @@
                             <TextBlock VerticalAlignment="Center">Clear All</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="ButtonClearHighlights" ToolTip="Clear all note" Height="36" Click="ButtonClearHighlights_Click">
+                    <Button x:Name="ButtonClearHighlights" ToolTip="Clear all highlights" Height="36" Click="ButtonClearHighlights_Click">
                         <StackPanel Orientation="Horizontal" ToolTip="Clear only highlights" >
                             <TextBlock VerticalAlignment="Center">Clear Highlights</TextBlock>
                         </StackPanel>
@@ -36,6 +36,11 @@
                     <Button x:Name="ButtonImage" ToolTip="Insert an imge" Click="ButtonImage_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center">Insert Image</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ButtonDelete"  ToolTip="Delete this note" Click="ButtonDelete_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center">Delete</TextBlock>
                         </StackPanel>
                     </Button>
                     <Button x:Name="ButtonClose"  ToolTip="Close this window" Click="ButtonClose_Click">
