@@ -15,20 +15,16 @@ namespace UbStandardObjects.Objects
         public string Description { get; set; }
         public string TIN { get; set; }
         public string TUB { get; set; }
-        public string LanguageCode { get; set; }
+        public int Version { get; set; }
         public string TextButton { get; set; }
         public int CultureID { get; set; }
         public bool UseBold { get; set; }
         public bool RightToLeft { get; set; }
         public short StartingYear { get; set; }
         public short EndingYear { get; set; }
-        public string ExternalName { get; set; }
         public string PaperTranslation { get; set; }
         public JsonPaper[] Papers { get; set; }
     }
-
-
-
 
     internal class JsonPaper
     {
@@ -40,18 +36,19 @@ namespace UbStandardObjects.Objects
     {
         public short LanguageID { get; set; }
         public string Description { get; set; }
+        public int Version { get; set; }
         public string TIN { get; set; }
         public string TUB { get; set; }
-        public string LanguageCode { get; set; }
         public string TextButton { get; set; }
         public int CultureID { get; set; }
         public bool UseBold { get; set; }
         public bool RightToLeft { get; set; }
-
         public int StartingYear { get; set; }
         public int EndingYear { get; set; }
-        public string ExternalName { get; set; }
         public string PaperTranslation { get; set; }
+
+
+        public List<Paper> Papers { get; set; } = new List<Paper>();
 
         /// <summary>
         /// List of available anootations for this translation
@@ -59,8 +56,6 @@ namespace UbStandardObjects.Objects
         [JsonIgnore]
         public List<UbAnnotationsStoreData> Annotations { get; set; } = new List<UbAnnotationsStoreData>();
 
-        [JsonIgnore]
-        public List<Paper> Papers { get; set; } = new List<Paper>();
 
         [JsonIgnore]
         public List<TOC_Entry> TableOfContents
@@ -115,29 +110,32 @@ namespace UbStandardObjects.Objects
             this.Description = root.Description;
             this.TIN = root.TIN;
             this.TUB = root.TUB;
-            this.LanguageCode = root.LanguageCode;
+            this.Version = root.Version;
             this.TextButton = root.TextButton;
             this.CultureID = root.CultureID;
             this.UseBold = root.UseBold;
             this.RightToLeft = root.RightToLeft;
             this.StartingYear = root.StartingYear;
             this.EndingYear = root.EndingYear;
-            this.ExternalName = root.ExternalName;
             this.PaperTranslation = root.PaperTranslation;
 
-            Papers = new List<Paper>();
-            foreach (JsonPaper jsonPaper in root.Papers)
+            if (root.Papers != null)
             {
-                this.Papers.Add(new Paper()
+                Papers = new List<Paper>();
+                foreach (JsonPaper jsonPaper in root.Papers)
                 {
-                    Paragraphs = new List<Paragraph>(jsonPaper.Paragraphs)
-                });
-                // Fix the translation number not set in json file for each paragraph
-                foreach (Paragraph p in jsonPaper.Paragraphs)
-                {
-                    p.Entry.TranslationId = LanguageID;
+                    this.Papers.Add(new Paper()
+                    {
+                        Paragraphs = new List<Paragraph>(jsonPaper.Paragraphs)
+                    });
+                    // Fix the translation number not set in json file for each paragraph
+                    foreach (Paragraph p in jsonPaper.Paragraphs)
+                    {
+                        p.Entry.TranslationId = LanguageID;
+                    }
                 }
             }
+
         }
 
 
