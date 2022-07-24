@@ -1,6 +1,6 @@
 # Revisão alternativa do Livro de Urântia para Português do Brasil
 
-O texto do livro todo foi formatado em markdown, dividido em documentos (diretórios) e parágrafos (aqruivos).
+O texto do livro todo foi formatado em markdown, dividido em documentos (diretórios) e parágrafos (aquivos).
 
 __Para editar, crie um branch e ao final faça um pull-request para a linha main.__
 
