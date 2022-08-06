@@ -1,0 +1,3 @@
+[submodule "UbStandardObjects"]
+	path = UbStandardObjects
+	url = git@github.com:Rogreis/UbStandardObjects.git

@@ -49,10 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\UbStandardObjects\UbStandardObjects.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Images\FontSizeDecrease.png" />
     <Resource Include="Images\FontSizeIncrease.png" />
     <Resource Include="Images\Help.png" />
@@ -90,12 +86,6 @@
     </None>
     <None Update="Images\Index.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Notes.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Notes.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Images\Search.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -195,6 +185,10 @@
 
   <ItemGroup>
     <SplashScreen Include="Images\SplashScreenFbUbPt.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\UbStandardObjects\UbStandardObjects.csproj" />
   </ItemGroup>
 
 </Project>
