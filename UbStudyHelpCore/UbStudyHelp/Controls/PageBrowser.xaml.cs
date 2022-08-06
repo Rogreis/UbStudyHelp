@@ -41,7 +41,7 @@ namespace UbStudyHelp.Controls
             EventsControl.TOCClicked += EventsControl_TOCClicked;
             EventsControl.TrackSelected += EventsControl_TrackSelected;
             EventsControl.IndexClicked += EventsControl_IndexClicked;
-            EventsControl.SearchClicked += EventsControl_SeachClicked;
+            EventsControl.SearchClicked += EventsControl_SearchClicked;
             EventsControl.RefreshText += EventsControl_RefreshText;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.TranslationsChanged += EventsControl_TranslationsChanged;
@@ -303,7 +303,7 @@ namespace UbStudyHelp.Controls
             Show(entry);
         }
 
-        private void EventsControl_SeachClicked(TOC_Entry entry, List<string> Words)
+        private void EventsControl_SearchClicked(TOC_Entry entry, List<string> Words)
         {
             Show(entry, true, Words);
         }

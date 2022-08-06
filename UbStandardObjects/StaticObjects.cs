@@ -4,6 +4,8 @@ namespace UbStandardObjects
 {
 	public delegate void ShowMessage(string message, bool isError = false, bool isFatal = false);
 
+	public delegate void ShowStatusMessage(string message);
+
 	public delegate void ShowPaperNumber(short paperNo);
 
 	public static class StaticObjects

@@ -93,6 +93,8 @@ namespace UbStudyHelp.Classes
         {
             new HtmlTag("<b>", "</b>",  TextTag.Bold),
             new HtmlTag("<em>", "</em>",  TextTag.Italic),
+            new HtmlTag("<i>", "</i>",  TextTag.Italic),
+            new HtmlTag("<I>", "</I>",  TextTag.Italic),
             new HtmlTag("<sup>", "</sup>",  TextTag.Superscript),
             new HtmlTag("<word>", "</word>", TextTag.Highlighted)
         };

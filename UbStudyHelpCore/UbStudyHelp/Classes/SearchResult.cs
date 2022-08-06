@@ -9,8 +9,6 @@ namespace UbStudyHelp.Classes
     /// </summary>
     public class SearchResult
     {
-        private TextWork TextWork = new TextWork();
-
         public TOC_Entry Entry { get; set; }
 
         public int OriginalPosition { get; set; } = -1;
