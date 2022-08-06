@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Text
 {
@@ -78,6 +80,24 @@ namespace UbStudyHelp.Text
             dataFiles.StoreAnnotations(entry, annotations);
         }
 
+        public override void DeleteAnnotations(TOC_Entry entry)
+        {
+            UbAnnotationsStoreData data = LeftTranslation.Annotations.Find(a => a.Entry == entry);
+            if (data != null)
+            {
+                LeftTranslation.Annotations.Remove(data);
+                EventsControl.FireAnnotationsChanges();
+                return;
+            }
+
+            data = RightTranslation.Annotations.Find(a => a.Entry == entry);
+            if (data != null)
+            {
+                RightTranslation.Annotations.Remove(data);
+                EventsControl.FireAnnotationsChanges();
+                return;
+            }
+        }
 
 
     }

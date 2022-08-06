@@ -69,6 +69,18 @@ namespace UbStudyHelp.Classes.ContextMenuCode
             Entry.Text = ""; // Text is not needed
         }
 
+        public void ClearAnnotation()
+        {
+            try
+            {
+                AnnotationHelper.ClearHighlightsForSelection(_annotService);
+                AnnotationHelper.DeleteTextStickyNotesForSelection(_annotService);
+            }
+            catch (Exception)
+            {
+
+            }    
+        }
 
         #region Store annotations
 

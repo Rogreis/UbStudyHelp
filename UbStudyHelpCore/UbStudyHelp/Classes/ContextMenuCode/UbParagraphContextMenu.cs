@@ -6,11 +6,12 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
+using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Classes
 {
 
-    public enum QuickSearchType
+    internal enum QuickSearchType
     {
         Quick,
         Simple,
@@ -18,7 +19,7 @@ namespace UbStudyHelp.Classes
         Close
     }
 
-    public class ParagraphSearchData
+    internal class ParagraphSearchData
     {
         public bool IsRightTranslation { get; set; } = false;
         public string QueryString = "";
@@ -26,13 +27,10 @@ namespace UbStudyHelp.Classes
     }
 
 
-    public class UbParagraphContextMenu : ContextMenu
+    internal class UbParagraphContextMenu : UbContextMenu
     {
-        protected FlowDocumentScrollViewer FlowDocument = null;
-        protected TOC_Entry Entry = null;
-        protected MenuItem menuItemSearch = null;
-        protected MenuItem menuItemOpenAnnotations = null;
-        private const int MaxWordsForSearch = 20;
+        private MenuItem menuItemSearch = null;
+        private MenuItem menuItemOpenAnnotations = null;
         private bool ShowAnnotations = true;
         private bool ShowSearch = true;
 
@@ -96,101 +94,6 @@ namespace UbStudyHelp.Classes
         }
 
 
-        protected MenuItem CreateMenuItem(string header, RoutedUICommand command)
-        {
-            MenuItem item = new MenuItem();
-            item.Header = header;
-            item.Command = command;
-            item.VerticalAlignment = VerticalAlignment.Top;
-            item.HorizontalAlignment = HorizontalAlignment.Left;
-            return item;
-        }
-
-        protected MenuItem CreateMenuItem(string header, RoutedEventHandler command)
-        {
-            MenuItem item = new MenuItem();
-            item.Header = header;
-            item.Click += command;
-            item.VerticalAlignment = VerticalAlignment.Top;
-            item.HorizontalAlignment = HorizontalAlignment.Left;
-            return item;
-        }
-
-        protected string GetSelectedText()
-        {
-            try
-            {
-                TextPointer potStart = FlowDocument.Selection.Start;
-                TextPointer potEnd = FlowDocument.Selection.End;
-                TextRange range = new TextRange(potStart, potEnd);
-                return range.Text;
-            }
-            catch 
-            {
-                return null;
-            }
-        }
-
-        //protected string GetAllText()
-        //{
-        //    TextRange range = new TextRange(Document.Document.ContentStart, Document.Document.ContentEnd);
-        //    using (Stream stream = new MemoryStream())
-        //    {
-        //        range.Save(stream, DataFormats.Text);
-        //        return Encoding.UTF8.GetString((stream as MemoryStream).ToArray());
-        //    }
-        //}
-
-
-        //protected System.Windows.Documents.Paragraph GetParagraphNoSelection()
-        //{
-        //    TextPointerContext tpc = FlowDocument.Document.ContentStart.GetPointerContext(LogicalDirection.Forward);
-        //    System.Windows.Documents.Paragraph p= new System.Windows.Documents.Paragraph();
-        //    return p;
-        //}
-
-
-        protected ParagraphSearchData GetCurrentParagraph()
-        {
-            try
-            {
-                TextPointer pointer = FlowDocument.Selection.Start;
-                System.Windows.Documents.Paragraph p = pointer.Paragraph;
-                if (p == null) return null;
-                ParagraphSearchData data = p.Tag as ParagraphSearchData;
-                return data;
-            }
-            catch 
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Split the currente selected text in words
-        /// </summary>
-        /// <returns></returns>
-        protected string[] SplitSelectedText()
-        {
-            // Some day check regex:  new Regex(@"[^\p{L}]*\p{Z}[^\p{L}]*")  https://stackoverflow.com/questions/10239518/how-do-i-split-a-phrase-into-words-using-regex-in-c-sharp
-            string text = GetSelectedText();
-            if (text != null && !string.IsNullOrWhiteSpace(text))
-            {
-                char[] sep = { ' ', '.', ',', ';', ':', '!', '?', '\t' };
-                return text.Split(sep, MaxWordsForSearch, StringSplitOptions.RemoveEmptyEntries);
-            }
-            return null;
-        }
-
-
-
-        //protected void SelectAll()
-        //{
-        //    TextPointer pointerStart = FlowDocument.Document.ContentStart;
-        //    TextPointer pointerEnd = FlowDocument.Document.ContentEnd;
-        //    FlowDocument.Selection.Select(pointerStart, pointerEnd);
-        //}
-
         #region Menu item functions
 
 
@@ -203,6 +106,8 @@ namespace UbStudyHelp.Classes
         //        Clipboard.SetData(DataFormats.Text, Encoding.UTF8.GetString((stream as MemoryStream).ToArray()));
         //    }
         //}
+
+
 
         protected void ItemOpenAnnotations_Click(object sender, RoutedEventArgs e)
         {

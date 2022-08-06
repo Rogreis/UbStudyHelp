@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -57,7 +58,7 @@ namespace UbStudyHelp.Classes
         /// <param name="includePage"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        public Hyperlink HyperlinkFullParagraph(TOC_Entry entry, bool includePage, string text)
+        public Hyperlink HyperlinkFullParagraph(TOC_Entry entry, bool includePage, string text, List<string> Words = null)
         {
             Run runIdent = ParagraphIdentification(entry, includePage);
             
@@ -72,9 +73,12 @@ namespace UbStudyHelp.Classes
             hyperlink.Inlines.Add(runIdent);
             hyperlink.Inlines.Add(new Run("  "));
             TextWork textWork = new TextWork(text);
-            textWork.GetInlinesText(hyperlink.Inlines);
+            textWork.GetInlinesText(hyperlink.Inlines, Words);
             return hyperlink;
         }
+
+
+
 
         public System.Windows.Documents.Paragraph FullParagraph(TOC_Entry entry, bool includePage, string text)
         {

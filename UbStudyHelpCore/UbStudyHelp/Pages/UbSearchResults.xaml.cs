@@ -111,7 +111,7 @@ namespace UbStudyHelp.Pages
                 lastItem = data.SearchResults.Count - 1;
             }
 
-            for (int i = fistItem; i < lastItem; i++)
+            for (int i = fistItem; i <= lastItem; i++)
             {
                 SearchResult result = data.SearchResults[i];
                 System.Windows.Documents.Paragraph paragraphSearchResult = new System.Windows.Documents.Paragraph
@@ -122,7 +122,7 @@ namespace UbStudyHelp.Pages
                 };
                 document.Blocks.Add(paragraphSearchResult);
 
-                Hyperlink hyperlink = format.HyperlinkFullParagraph(result.Entry, false, result.Text);
+                Hyperlink hyperlink = format.HyperlinkFullParagraph(result.Entry, false, result.Text, data.Words);
                 hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
                 hyperlink.MouseEnter += Hyperlink_MouseEnter;
                 hyperlink.MouseLeave += Hyperlink_MouseLeave;

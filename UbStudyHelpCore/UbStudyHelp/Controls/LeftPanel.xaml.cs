@@ -18,6 +18,7 @@ namespace UbStudyHelp.Controls
         UbTrackPage ubTrackPage = new UbTrackPage();
         SearchHelpPage searchHelpPage = new SearchHelpPage();
         SettingsPage optionsPage = new SettingsPage();
+        NotesPage notesPage = new NotesPage();
 
         public LeftPanel()
         {
@@ -29,6 +30,7 @@ namespace UbStudyHelp.Controls
             ubTrackPage.Initialize();
             searchHelpPage.Initialize();
             optionsPage.Initialize();
+            notesPage.Initialize();
             StaticObjects.Logger.Info("»»»» LeftPainel created");
 
             EventsControl.DirectSearch += EventsControl_DirectSearch;
@@ -58,7 +60,7 @@ namespace UbStudyHelp.Controls
             HamburgerMenuGlyphItem menuItem = (HamburgerMenuGlyphItem)args.InvokedItem;
             string targetView = menuItem.Tag.ToString();
 
-            switch(targetView)
+            switch (targetView)
             {
                 case "IncreaseFontSize":
                     if (StaticObjects.Parameters.FontSizeInfo < 22)
@@ -101,6 +103,9 @@ namespace UbStudyHelp.Controls
                     break;
                 case "OptionsPage":
                     FrameControl.Navigate(optionsPage);
+                    break;
+                case "UbNotes":
+                    FrameControl.Navigate(notesPage);
                     break;
             }
 
