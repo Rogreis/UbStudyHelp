@@ -120,7 +120,7 @@ namespace UbStudyHelp.Classes
         /// </summary>
         /// <param name="translationId"></param>
         /// <returns></returns>
-        protected override List<UbAnnotationsStoreData> LoadAnnotations(short translationId)
+        public override List<UbAnnotationsStoreData> LoadAnnotations(short translationId)
         {
             string pathAnnotationsFile = TranslationAnnotationsJsonFilePath(translationId);
             if (File.Exists(pathAnnotationsFile))
