@@ -87,12 +87,6 @@
     <None Update="Images\Index.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Images\Notes.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Notes.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Images\Search.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -191,6 +185,10 @@
 
   <ItemGroup>
     <SplashScreen Include="Images\SplashScreenFbUbPt.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\UbStandardObjects\UbStandardObjects.csproj" />
   </ItemGroup>
 
 </Project>
