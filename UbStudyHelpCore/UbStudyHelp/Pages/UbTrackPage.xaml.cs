@@ -337,7 +337,7 @@ namespace UbStudyHelp.Pages
                 try
                 {
                     var jsonString = File.ReadAllText(openFileDlg.FileName);
-                    StaticObjects.Parameters.TrackEntries = App.DeserializeObject<List<TOC_Entry>>(jsonString);
+                    StaticObjects.Parameters.TrackEntries = StaticObjects.DeserializeObject<List<TOC_Entry>>(jsonString);
                 }
                 catch (Exception ex)
                 {

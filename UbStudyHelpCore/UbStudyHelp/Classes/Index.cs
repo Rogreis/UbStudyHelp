@@ -35,7 +35,7 @@ namespace UbStudyHelp.Classes
             {
                 string pathFile = Path.Combine(SourceFolder, "tubIndex_000.json");
                 string json = File.ReadAllText(pathFile);
-                TubIndex = App.DeserializeObject<List<TubIndex>>(json);
+                TubIndex = StaticObjects.DeserializeObject<List<TubIndex>>(json);
                 return lucene.CreateLuceneIndexForUBIndex(TubIndex);
             }
             catch (Exception ex)

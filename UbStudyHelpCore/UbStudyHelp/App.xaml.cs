@@ -33,33 +33,6 @@ namespace UbStudyHelp
             return Path.Combine(commonpath, processName);
         }
 
-        /// <summary>
-        /// Serialize an object to string using json
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static string Serialize<T>(T obj)
-        {
-            var options = new JsonSerializerOptions
-            {
-                AllowTrailingCommas = true,
-                WriteIndented = true,
-            };
-            return JsonSerializer.Serialize<T>(obj, options);
-        }
-
-        /// <summary>
-        /// Deserialize an object from a json string
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="json"></param>
-        /// <returns></returns>
-        public static T DeserializeObject<T>(string json)
-        {
-            return JsonSerializer.Deserialize<T>(json);
-        }
-
 
         private string MakeProgramDataFolder(string fileName)
         {

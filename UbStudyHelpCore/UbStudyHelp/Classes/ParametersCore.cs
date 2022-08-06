@@ -79,7 +79,7 @@ namespace UbStudyHelp.Classes
             {
                 StaticObjects.Logger.Info("»»»» Deserialize Parameters");
                 var jsonString = File.ReadAllText(pathParameters);
-                return App.DeserializeObject<ParametersCore>(jsonString);
+                return StaticObjects.DeserializeObject<ParametersCore>(jsonString);
             }
             catch 
             {

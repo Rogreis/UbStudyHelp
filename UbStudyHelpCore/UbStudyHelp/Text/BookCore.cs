@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
@@ -24,7 +25,8 @@ namespace UbStudyHelp.Text
             try
             {
                 FilesPath = baseDataPath;
-                dataFiles = new GetDataFilesCore();
+
+                dataFiles = new GetDataFilesCore(System.AppDomain.CurrentDomain.BaseDirectory, App.BaseTubFilesPath);
                 Translations = dataFiles.GetTranslations();
                 LeftTranslation = dataFiles.GetTranslation(leftTranslationId);
                 if (!LeftTranslation.CheckData()) return false;

@@ -15,104 +15,21 @@ namespace UbStudyHelp.Classes
     public class GetDataFilesCore : GetDataFiles
     {
 
-        public GetDataFilesCore()
+        public GetDataFilesCore(string appFolder, string localStorageFolder) : base(appFolder, localStorageFolder)
         {
-            SourceFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, TubFilesFolder);
-            StoreFolder = App.BaseTubFilesPath;
         }
 
-
-        /// <summary>
-        /// Get all papers from the zipped file
-        /// </summary>
-        /// <param name="translationId"></param>
-        /// <param name="isZip"></param>
-        /// <returns></returns>
-        private string GetFile(short translationId, bool isZip = true)
-        {
-            try
-            {
-                string json = "";
-                string translationJsonFilePath = TranslationJsonFilePath(translationId);
-                if (File.Exists(translationJsonFilePath))
-                {
-                    json = File.ReadAllText(translationJsonFilePath);
-                    return json;
-                }
-
-                string translationStartupPath = TranslationFilePath(translationId);
-                if (File.Exists(translationStartupPath))
-                {
-                    StaticObjects.Logger.Info("File exists: " + translationStartupPath);
-                    byte[] bytes = File.ReadAllBytes(translationStartupPath);
-                    json = BytesToString(bytes, isZip);
-                    File.WriteAllText(translationJsonFilePath, json);
-                    return json;
-                }
-                else
-                {
-                    StaticObjects.Logger.Error($"Translation not found {translationId}");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                StaticObjects.Logger.Error("GetFile", ex);
-                return null;
-            }
-        }
-
-
-        /// <summary>
-        /// Get the translations list from a local file
-        /// </summary>
-        /// <returns></returns>
-        public override List<Translation> GetTranslations()
-        {
-            string path = ControlFilePath();
-            string json = File.ReadAllText(path);
-            return Translations.DeserializeJson(json);
-        }
-
-        /// <summary>
-        /// Get a translation from a local file
-        /// </summary>
-        /// <param name="translatioId"></param>
-        /// <returns></returns>
-        public override Translation GetTranslation(short translatioId)
-        {
-            Translation translation = StaticObjects.Book.GetTranslation(translatioId);
-            if (translation == null)
-            {
-                translation = new Translation();
-            }
-            if (translation.Papers.Count > 0)
-            {
-                return translation;
-            }
-            string json = GetFile(translatioId, true);
-            translation.GetData(json);
-
-            // Loading annotations
-            translation.Annotations= LoadAnnotations(translatioId);
-
-            return translation;
-        }
 
         #region Load & Store Annotations
-        public override void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations)
+        /// <summary>
+        /// Create a json string from the annotations list and store
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="annotations"></param>
+        public void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations)
         {
-            string path = TranslationAnnotationsJsonFilePath(entry.TranslationId);
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-            if (annotations.Count == 0)
-            {
-                return;
-            }
-            string jsonString = App.Serialize<List<UbAnnotationsStoreData>>(annotations);
-            File.WriteAllText(path, jsonString);
+            string jsonAnnotations = StaticObjects.Serialize<List<UbAnnotationsStoreData>>(annotations);
+            StoreJsonAnnotations(entry, jsonAnnotations);
         }
 
         /// <summary>
@@ -120,18 +37,32 @@ namespace UbStudyHelp.Classes
         /// </summary>
         /// <param name="translationId"></param>
         /// <returns></returns>
-        public override List<UbAnnotationsStoreData> LoadAnnotations(short translationId)
+        public List<UbAnnotationsStoreData> LoadAnnotations(short translationId)
         {
-            string pathAnnotationsFile = TranslationAnnotationsJsonFilePath(translationId);
-            if (File.Exists(pathAnnotationsFile))
+            string jsonAnnotations = LoadJsonAnnotations(translationId);
+            if (!string.IsNullOrWhiteSpace(jsonAnnotations))
             {
-                string json = File.ReadAllText(pathAnnotationsFile);
-                return (App.DeserializeObject<List<UbAnnotationsStoreDataCore>>(json)).ToList<UbAnnotationsStoreData>();
+                return (StaticObjects.DeserializeObject<List<UbAnnotationsStoreDataCore>>(jsonAnnotations)).ToList<UbAnnotationsStoreData>();
             }
+            // Return empty list
             return new List<UbAnnotationsStoreDataCore>().ToList<UbAnnotationsStoreData>();
         }
-
         #endregion
+
+        /// <summary>
+        /// Get a translation from a local file
+        /// Here also the annotations are got
+        /// </summary>
+        /// <param name="translatioId"></param>
+        /// <returns></returns>
+        public override Translation GetTranslation(short translatioId)
+        {
+            Translation translation = base.GetTranslation(translatioId);
+            // Loading annotations
+            translation.Annotations = LoadAnnotations(translatioId);
+            return translation;
+        }
+
 
 
     }
