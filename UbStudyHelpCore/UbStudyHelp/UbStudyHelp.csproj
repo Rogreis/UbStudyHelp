@@ -49,6 +49,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\UbStandardObjects\UbStandardObjects.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\FontSizeDecrease.png" />
     <Resource Include="Images\FontSizeIncrease.png" />
     <Resource Include="Images\Help.png" />
