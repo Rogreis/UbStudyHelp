@@ -70,7 +70,10 @@ namespace UbStudyHelp
 
             StaticObjects.Book= new BookCore();
 
-            if (!StaticObjects.Book.Inicialize(BaseTubFilesPath, StaticObjects.Parameters.LanguageIDLeftTranslation, StaticObjects.Parameters.LanguageIDRightTranslation))
+
+            GetDataFilesCore dataFiles = new GetDataFilesCore(System.AppDomain.CurrentDomain.BaseDirectory, BaseTubFilesPath);
+
+            if (!StaticObjects.Book.Inicialize(dataFiles, StaticObjects.Parameters.LanguageIDLeftTranslation, StaticObjects.Parameters.LanguageIDRightTranslation))
             {
                 StaticObjects.Logger.FatalError("Data not loaded!");
                 return;
