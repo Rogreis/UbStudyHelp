@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using MahApps.Metro.Controls;
 
 namespace UbStudyHelp
 {
