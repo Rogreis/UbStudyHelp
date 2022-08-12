@@ -35,7 +35,6 @@ namespace UbStudyHelp.Classes
         private bool ShowAnnotationsContextMenu = false;
 
         private Translation CurrentTranslation = null;
-        private bool ExistingNote = true;   // indicate the existence of the note before starts editing
         private bool DeletingNote = false;  // indicate that the note is being deleted
 
         public AnnotationsWindow(TOC_Entry entry, bool showAnnotationsContextMenu = false)
@@ -58,7 +57,6 @@ namespace UbStudyHelp.Classes
             if (AnnotationsStoreDataCore == null)
             {
                 AnnotationsStoreDataCore = new UbAnnotationsStoreDataCore();
-                ExistingNote = false;
             }
 
             // Force the annotation store object to be for paragraph in case it was just created
@@ -263,10 +261,6 @@ namespace UbStudyHelp.Classes
             AnnotationsStoreDataCore.XamlNotes = GetRichTextNote();
             AnnotationsStoreDataCore.Entry = Entry;
             AnnotationsStoreDataCore.Title = TextBoxTitle.Text;
-
-            //if (ExistingNote || !(AnnotationsStoreDataCore.Annotations.Count == 0 && IsTextEmpty(RichTextBoxNote)))
-            //{
-            //}
 
             var options = new JsonSerializerOptions
             {
