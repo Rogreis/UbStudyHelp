@@ -26,6 +26,7 @@
     <None Remove="Images\FontSizeIncrease.png" />
     <None Remove="Images\Help.png" />
     <None Remove="Images\Index.png" />
+    <None Remove="Images\Notes.png" />
     <None Remove="Images\Search.png" />
     <None Remove="Images\Settings.png" />
     <None Remove="Images\TOC.png" />
@@ -57,6 +58,9 @@
     <Resource Include="Images\FontSizeIncrease.png" />
     <Resource Include="Images\Help.png" />
     <Resource Include="Images\Index.png" />
+    <Resource Include="Images\Notes.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\Search.png" />
     <Resource Include="Images\Settings.png" />
     <Resource Include="Images\TOC.png" />
@@ -90,9 +94,6 @@
     </None>
     <None Update="Images\Index.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Notes.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Images\Notes.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -17,7 +17,10 @@ namespace UbStudyHelp.Text
 
         public BookCore()
         {
+            EventsControl.AnnotationsChanges += EventsControl_AnnotationsChanges;
+
         }
+
 
 
         //public override bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID)
@@ -82,13 +85,18 @@ namespace UbStudyHelp.Text
             ((GetDataFilesCore)DataFiles).StoreAnnotations(entry, annotations);
         }
 
+        /// <summary>
+        /// Remove annotations from the translation list
+        /// Do not need to store; this will be done for another event fired next
+        /// </summary>
+        /// <param name="entry"></param>
         public override void DeleteAnnotations(TOC_Entry entry)
         {
             UbAnnotationsStoreData data = LeftTranslation.Annotations.Find(a => a.Entry == entry);
             if (data != null)
             {
                 LeftTranslation.Annotations.Remove(data);
-                EventsControl.FireAnnotationsChanges();
+                EventsControl.FireAnnotationsChanges(entry);
                 return;
             }
 
@@ -96,10 +104,16 @@ namespace UbStudyHelp.Text
             if (data != null)
             {
                 RightTranslation.Annotations.Remove(data);
-                EventsControl.FireAnnotationsChanges();
+                EventsControl.FireAnnotationsChanges(entry);
                 return;
             }
         }
+
+        private void EventsControl_AnnotationsChanges(TOC_Entry entry)
+        {
+            StoreAnnotations(entry, entry.TranslationId == StaticObjects.Parameters.LanguageIDLeftTranslation ? LeftTranslation.Annotations : RightTranslation.Annotations);
+        }
+
 
 
     }

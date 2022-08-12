@@ -28,7 +28,7 @@ namespace UbStudyHelp.Classes
         /// <param name="annotations"></param>
         public void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations)
         {
-            string jsonAnnotations = StaticObjects.Serialize<List<UbAnnotationsStoreData>>(annotations);
+            string jsonAnnotations = annotations.Count == 0 ? null : StaticObjects.Serialize<List<UbAnnotationsStoreData>>(annotations);
             StoreJsonAnnotations(entry, jsonAnnotations);
         }
 

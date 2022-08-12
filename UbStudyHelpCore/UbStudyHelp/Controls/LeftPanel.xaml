@@ -63,11 +63,11 @@
 
             <mah:HamburgerMenu.ItemsSource>
                 <mah:HamburgerMenuItemCollection>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/TOC.png" Label="Table of Contents" Tag="UbTocPage" ToolTip="Show the UB Table of Contents"/>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png" Label="Index"  Tag="UbIndexPage" ToolTip="Show the Urantia Book Index"/>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Search.png" Label="Search Engine"  Tag="UbSearchPage" ToolTip="Show the Urantia Book Search Engine"/>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Track .png" Label="Track History"  Tag="UbTrackPage" ToolTip="Show a list of paragraphs previouly shown"/>
-                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Notes.png" Label="Notes"  Tag="UbNotes" ToolTip="Show a list of notes"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/TOC.png"    Label="Table of Contents" Tag="UbTocPage"    ToolTip="Show the UB Table of Contents"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Index.png"  Label="Index"             Tag="UbIndexPage"  ToolTip="Show the Urantia Book Index"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Search.png" Label="Search Engine"     Tag="UbSearchPage" ToolTip="Show the Urantia Book Search Engine"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Track .png" Label="Track History"     Tag="UbTrackPage"  ToolTip="Show a list of paragraphs previouly shown"/>
+                    <mah:HamburgerMenuGlyphItem Glyph="/Images/Notes.png"  Label="Notes"             Tag="UbNotes"      ToolTip="Show a list of notes"/>
                 </mah:HamburgerMenuItemCollection>
             </mah:HamburgerMenu.ItemsSource>
 

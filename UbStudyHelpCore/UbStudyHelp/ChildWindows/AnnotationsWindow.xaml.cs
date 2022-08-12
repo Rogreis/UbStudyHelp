@@ -254,7 +254,7 @@ namespace UbStudyHelp.Classes
 
         private void AnnotationsWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            // Stop annotatios and persist them
+            // Stop annotations and persist them
             UbAnnotationsObject.StopAnnotations();
             if (DeletingNote)
             {
@@ -263,18 +263,19 @@ namespace UbStudyHelp.Classes
             AnnotationsStoreDataCore.XamlNotes = GetRichTextNote();
             AnnotationsStoreDataCore.Entry = Entry;
             AnnotationsStoreDataCore.Title = TextBoxTitle.Text;
-            if (ExistingNote || !(AnnotationsStoreDataCore.Annotations.Count == 0 && IsTextEmpty(RichTextBoxNote)))
-            {
 
-                var options = new JsonSerializerOptions
-                {
-                    AllowTrailingCommas = true,
-                    WriteIndented = true,
-                };
-                CurrentTranslation.StoreAnnotation(AnnotationsStoreDataCore);
-                StaticObjects.Book.StoreAnnotations(Entry, CurrentTranslation.Annotations);
-                EventsControl.FireAnnotationsChanges();
-            }
+            //if (ExistingNote || !(AnnotationsStoreDataCore.Annotations.Count == 0 && IsTextEmpty(RichTextBoxNote)))
+            //{
+            //}
+
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                WriteIndented = true,
+            };
+            CurrentTranslation.StoreAnnotation(AnnotationsStoreDataCore);
+            StaticObjects.Book.StoreAnnotations(Entry, CurrentTranslation.Annotations);
+            EventsControl.FireAnnotationsChanges(Entry);
         }
 
 

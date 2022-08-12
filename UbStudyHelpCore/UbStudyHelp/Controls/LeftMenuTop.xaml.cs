@@ -77,7 +77,7 @@ namespace UbStudyHelp.Controls
                     case "NotesLogo":
                         SvgImage.Source = new Uri("Images/Notes.svg", UriKind.Relative);
                         toolTip = "Notes";
-                        textToDisplay = "Notes over paragraphs";
+                        textToDisplay = "Paragraph Notes";
                         break;
                 }
                 Resources["TextToDisplay"] = textToDisplay;

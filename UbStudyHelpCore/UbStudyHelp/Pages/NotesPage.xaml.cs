@@ -95,7 +95,9 @@ namespace UbStudyHelp.Pages
         }
 
 
-
+        /// <summary>
+        /// Update the shown list of annotations (a merge between both shown translations)
+        /// </summary>
         private void UpdateData()
         {
             List<AnnotationIdent> list = new List<AnnotationIdent>();
@@ -133,7 +135,7 @@ namespace UbStudyHelp.Pages
         }
 
 
-        private void EventsControl_AnnotationsChanges()
+        private void EventsControl_AnnotationsChanges(TOC_Entry entry)
         {
             UpdateData();
         }

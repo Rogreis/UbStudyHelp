@@ -109,7 +109,7 @@ namespace UbStudyHelp.Classes
     /// <summary>
     /// Inform about changes in the annotations list
     /// </summary>
-    public delegate void dlAnnotationsChanges();
+    public delegate void dlAnnotationsChanges(TOC_Entry entry);
 
 
 
@@ -246,9 +246,9 @@ namespace UbStudyHelp.Classes
             NewPaperShown?.Invoke();
         }
 
-        public static void FireAnnotationsChanges()
+        public static void FireAnnotationsChanges(TOC_Entry entry)
         {
-            AnnotationsChanges?.Invoke();
+            AnnotationsChanges?.Invoke(entry);
         }
 
     }
