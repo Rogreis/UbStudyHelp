@@ -15,7 +15,7 @@ namespace UbStudyHelp.Classes
     public class GetDataFilesCore : GetDataFiles
     {
 
-        public GetDataFilesCore(string appFolder, string localStorageFolder) : base(appFolder, localStorageFolder)
+        public GetDataFilesCore(ParametersCore param) : base(param)
         {
         }
 

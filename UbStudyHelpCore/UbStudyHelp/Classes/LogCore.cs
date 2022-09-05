@@ -98,7 +98,13 @@ namespace UbStudyHelp.Classes
             {
                 if (File.Exists(pathLog))
                 {
-                    File.Delete(pathLog);
+                    try
+                    {
+                        File.Delete(pathLog);
+                    }
+                    catch // Error ignored
+                    {
+                    }
                 }
             }
             PathLog = pathLog;

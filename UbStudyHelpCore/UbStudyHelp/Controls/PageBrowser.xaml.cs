@@ -192,7 +192,7 @@ namespace UbStudyHelp.Controls
 
 
         private TableRow HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entryLeft, TOC_Entry entryRight, string LeftText, string RightText,
-                                             enHtmlType htmlType = enHtmlType.NormalParagraph,
+                                             ParagraphHtmlType htmlType = ParagraphHtmlType.NormalParagraph,
                                              bool highlighted = false,
                                              List<string> words = null)
         {
@@ -209,23 +209,23 @@ namespace UbStudyHelp.Controls
 
             switch (htmlType)
             {
-                case enHtmlType.BookTitle:
+                case ParagraphHtmlType.BookTitle:
                     FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
                     FormatTitle(cellRight, entryRight, RightText, highlighted, words);
                     break;
-                case enHtmlType.PaperTitle:
+                case ParagraphHtmlType.PaperTitle:
                     FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
                     FormatTitle(cellRight, entryRight, RightText, highlighted, words);
                     break;
-                case enHtmlType.SectionTitle:
+                case ParagraphHtmlType.SectionTitle:
                     FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
                     FormatTitle(cellRight, entryRight, RightText, highlighted, words);
                     break;
-                case enHtmlType.NormalParagraph:
+                case ParagraphHtmlType.NormalParagraph:
                     FormatParagraph(cellLeft, entryLeft, LeftText, highlighted, words);
                     FormatParagraph(cellRight, entryRight, RightText, highlighted, words);
                     break;
-                case enHtmlType.IdentedParagraph:
+                case ParagraphHtmlType.IdentedParagraph:
                     FormatIdent(cellLeft, entryLeft, LeftText, highlighted, words);
                     FormatIdent(cellRight, entryRight, RightText, highlighted, words);
                     break;
@@ -257,7 +257,7 @@ namespace UbStudyHelp.Controls
             TOC_Entry entryRight = TOC_Entry.CreateEntry(entry, StaticObjects.Book.RightTranslation.LanguageID);
             entryLeft.Text = entryRight.Text = "";
 
-            HtmlSingleBilingualLine(tableRowGroup, entryLeft, entryRight, titleLeft, titleRight, enHtmlType.PaperTitle);
+            HtmlSingleBilingualLine(tableRowGroup, entryLeft, entryRight, titleLeft, titleRight, ParagraphHtmlType.PaperTitle);
 
             int indParagraph = 0;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)

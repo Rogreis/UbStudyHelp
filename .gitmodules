@@ -1,0 +1,3 @@
+[submodule "UbStudyHelpCore/UbStudyHelp/TUB_Files"]
+	path = UbStudyHelpCore/UbStudyHelp/TUB_Files
+	url = git@github.com:Rogreis/TUB_Files.git

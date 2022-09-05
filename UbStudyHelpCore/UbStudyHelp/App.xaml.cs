@@ -21,8 +21,6 @@ namespace UbStudyHelp
         // Styles based on https://mahapps.com/docs/guides/quick-start
         private static string pathParameters;
 
-        public static string BaseTubFilesPath = "";
-
         public static ControlsAppearance Appearance = new ControlsAppearance();
 
         private string DataFolder()
@@ -65,13 +63,19 @@ namespace UbStudyHelp
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();
 
 
-
-            BaseTubFilesPath = MakeProgramDataFolder("TUB_Files");
+            // Set folders and URLs used
+            // This must be set in the parameters
+            StaticObjects.Parameters.ApplicationFolder = System.AppDomain.CurrentDomain.BaseDirectory;
+            StaticObjects.Parameters.TUB_Files_RepositoryFolder = "C:\\Trabalho\\Github\\Rogerio\\TUB_Files";
+            StaticObjects.Parameters.EditParagraphsRepositoryFolder = "C:\\Trabalho\\Github\\Rogerio\\PtAlternative";
+            StaticObjects.Parameters.EditBookRepositoryFolder = "C:\\Trabalho\\Github\\Rogerio\\TUB_PT_BR";
+            StaticObjects.Parameters.UrlRepository = "https://github.com/Rogreis/PtAlternative";
+            StaticObjects.Parameters.UbStudyHelpTubFilesSourcePath = MakeProgramDataFolder("TUB_Files");
+            MessageBox.Show("Paths still hard coded");
 
             StaticObjects.Book= new BookCore();
 
-
-            GetDataFilesCore dataFiles = new GetDataFilesCore(System.AppDomain.CurrentDomain.BaseDirectory, BaseTubFilesPath);
+            GetDataFilesCore dataFiles = new GetDataFilesCore((ParametersCore)StaticObjects.Parameters);
 
             if (!StaticObjects.Book.Inicialize(dataFiles, StaticObjects.Parameters.LanguageIDLeftTranslation, StaticObjects.Parameters.LanguageIDRightTranslation))
             {
