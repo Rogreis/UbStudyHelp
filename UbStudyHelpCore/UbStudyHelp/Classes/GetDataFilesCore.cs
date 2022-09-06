@@ -19,6 +19,55 @@ namespace UbStudyHelp.Classes
         {
         }
 
+        #region File path creation
+        /// <summary>
+        /// Generates the control file full path
+        /// </summary>
+        /// <returns></returns>
+        protected override string ControlFilePath()
+        {
+            return Path.Combine(ApplicationFolderTubFiles, ControlFileName);
+
+        }
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected override string TranslationFilePath(short translationId)
+        {
+            return Path.Combine(ApplicationFolderTubFiles, $"TR{translationId:000}.gz");
+        }
+
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected override string TranslationJsonFilePath(short translationId)
+        {
+            return Path.Combine(ApplicationFolderTubFiles, $"TR{translationId:000}.json");
+        }
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected override string TranslationAnnotationsJsonFilePath(short translationId)
+        {
+            return Path.Combine(ApplicationFolderTubFiles, $"{translationAnnotationsFileName}_{translationId:000}.json");
+        }
+
+        protected override string ParagraphAnnotationsJsonFilePath(short translationId)
+        {
+            return Path.Combine(ApplicationFolderTubFiles, $"{paragraphAnnotationsFileName}_{translationId:000}.json");
+        }
+
+        #endregion
+
 
         #region Load & Store Annotations
         /// <summary>
