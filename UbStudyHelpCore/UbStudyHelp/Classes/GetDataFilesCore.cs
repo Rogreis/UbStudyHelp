@@ -48,7 +48,7 @@ namespace UbStudyHelp.Classes
         /// <returns></returns>
         protected override string TranslationJsonFilePath(short translationId)
         {
-            return Path.Combine(ApplicationFolderTubFiles, $"TR{translationId:000}.json");
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"TR{translationId:000}.json");
         }
 
         /// <summary>
@@ -58,12 +58,12 @@ namespace UbStudyHelp.Classes
         /// <returns></returns>
         protected override string TranslationAnnotationsJsonFilePath(short translationId)
         {
-            return Path.Combine(ApplicationFolderTubFiles, $"{translationAnnotationsFileName}_{translationId:000}.json");
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"{translationAnnotationsFileName}_{translationId:000}.json");
         }
 
         protected override string ParagraphAnnotationsJsonFilePath(short translationId)
         {
-            return Path.Combine(ApplicationFolderTubFiles, $"{paragraphAnnotationsFileName}_{translationId:000}.json");
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"{paragraphAnnotationsFileName}_{translationId:000}.json");
         }
 
         #endregion

@@ -262,7 +262,16 @@ namespace UbStudyHelp.Controls
             int indParagraph = 0;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)
             {
-                Paragraph parRight = paperRight.Paragraphs[indParagraph];
+                Paragraph parRight = null;
+                if (indParagraph >= paperRight.Paragraphs.Count)
+                {
+                    parRight = parLeft.DeepCopy();
+                    parRight.Text = "TEXT NOT FOUND";
+                }
+                else
+                {
+                    parRight = paperRight.Paragraphs[indParagraph];
+                }
                 indParagraph++;
                 bool highlighted = shouldHighlightText && (parLeft.Entry * entry);
                 TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
