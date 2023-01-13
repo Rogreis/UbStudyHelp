@@ -87,7 +87,7 @@ namespace UbStudyHelp
 
         private void formText_Loaded(object sender, RoutedEventArgs e)
         {
-            StatusBarVersion.Text = "v 2.1";
+            StatusBarVersion.Text = "v 2.1.2";
             StaticObjects.Logger.Info("»»»» MainWindow formText_Loaded");
         }
 
