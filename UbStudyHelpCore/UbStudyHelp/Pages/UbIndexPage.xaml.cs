@@ -12,7 +12,7 @@ namespace UbStudyHelp.Pages
     {
 
         // Object to manipulate the index
-        private UbStudyHelp.Classes.Index Index = new UbStudyHelp.Classes.Index(StaticObjects.Parameters.UbStudyHelpTubFilesSourcePath);
+        private UbStudyHelp.Classes.Index Index = new UbStudyHelp.Classes.Index();
 
         public UbIndexPage()
         {

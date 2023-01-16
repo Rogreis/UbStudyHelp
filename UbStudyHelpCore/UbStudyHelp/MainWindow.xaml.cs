@@ -15,11 +15,14 @@ namespace UbStudyHelp
     /// </summary>
     public partial class MainWindow
     {
+        // Controls the app initializantion done in the activated event
+        private bool DataInitialized= false;
 
         public MainWindow()
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
+            this.Activated += MainWindow_Activated;
             EventsControl.SendMessage += EventsControl_SendMessage;
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.NewPaperShown += EventsControl_NewPaperShown;
@@ -53,10 +56,36 @@ namespace UbStudyHelp
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            StaticObjects.Logger.Info("»»»» MainWindow_Loaded");
-            GridTexts.ColumnDefinitions[0].Width = new GridLength(StaticObjects.Parameters.SpliterDistance);
-            FontChanged();
         }
+
+        private void MainWindow_Activated(object sender, EventArgs e)
+        {
+            if (!DataInitialized)
+            {
+                if (!DataInitializer.InitLogger())
+                {
+                    throw new Exception("Could not initialize logger.");
+                }
+
+                if (!DataInitializer.InitParameters())
+                {
+                    throw new Exception("Could not initialize parameters.");
+                }
+
+
+                GridTexts.ColumnDefinitions[0].Width = new GridLength(StaticObjects.Parameters.SpliterDistance);
+                FontChanged();
+                StatusBarVersion.Text = "v 2.1.2";
+                if (!DataInitializer.InitTranslations())
+                {
+                    throw new Exception("Could not initialize translations.");
+                }
+                DataInitialized = true;
+                LeftPanelControl.Init();
+                App.Appearance.Theme = "Dark"; // : "Light";
+            }
+        }
+
 
         private void GridSplitterLeft_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
@@ -83,15 +112,6 @@ namespace UbStudyHelp
                 StaticObjects.Logger.Warn(message);
             }
         }
-
-
-        private void formText_Loaded(object sender, RoutedEventArgs e)
-        {
-            StatusBarVersion.Text = "v 2.1.2";
-            StaticObjects.Logger.Info("»»»» MainWindow formText_Loaded");
-        }
-
-
 
         private void MetroWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {

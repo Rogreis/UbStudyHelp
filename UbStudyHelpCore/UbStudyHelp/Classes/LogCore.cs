@@ -86,7 +86,7 @@ namespace UbStudyHelp.Classes
 
         }
 
-        public void Close()
+        public override void Close()
         {
             LogManager.GetRepository().Shutdown();
             _logIniciado = false;

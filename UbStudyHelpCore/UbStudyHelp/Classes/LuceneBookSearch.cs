@@ -63,20 +63,19 @@ namespace UbStudyHelp.Classes
         // Note there are many different types of Analyzer that may be used with Lucene, the exact one you use
         // will depend on your requirements
         private Directory luceneIndexDirectory;
-        private string indexPath;
+        private string IndexPath;
         private bool indexAlreadyExist = false;
         public Translation Translation { get; set; } = null;
         public string ErrorMessage = "";
 
 
-        public LuceneBookSearch(string basePathForFiles, Translation translation)
+        public LuceneBookSearch(Translation translation)
         {
             Translation = translation;
-            string pathFile = System.IO.Path.Combine(basePathForFiles, "L" + translation.LanguageID.ToString("000"));
-            indexPath = System.IO.Path.Combine(pathFile, "se");
-            if (!System.IO.Directory.Exists(indexPath))
+            IndexPath = System.IO.Path.Combine(StaticObjects.Parameters.TubSearchFolders, "T" + translation.LanguageID.ToString("000"));
+            if (!System.IO.Directory.Exists(IndexPath))
             {
-                System.IO.Directory.CreateDirectory(indexPath);
+                System.IO.Directory.CreateDirectory(IndexPath);
             }
             InitialiseLucene();
         }
@@ -89,13 +88,13 @@ namespace UbStudyHelp.Classes
 
         private void InitialiseLucene()
         {
-            indexAlreadyExist = System.IO.Directory.Exists(indexPath);
-            luceneIndexDirectory = FSDirectory.Open(indexPath);
+            indexAlreadyExist = System.IO.Directory.Exists(IndexPath);
+            luceneIndexDirectory = FSDirectory.Open(IndexPath);
         }
 
         private bool CreateUBIndex()
         {
-            if (System.IO.Directory.GetFiles(indexPath, "*.*").Length > 4)
+            if (System.IO.Directory.GetFiles(IndexPath, "*.*").Length > 4)
             {
                 return true;
             }
@@ -125,9 +124,9 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(indexPath);
+                System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(IndexPath);
                 directoryInfo.Delete(true);
-                StaticObjects.Logger.Error("Creating Book Search Data for " + indexPath, ex);
+                StaticObjects.Logger.Error("Creating Book Search Data for " + IndexPath, ex);
                 EventsControl.FireSendMessage("Creating Book Search Data for ", ex);
                 return false;
             }
@@ -140,7 +139,7 @@ namespace UbStudyHelp.Classes
             {
                 if (!CreateUBIndex())
                 {
-                    string message = "Book Index not created for " + indexPath;
+                    string message = "Book Index not created for " + IndexPath;
                     StaticObjects.Logger.NonFatalError(message);
                     EventsControl.FireSendMessage("Book Index not created.");
                 }
@@ -160,7 +159,7 @@ namespace UbStudyHelp.Classes
                 searchData.ExtractTerms(searchQuery);
                 //searchData.SetSearchString(FieldText + ":", searchQuery.ToString());
 
-                var reader = DirectoryReader.Open(FSDirectory.Open(indexPath));
+                var reader = DirectoryReader.Open(FSDirectory.Open(IndexPath));
                 IndexSearcher searcher = new IndexSearcher(reader);
                 TopDocs hits = searcher.Search(searchQuery, 200);
                 int results = hits.ScoreDocs.Length;

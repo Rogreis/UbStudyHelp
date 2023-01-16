@@ -121,13 +121,13 @@ namespace UbStudyHelp.Pages
         private void ComboLeftTranslations_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
-            ((BookCore)StaticObjects.Book).SetNewTranslation(trans, true);
+            ((BookCore)StaticObjects.Book).SetNewTranslation(trans, NewTranslation.Left);
         }
 
         private void ComboRightTranslation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
-            ((BookCore)StaticObjects.Book).SetNewTranslation(trans, false);
+            ((BookCore)StaticObjects.Book).SetNewTranslation(trans, NewTranslation.Right);
         }
 
         private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)

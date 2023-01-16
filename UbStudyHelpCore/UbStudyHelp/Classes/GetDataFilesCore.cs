@@ -26,7 +26,7 @@ namespace UbStudyHelp.Classes
         /// <returns></returns>
         protected override string ControlFilePath()
         {
-            return Path.Combine(ApplicationFolderTubFiles, ControlFileName);
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, ControlFileName);
 
         }
 
@@ -37,7 +37,7 @@ namespace UbStudyHelp.Classes
         /// <returns></returns>
         protected override string TranslationFilePath(short translationId)
         {
-            return Path.Combine(ApplicationFolderTubFiles, $"TR{translationId:000}.gz");
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"TR{translationId:000}.gz");
         }
 
 
@@ -104,7 +104,7 @@ namespace UbStudyHelp.Classes
         /// </summary>
         /// <param name="translatioId"></param>
         /// <returns></returns>
-        public override Translation GetTranslation(short translatioId)
+        public override Translation GetTranslation(short translatioId, bool initializePapers = true)
         {
             Translation translation = base.GetTranslation(translatioId);
             // Loading annotations
