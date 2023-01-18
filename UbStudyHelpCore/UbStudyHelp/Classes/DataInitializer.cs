@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
+using Lucene.Net.QueryParsers.Flexible.Messages;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Text;
@@ -174,6 +175,26 @@ namespace UbStudyHelp.Classes
             {
                 GetDataFilesCore dataFiles = new GetDataFilesCore((ParametersCore)StaticObjects.Parameters);
                 StaticObjects.Book = new BookCore(dataFiles);
+
+                // Verify respository existence
+                if (!GitCommands.IsValid(StaticObjects.Parameters.TUB_Files_RepositoryFolder))
+                {
+                    if (!GitCommands.Clone(StaticObjects.Parameters.TUB_Files_Url, StaticObjects.Parameters.TUB_Files_RepositoryFolder))
+                    {
+                        StaticObjects.Logger.FatalError("Could not clone translations");
+                        return false;
+                    }
+                }
+
+                // Verify respository existence
+                if (!GitCommands.IsValid(StaticObjects.Parameters.EditBookRepositoryFolder))
+                {
+                    if (!GitCommands.Clone(StaticObjects.Parameters.EditParagraphsUrl, StaticObjects.Parameters.EditBookRepositoryFolder))
+                    {
+                        StaticObjects.Logger.FatalError("Could not clone translations");
+                        return false;
+                    }
+                }
 
 
                 EventsControl.FireSendMessage("Getting translations list");

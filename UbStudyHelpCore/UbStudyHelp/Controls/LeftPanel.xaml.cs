@@ -54,9 +54,9 @@ namespace UbStudyHelp.Controls
             switch (targetView)
             {
                 case "IncreaseFontSize":
-                    if (StaticObjects.Parameters.FontSizeInfo < 22)
+                    if (StaticObjects.Parameters.FontSize < 22)
                     {
-                        StaticObjects.Parameters.FontSizeInfo++;
+                        StaticObjects.Parameters.FontSize++;
                         EventsControl.FireFontChanged();
                     }
                     else
@@ -66,9 +66,9 @@ namespace UbStudyHelp.Controls
                     args.Handled = true;
                     break;
                 case "DecreaseFontSize":
-                    if (StaticObjects.Parameters.FontSizeInfo > 10)
+                    if (StaticObjects.Parameters.FontSize > 10)
                     {
-                        StaticObjects.Parameters.FontSizeInfo--;
+                        StaticObjects.Parameters.FontSize--;
                         EventsControl.FireFontChanged();
                     }
                     else

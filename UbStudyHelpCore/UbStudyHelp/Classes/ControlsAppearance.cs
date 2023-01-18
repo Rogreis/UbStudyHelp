@@ -50,8 +50,8 @@ namespace UbStudyHelp.Classes
                     TargetType = typeof(System.Windows.Documents.Block)
                 };
 
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, StaticObjects.Parameters.FontSize));
                 style.Setters.Add(new Setter(System.Windows.Documents.Block.ForegroundProperty, App.Appearance.GetForegroundColorBrush()));
                 return style;
             }
@@ -175,8 +175,8 @@ namespace UbStudyHelp.Classes
                 TargetType = typeof(Control)
             };
             
-            style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
-            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
+            style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
+            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSize));
             if (!(control is ComboBox || control is ListView))
             {
                 style.Setters.Add(new Setter(Control.BackgroundProperty, reverse ? GetHighlightColorBrush() : GetBackgroundColorBrush()));
@@ -193,8 +193,8 @@ namespace UbStudyHelp.Classes
                 TargetType = typeof(TextBlock)
             };
 
-            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
-            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
+            style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
+            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, StaticObjects.Parameters.FontSize));
 
             style.Setters.Add(new Setter(TextBlock.BackgroundProperty, reverse ? GetHighlightColorBrush() : GetBackgroundColorBrush()));
             style.Setters.Add(new Setter(TextBlock.ForegroundProperty, reverse ? GetBackgroundColorBrush() : GetForegroundColorBrush()));
@@ -208,19 +208,21 @@ namespace UbStudyHelp.Classes
             {
                 TargetType = typeof(Control)
             };
-            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
+            StaticObjects.Parameters.FontSize = 10;
+            double FontSizeInfo = 10;
+            style.Setters.Add(new Setter(Control.FontSizeProperty, FontSizeInfo));
             control.Style = style;
         }
 
         public void SetFontSize(TextBlock control)
         {
-            control.FontSize = StaticObjects.Parameters.FontSizeInfo;
+            control.FontSize = StaticObjects.Parameters.FontSize;
         }
 
         public void SetHeight(Control control)
         {
             double delta = 10;
-            control.Height = StaticObjects.Parameters.FontSizeInfo + delta;
+            control.Height = StaticObjects.Parameters.FontSize + delta;
         }
 
         public string ThemeColor

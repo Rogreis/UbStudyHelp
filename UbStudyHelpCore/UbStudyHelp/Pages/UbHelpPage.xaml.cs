@@ -54,8 +54,8 @@ namespace UbStudyHelp.Pages
                     TargetType = typeof(Block)
                 };
 
-                style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
-                style.Setters.Add(new Setter(Block.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
+                style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
+                style.Setters.Add(new Setter(Block.FontSizeProperty, StaticObjects.Parameters.FontSize));
                 style.Setters.Add(new Setter(Block.ForegroundProperty, App.Appearance.GetForegroundColorBrush()));
                 return style;
             }
@@ -68,8 +68,8 @@ namespace UbStudyHelp.Pages
                 TargetType = typeof(Block)
             };
 
-            style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
-            style.Setters.Add(new Setter(Block.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo + size));
+            style.Setters.Add(new Setter(Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
+            style.Setters.Add(new Setter(Block.FontSizeProperty, StaticObjects.Parameters.FontSize + size));
             style.Setters.Add(new Setter(Block.ForegroundProperty, App.Appearance.GetHighlightColorBrush()));
             return style;
         }

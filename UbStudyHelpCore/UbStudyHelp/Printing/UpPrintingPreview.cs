@@ -92,8 +92,8 @@ namespace UbStudyHelp.Printing
                 TargetType = typeof(Control)
             };
 
-            style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamilyInfo)));
-            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSizeInfo));
+            style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
+            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSize));
             if (!(control is ComboBox || control is ListView))
             {
                 style.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Colors.White)));

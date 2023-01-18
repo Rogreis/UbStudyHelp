@@ -235,30 +235,30 @@ namespace UbStudyHelp.Classes
                 {
                     case TextTag.Normal:
                         Run runNormal = new Run(textTag.Text);
-                        runNormal.FontSize = StaticObjects.Parameters.FontSizeInfo;
+                        runNormal.FontSize = StaticObjects.Parameters.FontSize;
                         Inlines.Add(runNormal);
                         break;
                     case TextTag.Italic:
                         var i = new Italic();
-                        i.FontSize = StaticObjects.Parameters.FontSizeInfo;
+                        i.FontSize = StaticObjects.Parameters.FontSize;
                         i.Inlines.Add(textTag.Text);
                         Inlines.Add(i);
                         break;
                     case TextTag.Bold:
                         var b = new Bold();
-                        b.FontSize = StaticObjects.Parameters.FontSizeInfo;
+                        b.FontSize = StaticObjects.Parameters.FontSize;
                         b.Inlines.Add(textTag.Text);
                         Inlines.Add(b);
                         break;
                     case TextTag.Superscript:
                         Run runSuper = new Run(textTag.Text);
-                        runSuper.FontSize = StaticObjects.Parameters.FontSizeInfo;
+                        runSuper.FontSize = StaticObjects.Parameters.FontSize;
                         runSuper.BaselineAlignment = BaselineAlignment.Superscript;
                         Inlines.Add(runSuper);
                         break;
                     case TextTag.Highlighted:
                         Bold bHighlighted = new Bold();
-                        bHighlighted.FontSize = StaticObjects.Parameters.FontSizeInfo;
+                        bHighlighted.FontSize = StaticObjects.Parameters.FontSize;
                         bHighlighted.Foreground = accentBrush;
                         bHighlighted.Inlines.Add(textTag.Text);
                         Inlines.Add(bHighlighted);

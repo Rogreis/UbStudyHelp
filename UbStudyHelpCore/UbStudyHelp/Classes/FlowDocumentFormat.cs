@@ -18,7 +18,7 @@ namespace UbStudyHelp.Classes
                 string id = includePage ? $"{entry.ParagraphID}" : $"{entry.ParagraphIDNoPage}";
                 Run runIdent = new Run(id)
                 {
-                    FontSize = StaticObjects.Parameters.FontSizeInfo - 4,
+                    FontSize = StaticObjects.Parameters.FontSize - 4,
                     Foreground = accentBrush
                 };
                 return runIdent;
