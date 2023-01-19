@@ -187,7 +187,7 @@ namespace UbStudyHelp.Classes
                 }
 
                 // Verify respository existence
-                if (!GitCommands.IsValid(StaticObjects.Parameters.EditBookRepositoryFolder))
+                if (!GitCommands.IsValid(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
                 {
                     if (!GitCommands.Clone(StaticObjects.Parameters.EditParagraphsUrl, StaticObjects.Parameters.EditBookRepositoryFolder))
                     {
@@ -222,7 +222,7 @@ namespace UbStudyHelp.Classes
             }
             catch (Exception ex)
             {
-                string message = "Could not initialize translations. See log.";
+                string message = "Could not initialize translations 2. See log.";
                 StaticObjects.Logger.Error(message, ex);
                 StaticObjects.Logger.FatalError(message);
                 return false;

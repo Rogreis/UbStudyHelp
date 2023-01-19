@@ -74,11 +74,11 @@ namespace UbStudyHelp.Pages
         /// <summary>
         /// Show track data
         /// </summary>
-        private void ShowTrackData()
+        private void ShowTrackData(bool force= false)
         {
 
             // Already shown?
-            if (lastEntryShown != null && StaticObjects.Parameters.TrackEntries.Count > 0 && lastEntryShown == StaticObjects.Parameters.TrackEntries[0])
+            if (!force && lastEntryShown != null && StaticObjects.Parameters.TrackEntries.Count > 0 && lastEntryShown == StaticObjects.Parameters.TrackEntries[0])
             {
                 return;
             }
@@ -122,7 +122,7 @@ namespace UbStudyHelp.Pages
 
         private void SetFontSize()
         {
-            ShowTrackData();
+            ShowTrackData(true);
             //App.Appearance.SetFontSize(ButtonTrackSort);
             //App.Appearance.SetFontSize(ButtonTrackClear);
             //App.Appearance.SetFontSize(ButtonTrackSave);
@@ -131,7 +131,7 @@ namespace UbStudyHelp.Pages
 
         private void SetAppearence()
         {
-            ShowTrackData();
+            ShowTrackData(true);
             App.Appearance.SetThemeInfo(ButtonTrackSort);
             App.Appearance.SetThemeInfo(ButtonTrackClear);
             App.Appearance.SetThemeInfo(ButtonTrackSave);

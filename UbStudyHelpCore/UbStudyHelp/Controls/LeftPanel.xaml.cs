@@ -54,7 +54,7 @@ namespace UbStudyHelp.Controls
             switch (targetView)
             {
                 case "IncreaseFontSize":
-                    if (StaticObjects.Parameters.FontSize < 22)
+                    if (StaticObjects.Parameters.FontSize < 32)
                     {
                         StaticObjects.Parameters.FontSize++;
                         EventsControl.FireFontChanged();

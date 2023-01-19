@@ -78,7 +78,7 @@ namespace UbStudyHelp
                 StatusBarVersion.Text = "v 2.1.2";
                 if (!DataInitializer.InitTranslations())
                 {
-                    throw new Exception("Could not initialize translations.");
+                    throw new Exception("Could not initialize translations 1.");
                 }
                 DataInitialized = true;
                 LeftPanelControl.Init();

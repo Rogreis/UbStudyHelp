@@ -51,7 +51,7 @@ namespace UbStudyHelp.Classes
                 };
 
                 style.Setters.Add(new Setter(System.Windows.Documents.Block.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
-                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, StaticObjects.Parameters.FontSize));
+                style.Setters.Add(new Setter(System.Windows.Documents.Block.FontSizeProperty, (double)StaticObjects.Parameters.FontSize));
                 style.Setters.Add(new Setter(System.Windows.Documents.Block.ForegroundProperty, App.Appearance.GetForegroundColorBrush()));
                 return style;
             }
@@ -125,7 +125,7 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public string GetGrayColor(int grayColorNumber= 1)
+        public string GetGrayColor(int grayColorNumber = 1)
         {
             // https://mahapps.com/docs/themes/thememanager
             return Convert.ToString(Application.Current.FindResource($"MahApps.Colors.Gray{grayColorNumber}"));
@@ -168,15 +168,15 @@ namespace UbStudyHelp.Classes
         }
 
 
-        public void SetThemeInfo(Control control, bool reverse= false)
+        public void SetThemeInfo(Control control, bool reverse = false)
         {
             Style style = new Style
             {
                 TargetType = typeof(Control)
             };
-            
+
             style.Setters.Add(new Setter(Control.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
-            style.Setters.Add(new Setter(Control.FontSizeProperty, StaticObjects.Parameters.FontSize));
+            style.Setters.Add(new Setter(Control.FontSizeProperty, (double)StaticObjects.Parameters.FontSize));
             if (!(control is ComboBox || control is ListView))
             {
                 style.Setters.Add(new Setter(Control.BackgroundProperty, reverse ? GetHighlightColorBrush() : GetBackgroundColorBrush()));
@@ -187,14 +187,13 @@ namespace UbStudyHelp.Classes
 
         public void SetThemeInfo(TextBlock control, bool reverse = false)
         {
-
             Style style = new Style
             {
                 TargetType = typeof(TextBlock)
             };
 
             style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, new FontFamily(StaticObjects.Parameters.FontFamily)));
-            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, StaticObjects.Parameters.FontSize));
+            style.Setters.Add(new Setter(TextBlock.FontSizeProperty, (double)StaticObjects.Parameters.FontSize));
 
             style.Setters.Add(new Setter(TextBlock.BackgroundProperty, reverse ? GetHighlightColorBrush() : GetBackgroundColorBrush()));
             style.Setters.Add(new Setter(TextBlock.ForegroundProperty, reverse ? GetBackgroundColorBrush() : GetForegroundColorBrush()));
@@ -208,9 +207,7 @@ namespace UbStudyHelp.Classes
             {
                 TargetType = typeof(Control)
             };
-            StaticObjects.Parameters.FontSize = 10;
-            double FontSizeInfo = 10;
-            style.Setters.Add(new Setter(Control.FontSizeProperty, FontSizeInfo));
+            style.Setters.Add(new Setter(Control.FontSizeProperty, (double)StaticObjects.Parameters.FontSize));
             control.Style = style;
         }
 
