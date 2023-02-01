@@ -31,6 +31,7 @@
     <None Remove="Images\Settings.png" />
     <None Remove="Images\TOC.png" />
     <None Remove="Images\Track .png" />
+    <None Remove="Resources\SplashScreenImage.png" />
   </ItemGroup>
 
 
@@ -41,13 +42,13 @@
   <ItemGroup>
     <PackageReference Include="CommonMark.NET" Version="0.15.1" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="log4net" Version="2.0.13" />
+    <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Lucene.Net" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00014" />
     <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00014" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
-    <PackageReference Include="SharpVectors" Version="1.7.7" />
-    <PackageReference Include="System.Text.Json" Version="6.0.5" />
+    <PackageReference Include="SharpVectors" Version="1.8.1" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +67,12 @@
     <Resource Include="Images\Settings.png" />
     <Resource Include="Images\TOC.png" />
     <Resource Include="Images\Track .png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Resources\SplashScreenImage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </SplashScreen>
   </ItemGroup>
 
 
@@ -123,8 +130,5 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <SplashScreen Include="Images\SplashScreenFbUbPt.png" />
-  </ItemGroup>
 
 </Project>

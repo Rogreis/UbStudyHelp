@@ -1,16 +1,15 @@
-﻿using ControlzEx.Theming;
-using log4net.Core;
-using log4net;
-using Microsoft.Windows.Themes;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using ControlzEx.Theming;
+using Lucene.Net.QueryParsers.Flexible.Messages;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Text;
-using System.ComponentModel;
-using System.Diagnostics;
 
 namespace UbStudyHelp.Pages
 {
@@ -68,22 +67,28 @@ namespace UbStudyHelp.Pages
 
         private void SetFontSize()
         {
-            App.Appearance.SetFontSize(LabelLeftTranslations);
-            App.Appearance.SetFontSize(LabelRightTranslations);
-            App.Appearance.SetFontSize(LabelColorTheme);
-            App.Appearance.SetFontSize(ComboLeftTranslations);
-            App.Appearance.SetFontSize(ComboRightTranslation);
-            App.Appearance.SetFontSize(ComboTheme);
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                App.Appearance.SetFontSize(LabelLeftTranslations);
+                App.Appearance.SetFontSize(LabelRightTranslations);
+                App.Appearance.SetFontSize(LabelColorTheme);
+                App.Appearance.SetFontSize(ComboLeftTranslations);
+                App.Appearance.SetFontSize(ComboRightTranslation);
+                App.Appearance.SetFontSize(ComboTheme);
+            }
         }
 
         private void SetAppearence()
         {
-            App.Appearance.SetThemeInfo(LabelLeftTranslations);
-            App.Appearance.SetThemeInfo(LabelRightTranslations);
-            App.Appearance.SetThemeInfo(LabelColorTheme);
-            App.Appearance.SetThemeInfo(ComboLeftTranslations);
-            App.Appearance.SetThemeInfo(ComboRightTranslation);
-            App.Appearance.SetThemeInfo(ComboTheme);
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                App.Appearance.SetThemeInfo(LabelLeftTranslations);
+                App.Appearance.SetThemeInfo(LabelRightTranslations);
+                App.Appearance.SetThemeInfo(LabelColorTheme);
+                App.Appearance.SetThemeInfo(ComboLeftTranslations);
+                App.Appearance.SetThemeInfo(ComboRightTranslation);
+                App.Appearance.SetThemeInfo(ComboTheme);
+            }
         }
 
 
@@ -91,6 +96,7 @@ namespace UbStudyHelp.Pages
         {
             string theme = ((ParametersCore)StaticObjects.Parameters).ThemeName + "." + ((ParametersCore)StaticObjects.Parameters).ThemeColor;
             ThemeManager.Current.ChangeTheme(Application.Current, theme);
+            StaticObjects.FireSendMessage($"Theme changed to be {theme}");
         }
 
         #region events
@@ -122,12 +128,14 @@ namespace UbStudyHelp.Pages
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
             ((BookCore)StaticObjects.Book).SetNewTranslation(trans, NewTranslation.Left);
+            StaticObjects.FireSendMessage($"Left Translation set to be {trans.Description}");
         }
 
         private void ComboRightTranslation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Translation trans = (sender as ComboBox).SelectedItem as Translation;
             ((BookCore)StaticObjects.Book).SetNewTranslation(trans, NewTranslation.Right);
+            StaticObjects.FireSendMessage($"Right Translation set to be {trans.Description}");
         }
 
         private void ToggleSwitchThemme_Toggled(object sender, RoutedEventArgs e)
@@ -139,12 +147,14 @@ namespace UbStudyHelp.Pages
         {
             StaticObjects.Parameters.ShowParagraphIdentification = ToggleSwitchShowParIdent.IsOn;
             EventsControl.FireRefreshText();
+            StaticObjects.FireSendMessage($"Show Paragraph Identification: {StaticObjects.Parameters.ShowParagraphIdentification}");
         }
 
         private void ToggleSwitchBilingual_Toggled(object sender, RoutedEventArgs e)
         {
             StaticObjects.Parameters.ShowBilingual = ToggleSwitchBilingual.IsOn;
             EventsControl.FireBilingualChanged(ToggleSwitchBilingual.IsOn);
+            StaticObjects.FireSendMessage($"Show Bilingual: {StaticObjects.Parameters.ShowBilingual}");
         }
 
         /// <summary>

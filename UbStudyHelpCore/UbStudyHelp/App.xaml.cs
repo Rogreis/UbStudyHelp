@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography.Xml;
 using System.Text.Json;
 using System.Windows;
 using UbStandardObjects;
@@ -25,8 +26,10 @@ namespace UbStudyHelp
 
         protected override void OnStartup(StartupEventArgs e)
         {
+  
             ControlzEx.Theming.ThemeManager.Current.ThemeSyncMode = ControlzEx.Theming.ThemeSyncMode.SyncAll;
             ControlzEx.Theming.ThemeManager.Current.SyncTheme();
+
             base.OnStartup(e);
         }
 

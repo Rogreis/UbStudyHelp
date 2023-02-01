@@ -249,8 +249,8 @@ namespace UbStudyHelp.Controls
             Paper paperLeft = StaticObjects.Book.LeftTranslation.Paper(entry.Paper);
             Paper paperRight = StaticObjects.Book.RightTranslation.Paper(entry.Paper);
 
-            string titleLeft = StaticObjects.Book.LeftTranslation.PaperTranslation.Replace("1", paperLeft.PaperNo.ToString());
-            string titleRight = StaticObjects.Book.RightTranslation.PaperTranslation.Replace("1", paperRight.PaperNo.ToString());
+            string titleLeft = $"{StaticObjects.Book.LeftTranslation.PaperTranslation} {paperLeft.PaperNo}";
+            string titleRight = $"{StaticObjects.Book.RightTranslation.PaperTranslation} {paperRight.PaperNo}";
 
             // Entry informations goes to each paragraph without text
             TOC_Entry entryLeft = TOC_Entry.CreateEntry(entry, StaticObjects.Book.LeftTranslation.LanguageID);

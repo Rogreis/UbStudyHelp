@@ -23,11 +23,16 @@ namespace UbStudyHelp.Classes
         }
 
 
-        private static string MakeProgramDataFolder(string fileName)
+        private static string MakeProgramDataFolder(string fileName = null)
         {
             string folder = DataFolder();
             Directory.CreateDirectory(folder);
-            return Path.Combine(folder, fileName);
+            if (fileName != null) 
+            {
+                folder = Path.Combine(folder, fileName);
+                Directory.CreateDirectory(folder);
+            }
+            return folder;
         }
 
         /// <summary>
@@ -91,14 +96,14 @@ namespace UbStudyHelp.Classes
             {
                 EventsControl.FireSendMessage($"Getting editying translation {trans.Description}");
                 EventsControl.FireSendMessage("Checking folders for editing translation");
-                if (!Directory.Exists(StaticObjects.Parameters.EditBookRepositoryFolder))
+                if (!Directory.Exists(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
                 {
                     StaticObjects.Logger.Error("There is no repositoty set for editing translation");
                     return false;
                 }
-                if (!GitCommands.IsValid(StaticObjects.Parameters.EditBookRepositoryFolder))
+                if (!GitCommands.IsValid(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
                 {
-                    StaticObjects.Logger.Error($"Folder is not a valid respository: {StaticObjects.Parameters.EditBookRepositoryFolder}");
+                    StaticObjects.Logger.Error($"Folder is not a valid respository: {StaticObjects.Parameters.EditParagraphsRepositoryFolder}");
                     return false;
                 }
                 EventsControl.FireSendMessage("Found a valid repository");
@@ -117,7 +122,7 @@ namespace UbStudyHelp.Classes
             try
             {
                 // Log for errors
-                string pathLog = MakeProgramDataFolder("UbStudyHelp.log");
+                string pathLog = Path.Combine(MakeProgramDataFolder(), "UbStudyHelp.log");
                 StaticObjects.Logger = new LogCore();
                 StaticObjects.Logger.Initialize(pathLog, false);
                 StaticObjects.Logger.Info("»»»» Startup");
@@ -136,7 +141,7 @@ namespace UbStudyHelp.Classes
         {
             try
             {
-                App.PathParameters = MakeProgramDataFolder("UbStudyHelp.json");
+                App.PathParameters = Path.Combine(MakeProgramDataFolder(), "UbStudyHelp.json");
                 if (!File.Exists(App.PathParameters))
                 {
                     StaticObjects.Logger.Info("Parameters not found, creating a new one: " + App.PathParameters);
@@ -146,7 +151,7 @@ namespace UbStudyHelp.Classes
 
                 // Set folders and URLs used
                 // This must be set in the parameters
-                StaticObjects.Parameters.ApplicationDataFolder = MakeProgramDataFolder("");
+                StaticObjects.Parameters.ApplicationDataFolder = MakeProgramDataFolder();
                 StaticObjects.Parameters.IndexSearchFolders = MakeProgramDataFolder("IndexSearch");
                 StaticObjects.Parameters.TubSearchFolders = MakeProgramDataFolder("TubSearch");
 
@@ -185,17 +190,33 @@ namespace UbStudyHelp.Classes
                         return false;
                     }
                 }
-
-                // Verify respository existence
-                if (!GitCommands.IsValid(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
+                else
                 {
-                    if (!GitCommands.Clone(StaticObjects.Parameters.EditParagraphsUrl, StaticObjects.Parameters.EditBookRepositoryFolder))
+                    if (!GitCommands.Pull(StaticObjects.Parameters.TUB_Files_RepositoryFolder))
                     {
-                        StaticObjects.Logger.FatalError("Could not clone translations");
+                        StaticObjects.Logger.FatalError("Could not checkout TUB translations");
                         return false;
                     }
                 }
 
+
+                // Verify respository existence
+                if (!GitCommands.IsValid(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
+                {
+                    if (!GitCommands.Clone(StaticObjects.Parameters.EditParagraphsUrl, StaticObjects.Parameters.EditParagraphsRepositoryFolder))
+                    {
+                        StaticObjects.Logger.FatalError("Could not clone edit translation");
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (!GitCommands.Pull(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
+                    {
+                        StaticObjects.Logger.FatalError("Could not checkout TUB translations");
+                        return false;
+                    }
+                }
 
                 EventsControl.FireSendMessage("Getting translations list");
                 if (!InicializeTranslations(dataFiles))
