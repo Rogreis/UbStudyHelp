@@ -36,8 +36,8 @@ namespace UbStudyHelp.Controls
         {
             SetAppearence();
             SetFontSize();
-            luceneLeft = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.LeftTranslation);
-            luceneRight = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.RightTranslation);
+            luceneLeft = new LuceneBookSearch(StaticObjects.Book.LeftTranslation);
+            luceneRight = new LuceneBookSearch(StaticObjects.Book.RightTranslation);
 
             TooglePart1.IsOn= StaticObjects.Parameters.SimpleSearchIncludePartI;
             TooglePart2.IsOn = StaticObjects.Parameters.SimpleSearchIncludePartII;
@@ -205,7 +205,7 @@ namespace UbStudyHelp.Controls
             SearchData data = GetData();
             if (luceneLeft.Translation.LanguageID != StaticObjects.Book.LeftTranslation.LanguageID)
             {
-                luceneLeft = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.LeftTranslation);
+                luceneLeft = new LuceneBookSearch(StaticObjects.Book.LeftTranslation);
             }
             if (luceneLeft.Execute(data))
             {
@@ -224,7 +224,7 @@ namespace UbStudyHelp.Controls
             SearchData data = GetData();
             if (luceneRight.Translation.LanguageID != StaticObjects.Book.RightTranslation.LanguageID)
             {
-                luceneRight = new LuceneBookSearch(App.BaseTubFilesPath, StaticObjects.Book.RightTranslation);
+                luceneRight = new LuceneBookSearch(StaticObjects.Book.RightTranslation);
             }
             if (luceneRight.Execute(data))
             {

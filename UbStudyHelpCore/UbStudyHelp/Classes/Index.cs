@@ -8,20 +8,13 @@ namespace UbStudyHelp.Classes
 {
     public class Index
     {
-        private string DestinationFolder;
-        private string SourceFolder;
         private LuceneIndexSearch lucene = null;
 
         public List<TubIndex> TubIndex { get; private set; } = new List<TubIndex>();
 
-        public Index(string basePathForFiles)
+        public Index()
         {
-            SourceFolder = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "TUB_Files");
-            //DestinationFolder = destinationFolder;
-
-
-            DestinationFolder = basePathForFiles;
-            lucene = new LuceneIndexSearch(DestinationFolder, 0); // Only English for now
+            lucene = new LuceneIndexSearch(0); // Only English for now
         }
 
 
@@ -33,7 +26,7 @@ namespace UbStudyHelp.Classes
         {
             try
             {
-                string pathFile = Path.Combine(SourceFolder, "tubIndex_000.json");
+                string pathFile = Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, "tubIndex_000.json");
                 string json = File.ReadAllText(pathFile);
                 TubIndex = StaticObjects.DeserializeObject<List<TubIndex>>(json);
                 return lucene.CreateLuceneIndexForUBIndex(TubIndex);

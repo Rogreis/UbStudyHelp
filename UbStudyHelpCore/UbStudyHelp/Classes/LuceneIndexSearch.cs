@@ -22,10 +22,9 @@ namespace UbStudyHelp.Classes
 
         public string IndexPath { get; private set; } = "";
 
-        public LuceneIndexSearch(string basePathForFiles, short translationID)
+        public LuceneIndexSearch(short translationID)
         {
-            string pathFile = System.IO.Path.Combine(basePathForFiles, "L" + translationID.ToString("000"));
-            IndexPath = System.IO.Path.Combine(pathFile, "in");
+            IndexPath = System.IO.Path.Combine(StaticObjects.Parameters.IndexSearchFolders, "T" + translationID.ToString("000"));
             if (!System.IO.Directory.Exists(IndexPath))
             {
                 System.IO.Directory.CreateDirectory(IndexPath);

@@ -82,7 +82,7 @@ namespace UbStudyHelp.Pages
             Run runTop = new Run($"({data.SearchResults.Count}) paragraph(s) found")
             {
                 //FontWeight = FontWeights.Bold,
-                FontSize = StaticObjects.Parameters.FontSizeInfo,
+                FontSize = StaticObjects.Parameters.FontSize,
                 Foreground = accentBrush
             };
             paragraphTop.Inlines.Add(runTop);
@@ -90,7 +90,7 @@ namespace UbStudyHelp.Pages
             paragraphTop.Inlines.Add(new LineBreak());
             Run runPageShown = new Run($"Showing page {nrPage} of {totalPages}")
             {
-                FontSize = StaticObjects.Parameters.FontSizeInfo,
+                FontSize = StaticObjects.Parameters.FontSize,
                 Foreground = accentBrush
             };
             paragraphTop.Inlines.Add(runPageShown);

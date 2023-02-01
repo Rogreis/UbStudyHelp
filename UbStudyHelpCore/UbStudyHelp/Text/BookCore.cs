@@ -9,66 +9,58 @@ using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Text
 {
+    public enum NewTranslation
+    {
+        Left,
+        Middle,
+        Right,
+        Compare
+    }
+
     public class BookCore : Book
     {
 
-        //private GetDataFilesCore dataFiles = null;
+        private GetDataFilesCore DataReader = null;
 
 
-        public BookCore()
+        public BookCore(GetDataFilesCore dataReader)
         {
             EventsControl.AnnotationsChanges += EventsControl_AnnotationsChanges;
-
+            DataReader = dataReader;
         }
 
-
-
-        //public override bool Inicialize(string baseDataPath, short leftTranslationId, short rightTranslationID)
-        //{
-        //    try
-        //    {
-        //        FilesPath = baseDataPath;
-
-        //        dataFiles = new GetDataFilesCore(System.AppDomain.CurrentDomain.BaseDirectory, App.BaseTubFilesPath);
-        //        Translations = dataFiles.GetTranslations();
-        //        LeftTranslation = dataFiles.GetTranslation(leftTranslationId);
-        //        if (!LeftTranslation.CheckData()) return false;
-        //        RightTranslation = dataFiles.GetTranslation(rightTranslationID);
-        //        if (!RightTranslation.CheckData()) return false;
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string message = $"General error getting translations: {ex.Message}. May be you do not have the correct data to use this tool.";
-        //        StaticObjects.Logger.Error(message, ex);
-        //        StaticObjects.Logger.FatalError(message);
-        //        return false;
-        //    }
-        //}
-
-        public void SetNewTranslation(Translation translation, bool isLeft = true)
+       public void SetNewTranslation(Translation translation, NewTranslation newTranslation)
         {
             try
             {
-                if (isLeft)
+                switch(newTranslation)
                 {
-                    StaticObjects.Parameters.LanguageIDLeftTranslation = translation.LanguageID;
-                    LeftTranslation = DataFiles.GetTranslation(translation.LanguageID);
-                    StaticObjects.Logger.IsNull(LeftTranslation, $"Invalid of non existing translation: {translation.LanguageID}");
-                    if (!LeftTranslation.CheckData())
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    StaticObjects.Parameters.LanguageIDRightTranslation = translation.LanguageID;
-                    RightTranslation = DataFiles.GetTranslation(translation.LanguageID);
-                    StaticObjects.Logger.IsNull(RightTranslation, $"Invalid of non existing translation: {translation.LanguageID}");
-                    if (!RightTranslation.CheckData())
-                    {
-                        return;
-                    }
+                    case NewTranslation.Left:
+                        if (StaticObjects.Parameters.LanguageIDLeftTranslation == translation.LanguageID)
+                        {
+                            return;
+                        }
+                        StaticObjects.Parameters.LanguageIDLeftTranslation = translation.LanguageID;
+                        LeftTranslation = DataReader.GetTranslation(translation.LanguageID);
+                        StaticObjects.Logger.IsNull(LeftTranslation, $"Invalid of non existing translation: {translation.LanguageID}");
+                        break;
+                    case NewTranslation.Middle:
+                        if (StaticObjects.Parameters.LanguageIDMiddleTranslation == translation.LanguageID)
+                        {
+                            return;
+                        }
+
+                        StaticObjects.Parameters.LanguageIDMiddleTranslation = translation.LanguageID;
+                        MiddleTranslation = DataReader.GetTranslation(translation.LanguageID);
+                        StaticObjects.Logger.IsNull(MiddleTranslation, $"Invalid of non existing translation: {translation.LanguageID}");
+                        break;
+                    case NewTranslation.Right:
+                        StaticObjects.Parameters.LanguageIDRightTranslation = translation.LanguageID;
+                        RightTranslation = DataReader.GetTranslation(translation.LanguageID);
+                        StaticObjects.Logger.IsNull(RightTranslation, $"Invalid of non existing translation: {translation.LanguageID}");
+                        break;
+                    case NewTranslation.Compare:
+                        break;
                 }
                 EventsControl.FireTranslationsChanged();
             }
@@ -82,7 +74,7 @@ namespace UbStudyHelp.Text
 
         public override void StoreAnnotations(TOC_Entry entry, List<UbAnnotationsStoreData> annotations)
         {
-            ((GetDataFilesCore)DataFiles).StoreAnnotations(entry, annotations);
+            ((GetDataFilesCore)DataReader).StoreAnnotations(entry, annotations);
         }
 
         /// <summary>

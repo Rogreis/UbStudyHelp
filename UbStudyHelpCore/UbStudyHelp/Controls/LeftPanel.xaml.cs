@@ -12,27 +12,18 @@ namespace UbStudyHelp.Controls
     /// </summary>
     public partial class LeftPanel : UserControl
     {
-        UbTocPage ubTocPage = new UbTocPage();
-        UbIndexPage ubIndexPage = new UbIndexPage();
-        UbSearchPage ubSearchPage = new UbSearchPage();
-        UbTrackPage ubTrackPage = new UbTrackPage();
-        SearchHelpPage searchHelpPage = new SearchHelpPage();
-        SettingsPage optionsPage = new SettingsPage();
-        NotesPage notesPage = new NotesPage();
+        UbTocPage ubTocPage = null;
+        UbIndexPage ubIndexPage = null;
+        UbSearchPage ubSearchPage = null;
+        UbTrackPage ubTrackPage = null;
+        SearchHelpPage searchHelpPage = null;
+        SettingsPage optionsPage = null;
+        NotesPage notesPage = null;
 
         public LeftPanel()
         {
             InitializeComponent();
             this.Loaded += LeftPainel_Loaded;
-            ubTocPage.Initialize();
-            ubIndexPage.Initialize();
-            ubSearchPage.Initialize();
-            ubTrackPage.Initialize();
-            searchHelpPage.Initialize();
-            optionsPage.Initialize();
-            notesPage.Initialize();
-            StaticObjects.Logger.Info("»»»» LeftPainel created");
-
             EventsControl.DirectSearch += EventsControl_DirectSearch;
         }
 
@@ -63,9 +54,9 @@ namespace UbStudyHelp.Controls
             switch (targetView)
             {
                 case "IncreaseFontSize":
-                    if (StaticObjects.Parameters.FontSizeInfo < 22)
+                    if (StaticObjects.Parameters.FontSize < 32)
                     {
-                        StaticObjects.Parameters.FontSizeInfo++;
+                        StaticObjects.Parameters.FontSize++;
                         EventsControl.FireFontChanged();
                     }
                     else
@@ -75,9 +66,9 @@ namespace UbStudyHelp.Controls
                     args.Handled = true;
                     break;
                 case "DecreaseFontSize":
-                    if (StaticObjects.Parameters.FontSizeInfo > 10)
+                    if (StaticObjects.Parameters.FontSize > 10)
                     {
-                        StaticObjects.Parameters.FontSizeInfo--;
+                        StaticObjects.Parameters.FontSize--;
                         EventsControl.FireFontChanged();
                     }
                     else
@@ -108,6 +99,28 @@ namespace UbStudyHelp.Controls
                     FrameControl.Navigate(notesPage);
                     break;
             }
+
+        }
+
+        public void Init()
+        {
+            ubTocPage = new UbTocPage();
+            ubIndexPage = new UbIndexPage();
+            ubSearchPage = new UbSearchPage();
+            ubTrackPage = new UbTrackPage();
+            searchHelpPage = new SearchHelpPage();
+            optionsPage = new SettingsPage();
+            notesPage = new NotesPage();
+
+            ubTocPage.Initialize();
+            ubIndexPage.Initialize();
+            ubSearchPage.Initialize();
+            ubTrackPage.Initialize();
+            searchHelpPage.Initialize();
+            optionsPage.Initialize();
+            notesPage.Initialize();
+            StaticObjects.Logger.Info("»»»» LeftPainel created");
+
 
         }
 

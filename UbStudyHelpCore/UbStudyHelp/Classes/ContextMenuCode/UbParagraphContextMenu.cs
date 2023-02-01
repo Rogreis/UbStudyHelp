@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Annotations;
 using System.Windows.Controls;
@@ -43,12 +44,13 @@ namespace UbStudyHelp.Classes
             Entry = entry;
             FlowDocument = flowDocument;
             FlowDocument.ContextMenuOpening += UbParagraphContextMenu_ContextMenuOpening;
-            CreateContextMenu();
         }
 
 
         private void UbParagraphContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
+            CreateContextMenu();
+
             if (menuItemSearch == null)
             {
                 return;
@@ -130,6 +132,16 @@ namespace UbStudyHelp.Classes
             quickSearch.ShowDialog();
         }
 
+        protected void ItemOpenInGitHub_Click(object sender, RoutedEventArgs e)
+        {
+            ParagraphSearchData data = GetCurrentParagraph();
+            if (data != null) 
+            {
+                string url = $"https://github.com/Rogreis/PtAlternative/blob/correcoes/Doc{data.Entry.Paper:000}/Par_{data.Entry.Paper:000}_{data.Entry.Section:000}_{data.Entry.ParagraphNo:000}.md";
+                // Doc016/Par_016_003_16:3-16 (188.4).md
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+        }
 
 
         protected void ItemSearch_Click(object sender, RoutedEventArgs e)
@@ -156,6 +168,7 @@ namespace UbStudyHelp.Classes
 
         protected void CreateContextMenu()
         {
+            Items.Clear();
             if (ShowAnnotations)
             {
                 Items.Add(CreateMenuItem("Add Highlight", AnnotationService.CreateHighlightCommand));
@@ -169,6 +182,12 @@ namespace UbStudyHelp.Classes
 
             Items.Add(CreateMenuItem("Copy", ApplicationCommands.Copy));
             Items.Add(CreateMenuItem("Select All", ApplicationCommands.SelectAll));
+            if (StaticObjects.Book != null && StaticObjects.Book.RightTranslation != null && StaticObjects.Book.RightTranslation.IsEditingTranslation) 
+            {
+                ParagraphSearchData data = GetCurrentParagraph();
+                if (data != null && !data.IsRightTranslation)
+                    Items.Add(CreateMenuItem("Open in Github", ItemOpenInGitHub_Click));
+            }
 
             if (ShowSearch)
             {

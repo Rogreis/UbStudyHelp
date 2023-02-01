@@ -15,9 +15,58 @@ namespace UbStudyHelp.Classes
     public class GetDataFilesCore : GetDataFiles
     {
 
-        public GetDataFilesCore(string appFolder, string localStorageFolder) : base(appFolder, localStorageFolder)
+        public GetDataFilesCore(ParametersCore param) : base(param)
         {
         }
+
+        #region File path creation
+        /// <summary>
+        /// Generates the control file full path
+        /// </summary>
+        /// <returns></returns>
+        protected override string ControlFilePath()
+        {
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, ControlFileName);
+
+        }
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected override string TranslationFilePath(short translationId)
+        {
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"TR{translationId:000}.gz");
+        }
+
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected override string TranslationJsonFilePath(short translationId)
+        {
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"TR{translationId:000}.json");
+        }
+
+        /// <summary>
+        /// Generates the translation full path
+        /// </summary>
+        /// <param name="translationId"></param>
+        /// <returns></returns>
+        protected override string TranslationAnnotationsJsonFilePath(short translationId)
+        {
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"{translationAnnotationsFileName}_{translationId:000}.json");
+        }
+
+        protected override string ParagraphAnnotationsJsonFilePath(short translationId)
+        {
+            return Path.Combine(StaticObjects.Parameters.TUB_Files_RepositoryFolder, $"{paragraphAnnotationsFileName}_{translationId:000}.json");
+        }
+
+        #endregion
 
 
         #region Load & Store Annotations
@@ -55,7 +104,7 @@ namespace UbStudyHelp.Classes
         /// </summary>
         /// <param name="translatioId"></param>
         /// <returns></returns>
-        public override Translation GetTranslation(short translatioId)
+        public override Translation GetTranslation(short translatioId, bool initializePapers = true)
         {
             Translation translation = base.GetTranslation(translatioId);
             // Loading annotations

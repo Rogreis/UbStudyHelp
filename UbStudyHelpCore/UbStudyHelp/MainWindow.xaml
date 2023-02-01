@@ -11,7 +11,6 @@
                 GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                 SaveWindowPosition="True" 
                 mc:Ignorable="d"
-                Loaded="formText_Loaded"
                 Title="The Urantia Book Study Help" Height="800" Width="1800" SizeChanged="MetroWindow_SizeChanged" WindowState="Maximized">
 
     <!--Setting a custom Icon see https://mahapps.com/docs/controls/metrowindow  -->
@@ -54,7 +53,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Controls:LeftPanel Grid.Column="0" />
+            <Controls:LeftPanel Grid.Column="0" x:Name="LeftPanelControl" />
 
             <GridSplitter x:Name="GridSplitterLeft" Background="DarkGray"  ResizeDirection="Columns"  Grid.Column="1" Grid.RowSpan="2"
                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
