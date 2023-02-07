@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net7.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <!--<TargetFrameworks>netcoreapp3.1;net5.0-windows</TargetFrameworks>-->
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
@@ -10,8 +10,8 @@
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <StartupObject>UbStudyHelp.App</StartupObject>
     <ApplicationIcon>UbStudyHelp.ico</ApplicationIcon>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
-    <FileVersion>2.1.0</FileVersion>
+    <AssemblyVersion>2.1.2</AssemblyVersion>
+    <FileVersion>2.1.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

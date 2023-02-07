@@ -185,7 +185,7 @@ namespace UbStudyHelp.Classes
             if (StaticObjects.Book != null && StaticObjects.Book.RightTranslation != null && StaticObjects.Book.RightTranslation.IsEditingTranslation) 
             {
                 ParagraphSearchData data = GetCurrentParagraph();
-                if (data != null && !data.IsRightTranslation)
+                if (data != null && data.IsRightTranslation)
                     Items.Add(CreateMenuItem("Open in Github", ItemOpenInGitHub_Click));
             }
 
