@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Windows;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
-using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Text
 {
@@ -29,11 +26,11 @@ namespace UbStudyHelp.Text
             DataReader = dataReader;
         }
 
-       public void SetNewTranslation(Translation translation, NewTranslation newTranslation)
+        public void SetNewTranslation(Translation translation, NewTranslation newTranslation)
         {
             try
             {
-                switch(newTranslation)
+                switch (newTranslation)
                 {
                     case NewTranslation.Left:
                         if (StaticObjects.Parameters.LanguageIDLeftTranslation == translation.LanguageID)
