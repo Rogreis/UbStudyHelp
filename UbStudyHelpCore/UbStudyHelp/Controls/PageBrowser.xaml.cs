@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using CommonMark.Syntax;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
@@ -174,6 +175,17 @@ namespace UbStudyHelp.Controls
         }
 
 
+        private void FormatCenter(TableCell cell, string text)
+        {
+            System.Windows.Documents.Paragraph paragraph = CreateParagraph(null, false);
+            cell.Blocks.Add(paragraph);
+            paragraph.Margin = new Thickness(50, 20, 20, 0);
+            Run centerText = new Run(text);
+            paragraph.TextAlignment = TextAlignment.Center;
+            paragraph.Inlines.Add(centerText);
+        }
+
+
         private void FormatTitle(TableCell cell,
                                  TOC_Entry entry, string text,
                                  bool highlighted = false,
@@ -205,6 +217,13 @@ namespace UbStudyHelp.Controls
             cellRight.Tag = new ParagraphSearchData() { IsRightTranslation = true, Entry = entryRight };
             row.Cells.Add(cellLeft);
             row.Cells.Add(cellRight);
+
+            if (LeftText.StartsWith("* * *") || LeftText.StartsWith("~ ~ ~"))
+            {
+                FormatCenter(cellLeft, "* * * *");
+                FormatCenter(cellRight, "* * * *");
+                return row;
+            }
 
 
             switch (htmlType)
