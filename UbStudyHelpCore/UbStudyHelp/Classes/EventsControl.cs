@@ -196,6 +196,12 @@ namespace UbStudyHelp.Classes
             SendMessage?.Invoke(message);
         }
 
+        public static void FireFatalError(string message, Exception ex = null)
+        {
+            SendMessage?.Invoke(message);
+        }
+
+
         public static void FireGridSplitter(double newWidth)
         {
             GridSplitterChanged?.Invoke(newWidth);

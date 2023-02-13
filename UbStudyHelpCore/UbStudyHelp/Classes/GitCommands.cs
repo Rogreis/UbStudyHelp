@@ -1,16 +1,9 @@
-﻿using CommonMark.Syntax;
-using LibGit2Sharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using UbStandardObjects.Objects;
-using UbStandardObjects;
-using Lucene.Net.QueryParsers.Flexible.Messages;
-using Lucene.Net.Documents;
-using LibGit2Sharp.Handlers;
 using System.Linq;
-using System.Net.Mail;
+using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
+using UbStandardObjects;
 
 namespace UbStudyHelp.Classes
 {
@@ -37,6 +30,11 @@ namespace UbStudyHelp.Classes
                             Username = "username",
                             Password = "password"
                         });
+        }
+
+        private static void CheckoutProgress(string path, int completedSteps, int totalSteps)
+        {
+            EventsControl.FireSendMessage($"Checkout progress: {completedSteps} of {totalSteps}");
         }
 
 
@@ -92,16 +90,28 @@ namespace UbStudyHelp.Classes
         {
             try
             {
-                /*
-                    git fetch --all
-                    git reset --hard origin/abranch
-                    git checkout abranch 
-                */
-                CheckoutOptions options = new CheckoutOptions() { CheckoutModifiers = CheckoutModifiers.Force };
                 using Repository localRepo = new Repository(repositoryPath);
-                Branch branch = localRepo.Branches[branchName];
-                Fetch(localRepo);
-                Commands.Checkout(localRepo, branch, options);
+
+                Branch branch = localRepo.Branches.ToList().Find(b => b.CanonicalName == branchName);
+                if (branch == null)
+                {
+                    // Let's get a reference on the remote tracking branch...
+                    string trackedBranchName = $"origin/{branchName}";
+                    Branch trackedBranch = localRepo.Branches[trackedBranchName];
+
+                    // ...and create a local branch pointing at the same Commit
+                    branch = localRepo.CreateBranch(branchName, trackedBranch.Tip);
+
+                    // The local branch is not configured to track anything
+                    if (!branch.IsTracking)
+                    {
+                        // So, let's configure the local branch to track the remote one.
+                        Branch updatedBranch = localRepo.Branches.Update(branch, b => b.TrackedBranch = trackedBranch.CanonicalName);
+                    }
+
+                }
+                CheckoutOptions options = new CheckoutOptions() { CheckoutModifiers = CheckoutModifiers.Force, OnCheckoutProgress = CheckoutProgress };
+                Branch currentBranch = Commands.Checkout(localRepo, branchName, options);
                 return true;
             }
             catch (Exception ex)

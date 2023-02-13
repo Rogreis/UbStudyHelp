@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Windows;
-using Lucene.Net.QueryParsers.Flexible.Messages;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Text;
@@ -82,9 +78,10 @@ namespace UbStudyHelp.Classes
 
         private static bool InitTranslation(GetDataFilesCore dataFiles, short translationId, ref Translation trans)
         {
-            EventsControl.FireSendMessage($"Getting translation {translationId}");
             trans = null;
             if (translationId < 0) return true;
+
+            EventsControl.FireSendMessage($"Getting translation {translationId}");
             trans = dataFiles.GetTranslation(translationId);
             if (trans == null)
             {
@@ -114,6 +111,55 @@ namespace UbStudyHelp.Classes
                 }
             }
             return trans.CheckData();
+        }
+
+        private static bool VerifyRepository(string repository, string url, string branch = null)
+        {
+            try
+            {
+                EventsControl.FireSendMessage($"Verifying repository: {repository}");
+                if (!GitCommands.IsValid(repository))
+                {
+                    EventsControl.FireSendMessage("Cloning...");
+                    if (!GitCommands.Clone(url, repository))
+                    {
+                        EventsControl.FireSendMessage("Clone failed");
+                        EventsControl.FireFatalError("Could not clone translations");
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (branch != null)
+                    {
+                        EventsControl.FireSendMessage("Checkout...");
+                        if (!GitCommands.Checkout(repository, branch))
+                        {
+                            EventsControl.FireSendMessage("Checkout failed");
+                            EventsControl.FireFatalError("Could not checkout TUB translations");
+                            return false;
+                        }
+                    }
+
+                    EventsControl.FireSendMessage("Pull...");
+                    if (!GitCommands.Pull(repository))
+                    {
+                        EventsControl.FireSendMessage("Pull failed");
+                        EventsControl.FireFatalError("Could not checkout TUB translations");
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                string message = $"Could not verify repository {repository}";
+                StaticObjects.Logger.Error(message, ex);
+                EventsControl.FireFatalError(message);
+                return false;
+            }
+            // Verify respository existence
         }
 
 
@@ -180,6 +226,19 @@ namespace UbStudyHelp.Classes
             {
                 GetDataFilesCore dataFiles = new GetDataFilesCore((ParametersCore)StaticObjects.Parameters);
                 StaticObjects.Book = new BookCore(dataFiles);
+
+                // Verify respository existence
+                if (!VerifyRepository(StaticObjects.Parameters.TUB_Files_RepositoryFolder, StaticObjects.Parameters.TUB_Files_Url))
+                {
+                    return false;
+                }
+
+                // Verify respository existence
+                if (!VerifyRepository(StaticObjects.Parameters.EditParagraphsRepositoryFolder, StaticObjects.Parameters.EditParagraphsUrl))
+                {
+                    return false;
+                }
+
 
                 // Verify respository existence
                 if (!GitCommands.IsValid(StaticObjects.Parameters.TUB_Files_RepositoryFolder))
@@ -249,5 +308,6 @@ namespace UbStudyHelp.Classes
                 return false;
             }
         }
+
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
+using UbStudyHelp.ChildWindows;
 using UbStudyHelp.Classes.ContextMenuCode;
 
 namespace UbStudyHelp.Classes
@@ -135,11 +136,15 @@ namespace UbStudyHelp.Classes
         protected void ItemOpenInGitHub_Click(object sender, RoutedEventArgs e)
         {
             ParagraphSearchData data = GetCurrentParagraph();
-            if (data != null) 
+            if (data != null && data.IsRightTranslation) 
             {
-                string url = $"https://github.com/Rogreis/PtAlternative/blob/correcoes/Doc{data.Entry.Paper:000}/Par_{data.Entry.Paper:000}_{data.Entry.Section:000}_{data.Entry.ParagraphNo:000}.md";
-                // Doc016/Par_016_003_16:3-16 (188.4).md
-                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+
+                EditText editText = new EditText();
+                editText.SetText(data.Entry);
+                editText.ShowDialog();
+
+                //string url = $"https://github.com/Rogreis/PtAlternative/blob/correcoes/Doc{data.Entry.Paper:000}/Par_{data.Entry.Paper:000}_{data.Entry.Section:000}_{data.Entry.ParagraphNo:000}.md";
+                //Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
             }
         }
 
@@ -186,7 +191,7 @@ namespace UbStudyHelp.Classes
             {
                 ParagraphSearchData data = GetCurrentParagraph();
                 if (data != null && data.IsRightTranslation)
-                    Items.Add(CreateMenuItem("Open in Github", ItemOpenInGitHub_Click));
+                    Items.Add(CreateMenuItem("Edit", ItemOpenInGitHub_Click));
             }
 
             if (ShowSearch)
