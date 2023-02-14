@@ -1,33 +1,32 @@
-name: .NET_Windows
+name: Build
 
 on:
-  workflow_dispatch:
-# pull_request:
-#   branches: 
-#   - main
-#  push:
-#    branches: [ main ]
-#  pull_request:
-#    branches: [ main ]
+  push:
+    branches: [ main ]
+    
+env:
+  SOLUTION: UbStudyHelp.sln
+
 
 jobs:
   build:
-    strategy:
-      matrix:
-        dotnet-version: ['3.1.x', '5.0.x' ]
-
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup dotnet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      # You can test your matrix by printing the current dotnet version
-      - name: Display dotnet version
-        run: dotnet --version
-      - name: Install dependencies ${{ matrix.dotnet-version }}
-        run: dotnet restore --verbosity d UbStudyHelpCore/UbStudyHelpCore.sln
-      - name: Build ${{ matrix.dotnet-version }}
-        run: dotnet build -c release UbStudyHelpCore/UbStudyHelpCore.sln
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Build solution
+      run: |
+        dotnet build --configuration Release "$env:SOLUTION"
+
+    - name: Test project
+      run: |
+        dotnet test --configuration Release --no-build "$env:SOLUTION"
+
+
