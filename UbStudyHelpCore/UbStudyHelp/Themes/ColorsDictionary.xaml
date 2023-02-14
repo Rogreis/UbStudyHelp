@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="FloralWhite">#FFFFFAF0</Color>
+    <Color x:Key="LemonChiffon">#FFFFFACD</Color>
+    <Color x:Key="FireBrick">#FFB22222</Color>
+    <Color x:Key="Aquamarine">#FF7FFFD4</Color>
+    <Color x:Key="Dark">#FF343A40</Color>
+    <Color x:Key="Black">#FF000000</Color>
+    <Color x:Key="White">#FFFFFFFF</Color>
+    <Color x:Key="Gold">#FFFFD700</Color>
+    <Color x:Key="Gray">#FF808080</Color>
+
+    
+
+    <SolidColorBrush x:Key="BackColorStarted" Color="{StaticResource FloralWhite}"/>
+    <SolidColorBrush x:Key="TextColorStarted" Color="{StaticResource Black}"/>
+
+    <SolidColorBrush x:Key="BackColorWorking" Color="{StaticResource LemonChiffon}"/>
+    <SolidColorBrush x:Key="TextColorWorking" Color="{StaticResource Black}"/>
+
+    <SolidColorBrush x:Key="BackColorDoubt" Color="{StaticResource FireBrick}"/>
+    <SolidColorBrush x:Key="TextColorDoubt" Color="{StaticResource White}"/>
+
+    <SolidColorBrush x:Key="BackColorOk" Color="{StaticResource Aquamarine}"/>
+    <SolidColorBrush x:Key="TextColorOk" Color="{StaticResource Black}"/>
+
+    <SolidColorBrush x:Key="BackColorClosed" Color="{StaticResource Dark}"/>
+    <SolidColorBrush x:Key="TextColorClosed" Color="{StaticResource White}"/>
+
+    <SolidColorBrush x:Key="ChildWindowsBackground" Color="{StaticResource Gray}"/>
+
+
+    <!--
+            public int FontSizeSmall { get => FontSize - 2; }
+            public int FontSizeBig { get => FontSize + 2; }
+
+            public string FontFamily { get; set; } = "Roboto Serif Medium";
+            public int FontSize { get; set; } = 18;
+            public int TextPadding { get; set; } = 15;
+
+            public string BackColor { get; set; } = "#000000";
+            public string TextColor { get; set; } = "#FFFFFF";
+            public string ItalicColor { get; set; } = "#FF33CC";
+    -->
+
+
+</ResourceDictionary>

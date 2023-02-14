@@ -9,42 +9,69 @@
 
     <Window.Resources>
 
-        <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Grid>
-                            <TextBox Text="{Binding Path=Text,
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UbStudyHelp;component/Themes/ColorsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TextBox}">
+                            <Grid>
+                                <TextBox Text="{Binding Path=Text,
                                                 RelativeSource={RelativeSource TemplatedParent}, 
                                                 Mode=TwoWay,
                                                 UpdateSourceTrigger=PropertyChanged}"
                                  x:Name="textSource" 
                                  Background="Transparent" 
                                  Panel.ZIndex="2" />
-                            <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
-                                <TextBox.Style>
-                                    <Style TargetType="{x:Type TextBox}">
-                                        <Setter Property="Foreground" Value="Transparent"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
-                                                <Setter Property="Foreground" Value="LightGray"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                                <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
+                                    <TextBox.Style>
+                                        <Style TargetType="{x:Type TextBox}">
+                                            <Setter Property="Foreground" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
+                                                    <Setter Property="Foreground" Value="LightGray"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+        </ResourceDictionary>
+
 
     </Window.Resources>
 
-<StackPanel Margin="30">
 
+<StackPanel Margin="15">
+
+    <Button x:Name="buttonItalic" Click="buttonItalic_Click"  Width="80" Margin="5" 
+            Background="{StaticResource BackColorWorking}"
+            Foreground="{StaticResource TextColorWorking}">Italic</Button>
     <RichTextBox x:Name="richTextBoxEdit" Height="300" Width="700"  Margin="5"  />
     <TextBox  Style="{StaticResource placeHolder}" Tag="Commit message (mandatory)" x:Name="commitMessage" Width="700"  Margin="5"    />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="0" Grid.Column="0" Tag="Github User (mandatory)" x:Name="GitHubUser" Width="700"  Margin="5"    />
+            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="0" Grid.Column="10" Tag="Github Email (mandatory)" x:Name="GitHubEmail" Width="700"  Margin="5"    />
+            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="1" Grid.Column="0" Tag="Github Password (mandatory)" x:Name="GithubPassword" Width="700"  Margin="5"    />
+            <TextBlock x:Name="LinkToGitHub" Grid.Row="1" Grid.Column="1"  TextWrapping="Wrap" >Github</TextBlock>
+        </Grid>
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 20, 0, 0">
         <Grid>
@@ -55,10 +82,18 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button x:Name="buttonWorking" Click="buttonWorking_Click" Width="80" Grid.Column="0" Margin="5" Background="Red">Working</Button>
-            <Button x:Name="buttonOk" Click="buttonOk_Click" Width="80" Grid.Column="1" Margin="5" Background="Green">Ok</Button>
-            <Button x:Name="buttonDoubt" Click="buttonDoubt_Click" Width="80" Grid.Column="2" Margin="5" Background="Blue">Doubt</Button>
-            <Button x:Name="buttonClosed" Click="buttonClosed_Click" Width="80" Grid.Column="3" Margin="5" Background="Yellow" Foreground="Black">Closed</Button>
+                <Button x:Name="buttonWorking" Click="buttonWorking_Click" Width="80" Grid.Column="0" Margin="5" 
+                    Background="{StaticResource BackColorWorking}"
+                    Foreground="{StaticResource TextColorWorking}">Working</Button>
+                <Button x:Name="buttonOk" Click="buttonOk_Click" Width="80" Grid.Column="1" Margin="5" 
+                    Background="{StaticResource BackColorOk}"
+                    Foreground="{StaticResource TextColorOk}">Ok</Button>
+                <Button x:Name="buttonDoubt" Click="buttonDoubt_Click" Width="80" Grid.Column="2" Margin="5" 
+                    Background="{StaticResource BackColorDoubt}"
+                    Foreground="{StaticResource TextColorDoubt}">Doubt</Button>
+                <Button x:Name="buttonClosed" Click="buttonClosed_Click" Width="80" Grid.Column="3" Margin="5" 
+                    Background="{StaticResource BackColorClosed}" 
+                    Foreground="{StaticResource TextColorClosed}">Closed</Button>
         </Grid>
     </StackPanel>
 

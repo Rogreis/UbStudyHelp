@@ -138,6 +138,80 @@ namespace UbStudyHelp.Classes
             }
         }
 
+        /// <summary>
+        /// Commit a list of files to the repository
+        /// </summary>
+        /// <param name="authorName"></param>
+        /// <param name="email"></param>
+        /// <param name="relativeFilesList"></param>
+        /// <param name="repositoryPath"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static bool CommitFiles(string authorName, string email, List<string> relativeFilesList, string repositoryPath, string message)
+        {
+            try
+            {
+                using Repository localRepo = new Repository(repositoryPath);
+                if (localRepo.Info.IsHeadDetached)
+                {
+                    StaticObjects.FireSendMessage("Cannot commit files, repository is in detached head state");
+                    return false;
+                }
+
+                Signature author = new Signature(authorName, email, DateTime.Now);
+                Signature committer = author;
+                Commands.Stage(localRepo, relativeFilesList);
+                // Commit the changes
+                localRepo.Commit(message, author, committer);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                StaticObjects.FireShowExceptionMessage("Commit files error", ex);
+                StaticObjects.Logger.Error("Commit files error", ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Push the repository to the remote
+        /// </summary>
+        /// <param name="repositoryPath"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static bool Push(string repositoryPath, string username, string password)
+        {
+            try
+            {
+                using (var repo = new Repository(repositoryPath))
+                {
+                    // Fetch the remote repository to ensure it's up-to-date
+                    Remote remote = repo.Network.Remotes["origin"];
+                    var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
+                    Commands.Fetch(repo, remote.Name, refSpecs, new FetchOptions(), "");
+
+                    // Push the changes to the remote repository
+                    PushOptions pushOptions = new PushOptions
+                    {
+                        CredentialsProvider = (_url, _user, _cred) =>
+                            new UsernamePasswordCredentials { Username = username, Password = password }
+                    };
+                    repo.Network.Push(repo.Branches["main"], pushOptions);
+
+                    Console.WriteLine("Changes pushed to remote repository successfully.");
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                StaticObjects.FireShowExceptionMessage("Push error", ex);
+                StaticObjects.Logger.Error("Push error", ex);
+                return false;
+            }
+        }
+
+
 
     }
 }
