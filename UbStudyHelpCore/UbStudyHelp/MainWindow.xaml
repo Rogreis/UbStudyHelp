@@ -15,13 +15,13 @@
 
     <!--Setting a custom Icon see https://mahapps.com/docs/controls/metrowindow  -->
     
-    <!--<mah:MetroWindow.LeftWindowCommands>
+    <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
-            <Button Click="LaunchUFSite" ToolTip="Open up the Urantia Foundation Web Site">
-                <iconPacks:PackIconFontAwesome Kind="RocketSolid" Width="22" Height="22" />
+            <Button Click="Button_Click"  ToolTip="Recover from background color error">
+                <Image x:Name="ButtonRecover"  Margin="5"></Image>
             </Button>
         </mah:WindowCommands>
-    </mah:MetroWindow.LeftWindowCommands>-->
+    </mah:MetroWindow.LeftWindowCommands>
     
 
     <!--<mah:MetroWindow.RightWindowCommands>

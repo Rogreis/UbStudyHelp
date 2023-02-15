@@ -165,16 +165,17 @@ namespace UbStudyHelp.ChildWindows
                     return;   
                 }
 
-                if (!GitCommands.CommitFiles(gitHubUser, email, relativeFilesList, StaticObjects.Parameters.EditParagraphsRepositoryFolder, message))
-                {
-                    MessageBox.Show("Paragraph commit data error");
-                    return;
-                }
-                if (!GitCommands.Push(StaticObjects.Parameters.EditParagraphsRepositoryFolder, gitHubUser, password))
-                {
-                    MessageBox.Show("Paragraph push data error");
-                    return;
-                }
+                //if (!GitCommands.CommitFiles(gitHubUser, email, relativeFilesList, StaticObjects.Parameters.EditParagraphsRepositoryFolder, message))
+                //{
+                //    MessageBox.Show("Paragraph commit data error");
+                //    return;
+                //}
+                ////if (!GitCommands.Push(StaticObjects.Parameters.EditParagraphsRepositoryFolder, gitHubUser, password))
+                //{
+                //    MessageBox.Show("Paragraph push data error");
+                //    return;
+                //}
+                EventsControl.FireRefreshText();
                 Close();
             }
             catch (Exception ex)

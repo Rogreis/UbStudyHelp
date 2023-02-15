@@ -234,7 +234,7 @@ namespace UbStudyHelp.Classes
                 }
 
                 // Verify respository existence
-                if (!VerifyRepository(StaticObjects.Parameters.EditParagraphsRepositoryFolder, StaticObjects.Parameters.EditParagraphsUrl))
+                if (!VerifyRepository(StaticObjects.Parameters.EditParagraphsRepositoryFolder, StaticObjects.Parameters.EditParagraphsUrl, StaticObjects.Parameters.BranchUsed))
                 {
                     return false;
                 }

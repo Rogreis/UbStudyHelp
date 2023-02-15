@@ -52,7 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\UbStandardObjects\UbStandardObjects.csproj" />
+    <ProjectReference Include="..\..\UbStandardObjects\UbStandardObjects.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -91,8 +91,8 @@ namespace UbStudyHelp.Classes
             try
             {
                 using Repository localRepo = new Repository(repositoryPath);
-
-                Branch branch = localRepo.Branches.ToList().Find(b => b.CanonicalName == branchName);
+                var branchNameFull = $@"refs/heads/{branchName}";
+                Branch branch = localRepo.Branches.ToList().Find(b => b.CanonicalName == branchNameFull);
                 if (branch == null)
                 {
                     // Let's get a reference on the remote tracking branch...
@@ -180,27 +180,31 @@ namespace UbStudyHelp.Classes
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static bool Push(string repositoryPath, string username, string password)
+        public static bool Push(string repositoryPath, string username, string password, string branch)
         {
             try
             {
-                using (var repo = new Repository(repositoryPath))
-                {
-                    // Fetch the remote repository to ensure it's up-to-date
-                    Remote remote = repo.Network.Remotes["origin"];
-                    var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
-                    Commands.Fetch(repo, remote.Name, refSpecs, new FetchOptions(), "");
+                //using (var repo = new Repository(repositoryPath))
+                //{
 
-                    // Push the changes to the remote repository
-                    PushOptions pushOptions = new PushOptions
-                    {
-                        CredentialsProvider = (_url, _user, _cred) =>
-                            new UsernamePasswordCredentials { Username = username, Password = password }
-                    };
-                    repo.Network.Push(repo.Branches["main"], pushOptions);
+                //    var remote = repo.Network.Remotes[branch];
+                //    PushOptions pushOptions = new PushOptions
+                //    {
+                //        CredentialsProvider = (_url, _user, _cred) =>
+                //            new UsernamePasswordCredentials { Username = username, Password = password }
+                //    };
+                //    var pushRefSpec = @"refs/heads/master";
+                //    repo.Network.Push(remote, pushRefSpec, pushOptions, new Signature(username, email, DateTimeOffset.Now),
+                //        "pushed changes");
 
-                    Console.WriteLine("Changes pushed to remote repository successfully.");
-                }
+                //    // Fetch the remote repository to ensure it's up-to-date
+                //    Remote remote = repo.Network.Remotes["origin"];
+                //    var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
+                //    Commands.Fetch(repo, remote.Name, refSpecs, new FetchOptions(), "");
+
+                //    // Push the changes to the remote repository
+                //    repo.Network.Push(repo.Branches["main"], pushOptions);
+                //}
                 return true;
             }
             catch (Exception ex)

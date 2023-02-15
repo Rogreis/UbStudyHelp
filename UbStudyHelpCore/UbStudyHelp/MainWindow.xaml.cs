@@ -6,6 +6,7 @@ using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using MahApps.Metro.Controls;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace UbStudyHelp
 {
@@ -27,6 +28,9 @@ namespace UbStudyHelp
             EventsControl.FontChanged += EventsControl_FontChanged;
             EventsControl.NewPaperShown += EventsControl_NewPaperShown;
             GridSplitterLeft.DragCompleted += GridSplitterLeft_DragCompleted;
+
+            GeometryImages images = new GeometryImages();
+            ButtonRecover.Source = images.GetImage(GeometryImagesTypes.Sort);
 
             // Objects in the status bar do not need theme update
             //EventsControl.AppearanceChanged += EventsControl_AppearanceChanged;
@@ -145,6 +149,17 @@ namespace UbStudyHelp
                     EventsControl.FireSendMessage(aMessage);
                 }
             }
+        }
+
+        private bool IsFixingTheme = false;
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsFixingTheme) return;
+            IsFixingTheme= true;
+            App.Appearance.Theme = "Dark";
+            App.Appearance.Theme = "Light";
+            App.Appearance.Theme = "Dark";
+            IsFixingTheme = false;
         }
     }
 }
