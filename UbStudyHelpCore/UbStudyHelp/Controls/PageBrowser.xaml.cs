@@ -317,7 +317,7 @@ namespace UbStudyHelp.Controls
 
         private void PageBrowser_Loaded(object sender, RoutedEventArgs e)
         {
-            Show(StaticObjects.Parameters.Entry);
+            //Show(StaticObjects.Parameters.Entry);
         }
 
 

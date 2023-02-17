@@ -1,4 +1,6 @@
-﻿using Lucene.Net.Analysis;
+﻿using System;
+using System.Collections.Generic;
+using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -6,11 +8,9 @@ using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
-
-using System;
-using System.Collections.Generic;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
+using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Classes
 {
@@ -62,7 +62,7 @@ namespace UbStudyHelp.Classes
 
         // Note there are many different types of Analyzer that may be used with Lucene, the exact one you use
         // will depend on your requirements
-        private Directory luceneIndexDirectory;
+        private Lucene.Net.Store.Directory luceneIndexDirectory;
         private string IndexPath;
         private bool indexAlreadyExist = false;
         public Translation Translation { get; set; } = null;
@@ -98,6 +98,7 @@ namespace UbStudyHelp.Classes
             {
                 return true;
             }
+            EventsControl.FireSendMessage($"Recreating search index form {Translation.Description}");
 
             try
             {
@@ -108,14 +109,19 @@ namespace UbStudyHelp.Classes
                 for (short paperNo = 0; paperNo <= 196; paperNo++)
                 {
                     Paper paper = Translation.Paper(paperNo);
+                    EventsControl.FireSendMessage($"Indexing paper {paperNo}");
                     foreach (Paragraph paragraph in paper.Paragraphs)
                     {
-                        Document doc = new Document();
-                        doc.Add(new StringField(FieldPaper, paragraph.Paper.ToString(), Field.Store.YES));
-                        doc.Add(new StringField(FieldSection, paragraph.Section.ToString(), Field.Store.YES));
-                        doc.Add(new StringField(FieldParagraph, paragraph.ParagraphNo.ToString(), Field.Store.YES));
-                        doc.Add(new TextField(FieldText, paragraph.Text, Field.Store.YES));
-                        writer.AddDocument(doc);
+                        if (!paragraph.IsDivider)
+                        {
+                            Document doc = new Document();
+                            doc.Add(new StringField("id", paragraph.ID, Field.Store.YES));
+                            doc.Add(new StringField(FieldPaper, paragraph.Paper.ToString(), Field.Store.YES));
+                            doc.Add(new StringField(FieldSection, paragraph.Section.ToString(), Field.Store.YES));
+                            doc.Add(new StringField(FieldParagraph, paragraph.ParagraphNo.ToString(), Field.Store.YES));
+                            doc.Add(new TextField(FieldText, paragraph.Text, Field.Store.YES));
+                            writer.AddDocument(doc);
+                        }
                     }
                 }
                 writer.Flush(triggerMerge: false, applyAllDeletes: false);
@@ -132,6 +138,33 @@ namespace UbStudyHelp.Classes
             }
         }
 
+        public void UpdateIndex(Paragraph paragraph)
+        {
+            // Open the index for writing
+            Analyzer analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
+            IndexWriterConfig config = new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer);
+            IndexWriter indexWriter = new IndexWriter(luceneIndexDirectory, config);
+
+            // Delete the old version of the document
+            Term term = new Term(FieldParagraph, paragraph.ID);
+            indexWriter.DeleteDocuments(term);
+
+            Document doc = new Document();
+            doc.Add(new StringField("id", paragraph.Paper.ToString(), Field.Store.YES));
+            doc.Add(new StringField(FieldPaper, paragraph.Paper.ToString(), Field.Store.YES));
+            doc.Add(new StringField(FieldSection, paragraph.Section.ToString(), Field.Store.YES));
+            doc.Add(new StringField(FieldParagraph, paragraph.ParagraphNo.ToString(), Field.Store.YES));
+            doc.Add(new TextField(FieldText, paragraph.Text, Field.Store.YES));
+
+            // Add the new version of the document
+            indexWriter.AddDocument(doc);
+
+            // Commit the changes to the index
+            indexWriter.Commit();
+
+            // Close the index writer
+            indexWriter.Dispose();
+        }
 
         public bool Execute(SearchData searchData)
         {

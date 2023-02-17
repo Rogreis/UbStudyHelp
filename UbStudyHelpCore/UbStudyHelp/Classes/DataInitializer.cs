@@ -130,24 +130,24 @@ namespace UbStudyHelp.Classes
                 }
                 else
                 {
-                    if (branch != null)
-                    {
-                        EventsControl.FireSendMessage("Checkout...");
-                        if (!GitCommands.Checkout(repository, branch))
-                        {
-                            EventsControl.FireSendMessage("Checkout failed");
-                            EventsControl.FireFatalError("Could not checkout TUB translations");
-                            return false;
-                        }
-                    }
+                    //if (branch != null)
+                    //{
+                    //    EventsControl.FireSendMessage("Checkout...");
+                    //    if (!GitCommands.Checkout(repository, branch))
+                    //    {
+                    //        EventsControl.FireSendMessage("Checkout failed");
+                    //        EventsControl.FireFatalError("Could not checkout TUB translations");
+                    //        return false;
+                    //    }
+                    //}
 
-                    EventsControl.FireSendMessage("Pull...");
-                    if (!GitCommands.Pull(repository))
-                    {
-                        EventsControl.FireSendMessage("Pull failed");
-                        EventsControl.FireFatalError("Could not checkout TUB translations");
-                        return false;
-                    }
+                    //EventsControl.FireSendMessage("Pull...");
+                    //if (!GitCommands.Pull(repository))
+                    //{
+                    //    EventsControl.FireSendMessage("Pull failed");
+                    //    EventsControl.FireFatalError("Could not checkout TUB translations");
+                    //    return false;
+                    //}
                 }
 
                 return true;
@@ -237,44 +237,6 @@ namespace UbStudyHelp.Classes
                 if (!VerifyRepository(StaticObjects.Parameters.EditParagraphsRepositoryFolder, StaticObjects.Parameters.EditParagraphsUrl, StaticObjects.Parameters.BranchUsed))
                 {
                     return false;
-                }
-
-
-                // Verify respository existence
-                if (!GitCommands.IsValid(StaticObjects.Parameters.TUB_Files_RepositoryFolder))
-                {
-                    if (!GitCommands.Clone(StaticObjects.Parameters.TUB_Files_Url, StaticObjects.Parameters.TUB_Files_RepositoryFolder))
-                    {
-                        StaticObjects.Logger.FatalError("Could not clone translations");
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (!GitCommands.Pull(StaticObjects.Parameters.TUB_Files_RepositoryFolder))
-                    {
-                        StaticObjects.Logger.FatalError("Could not checkout TUB translations");
-                        return false;
-                    }
-                }
-
-
-                // Verify respository existence
-                if (!GitCommands.IsValid(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
-                {
-                    if (!GitCommands.Clone(StaticObjects.Parameters.EditParagraphsUrl, StaticObjects.Parameters.EditParagraphsRepositoryFolder))
-                    {
-                        StaticObjects.Logger.FatalError("Could not clone edit translation");
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (!GitCommands.Pull(StaticObjects.Parameters.EditParagraphsRepositoryFolder))
-                    {
-                        StaticObjects.Logger.FatalError("Could not checkout TUB translations");
-                        return false;
-                    }
                 }
 
                 EventsControl.FireSendMessage("Getting translations list");

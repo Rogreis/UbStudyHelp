@@ -8,6 +8,7 @@ using System.Windows.Media;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Controls;
 using Paragraph = System.Windows.Documents.Paragraph;
 
 namespace UbStudyHelp.ChildWindows
@@ -175,6 +176,7 @@ namespace UbStudyHelp.ChildWindows
                 //    MessageBox.Show("Paragraph push data error");
                 //    return;
                 //}
+                SearchDataEntry.LuceneBookSearchRight.UpdateIndex(EditedParagraph);
                 EventsControl.FireRefreshText();
                 Close();
             }

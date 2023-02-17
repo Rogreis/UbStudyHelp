@@ -11,12 +11,11 @@ namespace UbStudyHelp.Controls
     /// </summary>
     public partial class SearchDataEntry : UserControl
     {
-
-        private LuceneBookSearch luceneLeft = null;
-
-        private LuceneBookSearch luceneRight = null;
-
         public event dlShowSearchResults ShowSearchResults = null;
+
+        public static LuceneBookSearch LuceneBookSearchLeft = null;
+
+        public static LuceneBookSearch LuceneBookSearchRight = null;
 
         private ObservableCollection<string> LocalSearchStringsEntries = new ObservableCollection<string>();
 
@@ -36,8 +35,8 @@ namespace UbStudyHelp.Controls
         {
             SetAppearence();
             SetFontSize();
-            luceneLeft = new LuceneBookSearch(StaticObjects.Book.LeftTranslation);
-            luceneRight = new LuceneBookSearch(StaticObjects.Book.RightTranslation);
+            LuceneBookSearchLeft = new LuceneBookSearch(StaticObjects.Book.LeftTranslation);
+            LuceneBookSearchRight = new LuceneBookSearch(StaticObjects.Book.RightTranslation);
 
             TooglePart1.IsOn= StaticObjects.Parameters.SimpleSearchIncludePartI;
             TooglePart2.IsOn = StaticObjects.Parameters.SimpleSearchIncludePartII;
@@ -203,11 +202,11 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
-            if (luceneLeft.Translation.LanguageID != StaticObjects.Book.LeftTranslation.LanguageID)
+            if (LuceneBookSearchLeft.Translation.LanguageID != StaticObjects.Book.LeftTranslation.LanguageID)
             {
-                luceneLeft = new LuceneBookSearch(StaticObjects.Book.LeftTranslation);
+                LuceneBookSearchLeft = new LuceneBookSearch(StaticObjects.Book.LeftTranslation);
             }
-            if (luceneLeft.Execute(data))
+            if (LuceneBookSearchLeft.Execute(data))
             {
                 lastData = data;
                 ShowSearchResults?.Invoke(data);
@@ -222,11 +221,11 @@ namespace UbStudyHelp.Controls
                 return;
             }
             SearchData data = GetData();
-            if (luceneRight.Translation.LanguageID != StaticObjects.Book.RightTranslation.LanguageID)
+            if (LuceneBookSearchRight.Translation.LanguageID != StaticObjects.Book.RightTranslation.LanguageID)
             {
-                luceneRight = new LuceneBookSearch(StaticObjects.Book.RightTranslation);
+                LuceneBookSearchRight = new LuceneBookSearch(StaticObjects.Book.RightTranslation);
             }
-            if (luceneRight.Execute(data))
+            if (LuceneBookSearchRight.Execute(data))
             {
                 lastData = data;
                 ShowSearchResults?.Invoke(data);
@@ -245,7 +244,7 @@ namespace UbStudyHelp.Controls
             data.QueryString = searchData.QueryString;
             if (searchData.IsRightTranslation)
             {
-                if (luceneRight.Execute(data))
+                if (LuceneBookSearchRight.Execute(data))
                 {
                     lastData = data;
                     ShowSearchResults?.Invoke(data);
@@ -253,7 +252,7 @@ namespace UbStudyHelp.Controls
             }
             else
             {
-                if (luceneLeft.Execute(data))
+                if (LuceneBookSearchLeft.Execute(data))
                 {
                     lastData = data;
                     ShowSearchResults?.Invoke(data);
