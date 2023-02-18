@@ -56,7 +56,7 @@
     <Button x:Name="buttonItalic" Click="buttonItalic_Click"  Width="80" Margin="5" 
             Background="{StaticResource BackColorWorking}"
             Foreground="{StaticResource TextColorWorking}">Italic</Button>
-    <RichTextBox x:Name="richTextBoxEdit" Height="300" Width="700"  Margin="5"  />
+    <RichTextBox x:Name="richTextBoxEdit" Height="300" Width="700"    />
     <TextBox  Style="{StaticResource placeHolder}" Tag="Commit message (mandatory)" x:Name="commitMessage" Width="700"  Margin="5"    />
     <Grid>
         <Grid.ColumnDefinitions>
@@ -67,10 +67,17 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="0" Grid.Column="0" Tag="Github User (mandatory)" x:Name="GitHubUser" Width="700"  Margin="5"    />
-            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="0" Grid.Column="10" Tag="Github Email (mandatory)" x:Name="GitHubEmail" Width="700"  Margin="5"    />
-            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="1" Grid.Column="0" Tag="Github Password (mandatory)" x:Name="GithubPassword" Width="700"  Margin="5"    />
-            <TextBlock x:Name="LinkToGitHub" Grid.Row="1" Grid.Column="1"  TextWrapping="Wrap" >Github</TextBlock>
+            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="0" Grid.Column="0" Tag="Github User (mandatory)" x:Name="GitHubUser" Width="325"  Margin="5"    />
+            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="0" Grid.Column="10" Tag="Github Email (mandatory)" x:Name="GitHubEmail" Width="325"  Margin="5"    />
+            <TextBox  Style="{StaticResource placeHolder}" Grid.Row="1" Grid.Column="0" Tag="Github Password (mandatory)" x:Name="GithubPassword" Width="325"  Margin="5"    />
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="LinkToGitHub" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"  TextWrapping="Wrap" >Edit in Github</TextBlock>
+                <TextBlock x:Name="LinkToRepository" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" >Open Repository</TextBlock>
+            </Grid>
         </Grid>
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 20, 0, 0">

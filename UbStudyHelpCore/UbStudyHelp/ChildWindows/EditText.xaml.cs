@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Policy;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
+using UbStudyHelp.Controls;
+using static Lucene.Net.Search.FieldValueHitQueue;
 using Paragraph = System.Windows.Documents.Paragraph;
 
 namespace UbStudyHelp.ChildWindows
@@ -74,6 +77,20 @@ namespace UbStudyHelp.ChildWindows
             App.Appearance.SetFontSize(buttonClosed);
         }
 
+        private void SetLink(TextBlock textBlock, TOC_Entry entry, string url, string text)
+        {
+            textBlock.Inlines.Clear();
+            Run runIdent = new Run(text);
+            Hyperlink link = new Hyperlink(runIdent)
+            {
+                NavigateUri = new Uri(url),
+                TextDecorations = TextDecorations.Underline,
+                Tag = entry,
+            };
+            link.Click += Link_Click;
+            textBlock.Inlines.Add(link);
+        }
+
         public void SetText(TOC_Entry entry)
         {
             richTextBoxEdit.Document.Blocks.Clear();
@@ -82,22 +99,24 @@ namespace UbStudyHelp.ChildWindows
             richTextBoxEdit.Document.Blocks.Add(new System.Windows.Documents.Paragraph(new Run(EditedParagraph.Text)));
 
             string url = $"https://github.com/Rogreis/PtAlternative/blob/correcoes/Doc{entry.Paper:000}/Par_{entry.Paper:000}_{entry.Section:000}_{entry.ParagraphNo:000}.md";
-            LinkToGitHub.Inlines.Clear();
-            Run runIdent = new Run("Edit in github");
-            Hyperlink link = new Hyperlink(runIdent)
-            {
-                NavigateUri = new Uri(url),
-                TextDecorations = TextDecorations.Underline,
-                Tag = entry,
-            };
-            link.Click += Link_Click;
-            LinkToGitHub.Inlines.Add(link);
+
+            SetLink(LinkToGitHub, entry, url, "Edit in github");
+            url = StaticObjects.Parameters.EditParagraphsRepositoryFolder;
+            SetLink(LinkToRepository, null, url, "Open Repository");
+
         }
 
         private void Link_Click(object sender, RoutedEventArgs e)
         {
             Hyperlink link = sender as Hyperlink;
-            Process.Start(new ProcessStartInfo(link.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+            if (link != null) 
+            {
+                Process.Start(new ProcessStartInfo(link.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+            }
+            else
+            {
+                Process.Start(link.NavigateUri.AbsoluteUri);
+            }
             e.Handled = true;
         }
 
@@ -175,6 +194,7 @@ namespace UbStudyHelp.ChildWindows
                 //    MessageBox.Show("Paragraph push data error");
                 //    return;
                 //}
+                SearchDataEntry.LuceneBookSearchRight.UpdateIndex(EditedParagraph);
                 EventsControl.FireRefreshText();
                 Close();
             }

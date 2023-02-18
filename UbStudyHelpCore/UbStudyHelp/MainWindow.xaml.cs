@@ -7,6 +7,7 @@ using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using MahApps.Metro.Controls;
 using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Threading;
 
 namespace UbStudyHelp
 {
@@ -102,6 +103,11 @@ namespace UbStudyHelp
             ShowMessage(message);
         }
 
+        private static void DoEvents()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Render, new Action(delegate { }));
+        }
+
         private void ShowMessage(string message, bool fatalError= false)
         {
             StatusBarMessages.Text = message;
@@ -115,6 +121,7 @@ namespace UbStudyHelp
             {
                 StaticObjects.Logger.Warn(message);
             }
+            DoEvents();
         }
 
         private void MetroWindow_SizeChanged(object sender, SizeChangedEventArgs e)
