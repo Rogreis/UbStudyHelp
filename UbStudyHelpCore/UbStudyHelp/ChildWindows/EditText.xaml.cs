@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -10,7 +9,6 @@ using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Controls;
-using static Lucene.Net.Search.FieldValueHitQueue;
 using Paragraph = System.Windows.Documents.Paragraph;
 
 namespace UbStudyHelp.ChildWindows
