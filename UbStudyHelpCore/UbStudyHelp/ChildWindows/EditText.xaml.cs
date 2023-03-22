@@ -9,6 +9,7 @@ using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Controls;
+using static Lucene.Net.Search.FieldValueHitQueue;
 using Paragraph = System.Windows.Documents.Paragraph;
 
 namespace UbStudyHelp.ChildWindows
@@ -20,6 +21,7 @@ namespace UbStudyHelp.ChildWindows
     {
 
         private ParagraphMarkDown EditedParagraph = null;
+        private PaperEdit paper = null;
 
         public EditText()
         {
@@ -47,13 +49,13 @@ namespace UbStudyHelp.ChildWindows
             App.Appearance.SetFontSize(buttonDoubt);
             App.Appearance.SetFontSize(buttonClosed);
 
-            GitHubUser.Text= StaticObjects.Parameters.GitAuthorName;
+            GitHubUser.Text = StaticObjects.Parameters.GitAuthorName;
             GitHubEmail.Text = StaticObjects.Parameters.GitEmail;
             commitMessage.Text = StaticObjects.Parameters.GitCommitMessage;
             GithubPassword.Text = StaticObjects.Parameters.GitPassword;
         }
 
-    private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
+        private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
         {
             //App.Appearance.SetThemeInfo(richTextBoxEdit);
             //App.Appearance.SetThemeInfo(commitMessage);
@@ -89,10 +91,11 @@ namespace UbStudyHelp.ChildWindows
             textBlock.Inlines.Add(link);
         }
 
+
         public void SetText(TOC_Entry entry)
         {
             richTextBoxEdit.Document.Blocks.Clear();
-            Paper paper = StaticObjects.Book.RightTranslation.Paper(entry.Paper);
+            paper = (PaperEdit)StaticObjects.Book.RightTranslation.Paper(entry.Paper);
             EditedParagraph = (ParagraphMarkDown)paper.GetParagraph(entry);
             richTextBoxEdit.Document.Blocks.Add(new System.Windows.Documents.Paragraph(new Run(EditedParagraph.Text)));
 
@@ -107,7 +110,7 @@ namespace UbStudyHelp.ChildWindows
         private void Link_Click(object sender, RoutedEventArgs e)
         {
             Hyperlink link = sender as Hyperlink;
-            if (link != null) 
+            if (link != null)
             {
                 Process.Start(new ProcessStartInfo(link.NavigateUri.AbsoluteUri) { UseShellExecute = true });
             }
@@ -123,9 +126,9 @@ namespace UbStudyHelp.ChildWindows
         private string RichtextToHtml()
         {
             string markdown = "";
-            foreach(Block block in richTextBoxEdit.Document.Blocks)
+            foreach (Block block in richTextBoxEdit.Document.Blocks)
             {
-            if (block is Paragraph)
+                if (block is Paragraph)
                 {
                     Paragraph paragraph = (Paragraph)block;
                     foreach (Inline inline in paragraph.Inlines)
@@ -156,13 +159,13 @@ namespace UbStudyHelp.ChildWindows
         {
             try
             {
-                EditedParagraph.Text= RichtextToHtml();
+                EditedParagraph.Text = RichtextToHtml();
                 EditedParagraph.SaveText(StaticObjects.Parameters.EditParagraphsRepositoryFolder);
-                Note note = Notes.GetNote(EditedParagraph);
+                Note note = Notes.GetNote(paper.NotesList, EditedParagraph);
                 note.Status = (short)status;
-                Notes.SaveNotes(EditedParagraph);
+                Notes.SaveNotes(paper.NotesList, EditedParagraph, note);
 
-                List<string> relativeFilesList= new List<string>();
+                List<string> relativeFilesList = new List<string>();
                 relativeFilesList.Add(ParagraphMarkDown.RelativeFilePathWindows(EditedParagraph));
                 relativeFilesList.Add(Notes.RelativeNotesPath(EditedParagraph.Paper));
 
@@ -171,15 +174,15 @@ namespace UbStudyHelp.ChildWindows
                 string message = commitMessage.Text;
                 string password = commitMessage.Text;
 
-                StaticObjects.Parameters.GitAuthorName= gitHubUser;
-                StaticObjects.Parameters.GitEmail= email;
-                StaticObjects.Parameters.GitCommitMessage= message;
-                StaticObjects.Parameters.GitPassword= password;
+                StaticObjects.Parameters.GitAuthorName = gitHubUser;
+                StaticObjects.Parameters.GitEmail = email;
+                StaticObjects.Parameters.GitCommitMessage = message;
+                StaticObjects.Parameters.GitPassword = password;
 
                 if (string.IsNullOrWhiteSpace(gitHubUser) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(message))
                 {
                     MessageBox.Show("Please fill author name, email and commit message");
-                    return;   
+                    return;
                 }
 
                 //if (!GitCommands.CommitFiles(gitHubUser, email, relativeFilesList, StaticObjects.Parameters.EditParagraphsRepositoryFolder, message))

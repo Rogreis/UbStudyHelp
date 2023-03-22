@@ -10,6 +10,7 @@ using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Classes.ContextMenuCode;
+using UbStudyHelp.Properties;
 using Paragraph = UbStandardObjects.Objects.Paragraph;
 
 namespace UbStudyHelp.Controls
@@ -22,6 +23,7 @@ namespace UbStudyHelp.Controls
 
         private bool lastShouldHighlightText = false;
 
+        // Used for specific formating 
         private FlowDocumentFormat format = new FlowDocumentFormat();
 
         // Last highlighted paragraph to force it to ne shown in the screen
@@ -145,16 +147,81 @@ namespace UbStudyHelp.Controls
         }
         #endregion
 
+        /*
+.parStarted {
+    background-color: FloralWhite;
+    color: black;
+}
+
+
+
+.parWorking {
+    background-color: LemonChiffon;
+    color: black;
+}
+
+.parDoubt {
+    background-color: FireBrick;
+    color: white;
+}
+
+
+.parOk {
+    background-color: Aquamarine;
+    color: black;
+}
+
+
+.parClosed {
+    color: rgba(var(--bs-white-rgb), var(--bs-text-opacity))!important;
+    background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity))!important;
+}
+
+         * */
+
+        private Brush brushClosed = null;
+
+        private void SetColors(System.Windows.Documents.Paragraph paragraph, ParagraphStatus status)
+        {
+            if (brushClosed == null)
+            {
+                // Get the background color from the application resources
+                brushClosed = new SolidColorBrush(Color.FromArgb(255, 0x26, 0x26, 0x26)); // Dark background color
+            }
+
+            switch (status)
+            {
+                case ParagraphStatus.Started:
+                    paragraph.Background = Brushes.FloralWhite;
+                    paragraph.Foreground = Brushes.Black;
+                    break;
+                case ParagraphStatus.Working:
+                    paragraph.Background = Brushes.LemonChiffon;
+                    paragraph.Foreground = Brushes.Black;
+                    break;
+                case ParagraphStatus.Doubt:
+                    paragraph.Background = Brushes.Firebrick;
+                    paragraph.Foreground = Brushes.White;
+                    break;
+                case ParagraphStatus.Ok:
+                    paragraph.Background = Brushes.Aquamarine;
+                    paragraph.Foreground = Brushes.Black;
+                    break;
+            }
+        }
+
         private void FormatParagraph(TableCell cell,
                                      TOC_Entry entry, string text,
                                      bool highlighted = false,
-                                     List<string> Words = null)
+                                     List<string> Words = null,
+                                     ParagraphStatus status= ParagraphStatus.Started)
         {
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             cell.Blocks.Add(paragraph);
             paragraph.Tag = cell.Tag;
             paragraph.Inlines.Add(ReferenceAsHyperlink(entry, true));
             paragraph.Inlines.Add(new Run(" "));
+            SetColors(paragraph, status);
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
@@ -162,7 +229,8 @@ namespace UbStudyHelp.Controls
         private void FormatIdent(TableCell cell,
                                      TOC_Entry entry, string text,
                                      bool highlighted = false,
-                                     List<string> Words = null)
+                                     List<string> Words = null,
+                                     ParagraphStatus status = ParagraphStatus.Started)
         {
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             cell.Blocks.Add(paragraph);
@@ -170,12 +238,13 @@ namespace UbStudyHelp.Controls
             paragraph.Tag = cell.Tag;
             paragraph.Inlines.Add(ReferenceAsHyperlink(entry, true));
             paragraph.Inlines.Add(new Run(" "));
+            SetColors(paragraph, status);
             TextWork textWork = new TextWork(text);
             textWork.GetInlinesText(paragraph.Inlines, Words);
         }
 
 
-        private void FormatCenter(TableCell cell, string text)
+        private void FormatCenter(TableCell cell, string text, ParagraphStatus status = ParagraphStatus.Started)
         {
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(null, false);
             cell.Blocks.Add(paragraph);
@@ -183,17 +252,20 @@ namespace UbStudyHelp.Controls
             Run centerText = new Run(text);
             paragraph.TextAlignment = TextAlignment.Center;
             paragraph.Inlines.Add(centerText);
+            SetColors(paragraph, status);
         }
 
 
         private void FormatTitle(TableCell cell,
                                  TOC_Entry entry, string text,
                                  bool highlighted = false,
-                                 List<string> Words = null)
+                                 List<string> Words = null,
+                                 ParagraphStatus status = ParagraphStatus.Started)
         {
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
             System.Windows.Documents.Paragraph paragraph = CreateParagraph(entry, highlighted);
             paragraph.FontWeight = FontWeights.Bold;
+            SetColors(paragraph, status);
             paragraph.Foreground = accentBrush;
             paragraph.Tag = cell.Tag;
             cell.Blocks.Add(paragraph);
@@ -203,7 +275,8 @@ namespace UbStudyHelp.Controls
 
 
 
-        private TableRow HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entryLeft, TOC_Entry entryRight, string LeftText, string RightText,
+        private TableRow HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entryLeft, TOC_Entry entryRight, 
+                                             Paragraph leftParagraph, Paragraph rightParagraph,
                                              ParagraphHtmlType htmlType = ParagraphHtmlType.NormalParagraph,
                                              bool highlighted = false,
                                              List<string> words = null)
@@ -218,35 +291,39 @@ namespace UbStudyHelp.Controls
             row.Cells.Add(cellLeft);
             row.Cells.Add(cellRight);
 
-            if (LeftText.StartsWith("* * *") || LeftText.StartsWith("~ ~ ~"))
+            string leftText = leftParagraph.Text;
+            string rightText = rightParagraph.Text;
+
+            if (leftText.StartsWith("* * *") || leftText.StartsWith("~ ~ ~"))
             {
                 FormatCenter(cellLeft, "* * * *");
                 FormatCenter(cellRight, "* * * *");
                 return row;
             }
 
+            ParagraphStatus status = rightParagraph.IsEditTranslation ? rightParagraph.Status : ParagraphStatus.Closed;
 
             switch (htmlType)
             {
                 case ParagraphHtmlType.BookTitle:
-                    FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, entryRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entryLeft, leftText, highlighted, words, ParagraphStatus.Closed);
+                    FormatTitle(cellRight, entryRight, rightText, highlighted, words, status);
                     break;
                 case ParagraphHtmlType.PaperTitle:
-                    FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, entryRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entryLeft, leftText, highlighted, words, ParagraphStatus.Closed);
+                    FormatTitle(cellRight, entryRight, rightText, highlighted, words, status);
                     break;
                 case ParagraphHtmlType.SectionTitle:
-                    FormatTitle(cellLeft, entryLeft, LeftText, highlighted, words);
-                    FormatTitle(cellRight, entryRight, RightText, highlighted, words);
+                    FormatTitle(cellLeft, entryLeft, leftText, highlighted, words, ParagraphStatus.Closed);
+                    FormatTitle(cellRight, entryRight, rightText, highlighted, words, status);
                     break;
                 case ParagraphHtmlType.NormalParagraph:
-                    FormatParagraph(cellLeft, entryLeft, LeftText, highlighted, words);
-                    FormatParagraph(cellRight, entryRight, RightText, highlighted, words);
+                    FormatParagraph(cellLeft, entryLeft, leftText, highlighted, words, ParagraphStatus.Closed);
+                    FormatParagraph(cellRight, entryRight, rightText, highlighted, words, status);
                     break;
                 case ParagraphHtmlType.IdentedParagraph:
-                    FormatIdent(cellLeft, entryLeft, LeftText, highlighted, words);
-                    FormatIdent(cellRight, entryRight, RightText, highlighted, words);
+                    FormatIdent(cellLeft, entryLeft, leftText, highlighted, words, ParagraphStatus.Closed);
+                    FormatIdent(cellRight, entryRight, rightText, highlighted, words, status);
                     break;
             }
             return row;
@@ -276,7 +353,7 @@ namespace UbStudyHelp.Controls
             TOC_Entry entryRight = TOC_Entry.CreateEntry(entry, StaticObjects.Book.RightTranslation.LanguageID);
             entryLeft.Text = entryRight.Text = "";
 
-            HtmlSingleBilingualLine(tableRowGroup, entryLeft, entryRight, titleLeft, titleRight, ParagraphHtmlType.PaperTitle);
+            //HtmlSingleBilingualLine(tableRowGroup, entryLeft, entryRight, titleLeft, titleRight, ParagraphHtmlType.PaperTitle);
 
             int indParagraph = 0;
             foreach (Paragraph parLeft in paperLeft.Paragraphs)
@@ -293,7 +370,7 @@ namespace UbStudyHelp.Controls
                 }
                 indParagraph++;
                 bool highlighted = shouldHighlightText && (parLeft.Entry * entry);
-                TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft.Text, parRight.Text, parLeft.Format, highlighted, Words);
+                TableRow row= HtmlSingleBilingualLine(tableRowGroup, parLeft.Entry, parRight.Entry, parLeft, parRight, parLeft.Format, highlighted, Words);
             }
             TextFlowDocument.Tag = entry;
             TextFlowDocument.Document = MainDocument;
