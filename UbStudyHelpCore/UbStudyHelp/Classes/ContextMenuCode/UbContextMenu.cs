@@ -72,6 +72,7 @@ namespace UbStudyHelp.Classes.ContextMenuCode
                 System.Windows.Documents.Paragraph p = pointer.Paragraph;
                 if (p == null) return null;
                 ParagraphSearchData data = p.Tag as ParagraphSearchData;
+                data.docParagraph = p;
                 return data;
             }
             catch

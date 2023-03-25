@@ -21,13 +21,7 @@ namespace UbStudyHelp.Classes
         Close
     }
 
-    internal class ParagraphSearchData
-    {
-        public bool IsRightTranslation { get; set; } = false;
-        public string QueryString = "";
-        public TOC_Entry Entry { get; set; }
-    }
-
+ 
 
     internal class UbParagraphContextMenu : UbContextMenu
     {
@@ -138,13 +132,9 @@ namespace UbStudyHelp.Classes
             ParagraphSearchData data = GetCurrentParagraph();
             if (data != null && data.IsRightTranslation) 
             {
-
                 EditText editText = new EditText();
-                editText.SetText(data.Entry);
+                editText.SetText(data);
                 editText.ShowDialog();
-
-                //string url = $"https://github.com/Rogreis/PtAlternative/blob/correcoes/Doc{data.Entry.Paper:000}/Par_{data.Entry.Paper:000}_{data.Entry.Section:000}_{data.Entry.ParagraphNo:000}.md";
-                //Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
             }
         }
 

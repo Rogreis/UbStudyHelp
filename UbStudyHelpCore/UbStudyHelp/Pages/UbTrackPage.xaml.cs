@@ -98,21 +98,21 @@ namespace UbStudyHelp.Pages
 
             foreach (TOC_Entry entry in StaticObjects.Parameters.TrackEntries)
             {
-                System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
+                FormatData data = new FormatData()
                 {
-                    Padding = new Thickness(5),
-                    Style = App.Appearance.ForegroundStyle,
-                    Tag = entry,
-                    ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry, false, false)
+                    FormatType= ParagraphFormatType.Track,
+                    Entry = entry,
+                    Status = ParagraphStatus.Closed,
+                    Text = entry.Text,
                 };
+                format.FormatParagraph(data);
+                data.DocParagraph.Padding = new Thickness(5);
+                data.DocParagraph.ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry, false, false);
 
-                Hyperlink hyperlink = format.HyperlinkFullParagraph(entry, false, entry.Text);
-                hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
-                hyperlink.MouseEnter += Hyperlink_MouseEnter;
-                hyperlink.MouseLeave += Hyperlink_MouseLeave;
-
-                paragraph.Inlines.Add(hyperlink);
-                document.Blocks.Add(paragraph);
+                data.Link.RequestNavigate += Hyperlink_RequestNavigate;
+                data.Link.MouseEnter += Hyperlink_MouseEnter;
+                data.Link.MouseLeave += Hyperlink_MouseLeave;
+                document.Blocks.Add(data.DocParagraph);
             }
             TrackDataFlowDocument.Document = document;
             App.Appearance.SetFontSize(TrackDataFlowDocument);

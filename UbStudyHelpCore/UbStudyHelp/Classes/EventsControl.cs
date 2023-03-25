@@ -79,6 +79,11 @@ namespace UbStudyHelp.Classes
     public delegate void dlRefreshText();
 
     /// <summary>
+    /// Used to ask to a text refresh in the main screen
+    /// </summary>
+    public delegate void dlRefreshParagraphText(ParagraphSearchData data);
+
+    /// <summary>
     /// Used to indicate that there are updates for translations and/application available 
     /// </summary>
     /// <param name="updateList"></param>
@@ -133,6 +138,8 @@ namespace UbStudyHelp.Classes
         public static event dlSendMessage SendMessage = null;
 
         public static event dlRefreshText RefreshText = null;
+
+        public static event dlRefreshParagraphText RefreshParagraphText = null;
 
         public static event dlUpdateAvailable UpdateAvailable = null;
 
@@ -220,6 +227,11 @@ namespace UbStudyHelp.Classes
         public static void FireRefreshText()
         {
             RefreshText?.Invoke();
+        }
+        
+        public static void FireRefreshParagraphText(ParagraphSearchData data)
+        {
+            RefreshParagraphText?.Invoke(data);
         }
 
         public static void FireUpdateAvailable()

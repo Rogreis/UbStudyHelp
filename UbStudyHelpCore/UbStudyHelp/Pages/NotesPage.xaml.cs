@@ -16,6 +16,7 @@ using UbStandardObjects;
 using UbStandardObjects.Objects;
 using UbStudyHelp.Classes;
 using UbStudyHelp.Classes.ContextMenuCode;
+using static Lucene.Net.Search.FieldValueHitQueue;
 
 namespace UbStudyHelp.Pages
 {
@@ -111,23 +112,23 @@ namespace UbStudyHelp.Pages
 
             foreach (AnnotationIdent ident in list)
             {
-                System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
+                FormatData data = new FormatData()
                 {
-                    Padding = new Thickness(5, 5, 5, 0),
-                    Style = App.Appearance.ForegroundStyle,
-                    Tag = ident.Entry,
-                    //ContextMenu = new UbParagraphContextMenu(TrackDataFlowDocument, entry, false, false)
+                    FormatType= ParagraphFormatType.Normal,
+                    Entry = ident.Entry,
+                    Status = ParagraphStatus.Closed,
+                    Text = ident.Entry.Text,
                 };
+                format.FormatParagraph(data);
+                data.DocParagraph.Padding = new Thickness(5, 5, 5, 0);
 
-                Hyperlink hyperlink = format.HyperlinkFullParagraph(ident.Entry, false, $" {ident.Title}");
-                hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
-                hyperlink.MouseEnter += Hyperlink_MouseEnter;
-                hyperlink.MouseLeave += Hyperlink_MouseLeave;
-                hyperlink.MouseRightButtonDown += Hyperlink_MouseRightButtonDown;
-                hyperlink.Tag = ident.Entry;
+                data.Link.Tag = ident.Entry;
+                data.Link.RequestNavigate += Hyperlink_RequestNavigate;
+                data.Link.MouseEnter += Hyperlink_MouseEnter;
+                data.Link.MouseLeave += Hyperlink_MouseLeave;
+                data.Link.MouseRightButtonDown += Hyperlink_MouseRightButtonDown;
 
-                paragraph.Inlines.Add(hyperlink);
-                document.Blocks.Add(paragraph);
+                document.Blocks.Add(data.DocParagraph);
             }
             NotesFlowDocument.Document = document;
             App.Appearance.SetFontSize(NotesFlowDocument);

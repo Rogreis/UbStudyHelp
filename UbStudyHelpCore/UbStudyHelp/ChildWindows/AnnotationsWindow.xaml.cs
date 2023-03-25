@@ -84,7 +84,8 @@ namespace UbStudyHelp.Classes
             FlowDocument document = new FlowDocument();
             //SolidColorBrush accentBrush = (SolidColorBrush)new BrushConverter().ConvertFromString(App.Appearance.GetHighlightColor());
 
-            document.Blocks.Add(format.FullParagraph(entry, false, entry.Text));
+            document.Blocks.Add(format.CreateDocParagraph(entry, false, ParagraphStatus.Closed));
+
             FlowDocument.Document = document;
             App.Appearance.SetFontSize(FlowDocument);
             App.Appearance.SetThemeInfo(FlowDocument);

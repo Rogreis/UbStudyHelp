@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -8,18 +9,97 @@ using UbStandardObjects.Objects;
 
 namespace UbStudyHelp.Classes
 {
+
+    public class ParagraphSearchData
+    {
+        public bool IsRightTranslation { get; set; } = false;
+        public string QueryString = "";
+        public TOC_Entry Entry { get; set; }
+        public System.Windows.Documents.Paragraph docParagraph;
+        public ParagraphMarkDown EditedParagraph = null;
+        public bool Highlighted { get; set; } = false;
+        public List<string> Words = null;
+    }
+
+    public enum ParagraphFormatType
+    {
+        Normal,
+        Idented,
+        Center,
+        Track,
+        Search,
+        Title,
+        SectionTitle
+    }
+
+
+    public class FormatData
+    {
+        public TOC_Entry Entry { get; set; }
+        public bool Highlighted { get; set; } = false;
+        public bool IncludePage { get; set; } = false;
+        public bool IsEditing { get; set; } = false;
+        public ParagraphFormatType FormatType { get; set; } = ParagraphFormatType.Normal;
+        public string Text { get; set; }
+        public ParagraphStatus Status { get; set; }
+        public List<string> Words = null;
+
+        // Output data
+        public System.Windows.Documents.Paragraph DocParagraph { get; set; } = null;
+        public Hyperlink Link { get; set; } = null;
+    }
+
+
     internal class FlowDocumentFormat
     {
-        public Run ParagraphIdentification(TOC_Entry entry, bool includePage)
+
+        private Brush TextBrush(FormatData data)
         {
-            if (entry != null)
+
+            if (data.IsEditing && data.Status == ParagraphStatus.Doubt)
+            {
+                return Brushes.White;
+            } 
+            else if (data.IsEditing)
+            {
+                return Brushes.Black;
+            }
+            else 
+            {
+                return Brushes.White;
+            }
+        }
+
+        private void SetColors(System.Windows.Documents.Paragraph paragraph, ParagraphStatus status)
+        {
+            switch (status)
+            {
+                case ParagraphStatus.Started:
+                    paragraph.Background = Brushes.FloralWhite;
+                    break;
+                case ParagraphStatus.Working:
+                    paragraph.Background = Brushes.LemonChiffon;
+                    break;
+                case ParagraphStatus.Doubt:
+                    paragraph.Background = Brushes.Firebrick;
+                    break;
+                case ParagraphStatus.Ok:
+                    paragraph.Background = Brushes.Aquamarine;
+                    break;
+            }
+        }
+
+   
+        public Run ParagraphIdentification(FormatData data)
+        {
+            if (data.Entry != null)
             {
                 Brush accentBrush = App.Appearance.GetHighlightColorBrush();
-                string id = includePage ? $"{entry.ParagraphID}" : $"{entry.ParagraphIDNoPage}";
+                string id = data.IncludePage ? $"{data.Entry.ParagraphID}" : $"{data.Entry.ParagraphIDNoPage}";
                 Run runIdent = new Run(id)
                 {
                     FontSize = StaticObjects.Parameters.FontSize - 4,
-                    Foreground = accentBrush
+                    Foreground = data.IsEditing ? TextBrush(data) : accentBrush
                 };
                 return runIdent;
             }
@@ -33,21 +113,20 @@ namespace UbStudyHelp.Classes
         /// <param name="includePage"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        public Hyperlink HyperlinkReference(TOC_Entry entry, bool includePage)
+        public Hyperlink HyperlinkReference(FormatData data)
         {
-            Run runIdent = ParagraphIdentification(entry, includePage);
-
-            Hyperlink hyperlink = new Hyperlink(runIdent)
+            Run runIdent = ParagraphIdentification(data);
+            data.Link= new Hyperlink(runIdent)
             {
                 NavigateUri = new Uri("about:blank"),
                 TextDecorations = null,
-                //TextDecorations = TextDecorations.Underline,
-                Tag = entry
+                Tag = data.Entry
             };
 
-            hyperlink.Inlines.Add(runIdent);
-            //hyperlink.Inlines.Add(new Run("  "));
-            return hyperlink;
+            data.Link.Inlines.Add(runIdent);
+            data.Link.FontWeight = FontWeights.Bold;
+            data.Link.Foreground = TextBrush(data);
+            return data.Link;
         }
 
 
@@ -58,44 +137,98 @@ namespace UbStudyHelp.Classes
         /// <param name="includePage"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        public Hyperlink HyperlinkFullParagraph(TOC_Entry entry, bool includePage, string text, List<string> Words = null)
+        public void HyperlinkFullParagraph(FormatData data)
         {
-            Run runIdent = ParagraphIdentification(entry, includePage);
-            
-            Hyperlink hyperlink = new Hyperlink(runIdent)
+            Run runIdent = ParagraphIdentification(data);
+
+            data.Link = new Hyperlink(runIdent)
             {
                 NavigateUri = new Uri("about:blank"),
                 TextDecorations = null,
                 //TextDecorations = TextDecorations.Underline,
-                Tag = entry
+                Tag = data.Entry
             };
 
-            hyperlink.Inlines.Add(runIdent);
-            hyperlink.Inlines.Add(new Run("  "));
-            TextWork textWork = new TextWork(text);
-            textWork.GetInlinesText(hyperlink.Inlines, Words);
-            return hyperlink;
+            data.Link.Inlines.Add(runIdent);
+            data.Link.Inlines.Add(new Run("  "));
+            TextWork textWork = new TextWork(data.Text);
+            textWork.GetInlinesText(data.Link.Inlines, data.Words);
         }
 
 
-
-
-        public System.Windows.Documents.Paragraph FullParagraph(TOC_Entry entry, bool includePage, string text)
+        public System.Windows.Documents.Paragraph CreateDocParagraph(TOC_Entry entry, bool highlighted, ParagraphStatus status)
         {
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
             {
                 Padding = new Thickness(5),
-                Style = App.Appearance.ForegroundStyle,
+                //ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry, true, true),
+                Tag = entry,
             };
 
-            Run runIdent = ParagraphIdentification(entry, includePage);
-            paragraph.Inlines.Add(runIdent);
-            paragraph.Inlines.Add(new Run("  "));
-            TextWork textWork = new TextWork(text);
-            textWork.GetInlinesText(paragraph.Inlines);
+            if (highlighted)
+            {
+                paragraph.BorderThickness = new Thickness(1);
+                paragraph.BorderBrush = App.Appearance.GetHighlightColorBrush();
+            };
+
+            paragraph.Style = App.Appearance.ForegroundStyle;
+            paragraph.Margin = new Thickness(20, 10, 10, 0);
+            paragraph.LineHeight = 26;
+            paragraph.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
+            SetColors(paragraph, status);
             return paragraph;
         }
 
+
+        public void FormatParagraph(FormatData data)
+        {
+            if (data.DocParagraph == null)
+            {
+                data.DocParagraph = CreateDocParagraph(data.Entry, data.Highlighted, data.Status);
+            }
+            data.DocParagraph.Inlines.Clear();
+            TextWork textWork = new(data.Text);
+
+            switch (data.FormatType)
+            {
+                case ParagraphFormatType.Normal:
+                    data.DocParagraph.Inlines.Add(HyperlinkReference(data));
+                    data.DocParagraph.Inlines.Add(new Run("  "));
+                    textWork.GetInlinesText(data.DocParagraph.Inlines, data.Words);
+                    data.DocParagraph.Foreground = TextBrush(data);
+                    break;
+                case ParagraphFormatType.Idented:
+                    data.DocParagraph.Inlines.Add(HyperlinkReference(data));
+                    data.DocParagraph.Inlines.Add(new Run("  "));
+                    textWork.GetInlinesText(data.DocParagraph.Inlines, data.Words);
+                    data.DocParagraph.Margin = new Thickness(50, 20, 20, 0);
+                    data.DocParagraph.Foreground = TextBrush(data);
+                    break;
+                case ParagraphFormatType.Center:
+                    data.DocParagraph.Inlines.Add(HyperlinkReference(data));
+                    data.DocParagraph.Inlines.Add(new Run("  "));
+                    textWork.GetInlinesText(data.DocParagraph.Inlines, data.Words);
+                    data.DocParagraph.TextAlignment = TextAlignment.Center;
+                    data.DocParagraph.Foreground = TextBrush(data);
+                    break;
+                case ParagraphFormatType.SectionTitle:
+                case ParagraphFormatType.Title:
+                    HyperlinkFullParagraph(data);
+                    data.DocParagraph.Inlines.Add(data.Link);
+                    data.DocParagraph.Inlines.Add(new Run("  "));
+                    data.DocParagraph.FontWeight = FontWeights.Bold;
+                    data.DocParagraph.Foreground = TextBrush(data);
+                    data.Link.Foreground = TextBrush(data);
+                    break;
+                case ParagraphFormatType.Search:
+                case ParagraphFormatType.Track:
+                    HyperlinkFullParagraph(data);
+                    data.DocParagraph.Inlines.Add(data.Link);
+                    data.DocParagraph.Inlines.Add(new Run("  "));
+                    data.DocParagraph.Foreground = TextBrush(data);
+                    break;
+            }
+        }
 
     }
 }

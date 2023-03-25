@@ -20,8 +20,10 @@ namespace UbStudyHelp.ChildWindows
     public partial class EditText : Window
     {
 
-        private ParagraphMarkDown EditedParagraph = null;
         private PaperEdit paper = null;
+        // Used for specific formating 
+        private FlowDocumentFormat format = new FlowDocumentFormat();
+        private ParagraphSearchData paragraphSearchData= null;
 
         public EditText()
         {
@@ -43,16 +45,11 @@ namespace UbStudyHelp.ChildWindows
         private void EditText_Loaded(object sender, RoutedEventArgs e)
         {
             App.Appearance.SetFontSize(richTextBoxEdit);
-            App.Appearance.SetFontSize(commitMessage);
             App.Appearance.SetFontSize(buttonWorking);
             App.Appearance.SetFontSize(buttonOk);
             App.Appearance.SetFontSize(buttonDoubt);
             App.Appearance.SetFontSize(buttonClosed);
 
-            GitHubUser.Text = StaticObjects.Parameters.GitAuthorName;
-            GitHubEmail.Text = StaticObjects.Parameters.GitEmail;
-            commitMessage.Text = StaticObjects.Parameters.GitCommitMessage;
-            GithubPassword.Text = StaticObjects.Parameters.GitPassword;
         }
 
         private void EventsControl_AppearanceChanged(ControlsAppearance appearance)
@@ -70,7 +67,6 @@ namespace UbStudyHelp.ChildWindows
         private void EventsControl_FontChanged(ControlsAppearance appearance)
         {
             App.Appearance.SetFontSize(richTextBoxEdit);
-            App.Appearance.SetFontSize(commitMessage);
             App.Appearance.SetFontSize(buttonWorking);
             App.Appearance.SetFontSize(buttonOk);
             App.Appearance.SetFontSize(buttonDoubt);
@@ -92,16 +88,31 @@ namespace UbStudyHelp.ChildWindows
         }
 
 
-        public void SetText(TOC_Entry entry)
+        public void SetText(ParagraphSearchData searchData)
         {
+            paragraphSearchData = searchData;
             richTextBoxEdit.Document.Blocks.Clear();
-            paper = (PaperEdit)StaticObjects.Book.RightTranslation.Paper(entry.Paper);
-            EditedParagraph = (ParagraphMarkDown)paper.GetParagraph(entry);
-            richTextBoxEdit.Document.Blocks.Add(new System.Windows.Documents.Paragraph(new Run(EditedParagraph.Text)));
+            paper = StaticObjects.Book.RightTranslation.GetPaperEdit(searchData.Entry.Paper);
+            searchData.EditedParagraph = (ParagraphMarkDown)paper.GetParagraph(searchData.Entry);
+            Note note = Notes.GetNote(paper.NotesList, searchData.EditedParagraph);
 
-            string url = $"https://github.com/Rogreis/PtAlternative/blob/correcoes/Doc{entry.Paper:000}/Par_{entry.Paper:000}_{entry.Section:000}_{entry.ParagraphNo:000}.md";
+            FormatData data = new FormatData()
+            {
+                Entry = searchData.Entry,
+                Words = searchData.Words,
+                Status = searchData.EditedParagraph.Status,
+                Highlighted = searchData.Highlighted,
+                Text = searchData.EditedParagraph.Text,
+            };
+            format.FormatParagraph(data);
 
-            SetLink(LinkToGitHub, entry, url, "Edit in github");
+            richTextBoxEdit.Document.Blocks.Add(data.DocParagraph);
+            richTextBoxEdit.Background = data.DocParagraph.Background;
+            richTextBoxEdit.Foreground = data.DocParagraph.Foreground;
+
+            string url = $"https://github.com/Rogreis/PtAlternative/blob/correcoes/Doc{data.Entry.Paper:000}/Par_{data.Entry.Paper:000}_{data.Entry.Section:000}_{data.Entry.ParagraphNo:000}.md";
+
+            SetLink(LinkToGitHub, data.Entry, url, "Edit in github");
             url = StaticObjects.Parameters.EditParagraphsRepositoryFolder;
             SetLink(LinkToRepository, null, url, "Open Repository");
 
@@ -159,44 +170,18 @@ namespace UbStudyHelp.ChildWindows
         {
             try
             {
-                EditedParagraph.Text = RichtextToHtml();
-                EditedParagraph.SaveText(StaticObjects.Parameters.EditParagraphsRepositoryFolder);
-                Note note = Notes.GetNote(paper.NotesList, EditedParagraph);
+                paragraphSearchData.EditedParagraph.Text = RichtextToHtml();
+                paragraphSearchData.EditedParagraph.SaveText(StaticObjects.Parameters.EditParagraphsRepositoryFolder);
+                Note note = Notes.GetNote(paper.NotesList, paragraphSearchData.EditedParagraph);
                 note.Status = (short)status;
-                Notes.SaveNotes(paper.NotesList, EditedParagraph, note);
+                Notes.SaveNotes(paper.NotesList, paragraphSearchData.EditedParagraph, note);
 
                 List<string> relativeFilesList = new List<string>();
-                relativeFilesList.Add(ParagraphMarkDown.RelativeFilePathWindows(EditedParagraph));
-                relativeFilesList.Add(Notes.RelativeNotesPath(EditedParagraph.Paper));
+                relativeFilesList.Add(ParagraphMarkDown.RelativeFilePathWindows(paragraphSearchData.EditedParagraph));
+                relativeFilesList.Add(Notes.RelativeNotesPath(paragraphSearchData.EditedParagraph.Paper));
 
-                string gitHubUser = GitHubUser.Text;
-                string email = GitHubEmail.Text;
-                string message = commitMessage.Text;
-                string password = commitMessage.Text;
-
-                StaticObjects.Parameters.GitAuthorName = gitHubUser;
-                StaticObjects.Parameters.GitEmail = email;
-                StaticObjects.Parameters.GitCommitMessage = message;
-                StaticObjects.Parameters.GitPassword = password;
-
-                if (string.IsNullOrWhiteSpace(gitHubUser) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(message))
-                {
-                    MessageBox.Show("Please fill author name, email and commit message");
-                    return;
-                }
-
-                //if (!GitCommands.CommitFiles(gitHubUser, email, relativeFilesList, StaticObjects.Parameters.EditParagraphsRepositoryFolder, message))
-                //{
-                //    MessageBox.Show("Paragraph commit data error");
-                //    return;
-                //}
-                ////if (!GitCommands.Push(StaticObjects.Parameters.EditParagraphsRepositoryFolder, gitHubUser, password))
-                //{
-                //    MessageBox.Show("Paragraph push data error");
-                //    return;
-                //}
-                SearchDataEntry.LuceneBookSearchRight.UpdateIndex(EditedParagraph);
-                EventsControl.FireRefreshText();
+                SearchDataEntry.LuceneBookSearchRight.UpdateIndex(paragraphSearchData.EditedParagraph);
+                EventsControl.FireRefreshParagraphText(paragraphSearchData);
                 Close();
             }
             catch (Exception ex)

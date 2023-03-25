@@ -48,16 +48,16 @@ namespace UbStudyHelp.Pages
             return paragraph;
         }
 
-        public void ShowSearchResults(SearchData data, int nrPage, int pageSize, int totalPages)
+        public void ShowSearchResults(SearchData searchData, int nrPage, int pageSize, int totalPages)
         {
-            if (data == null)
+            if (searchData == null)
             {
                 return;
             }
             FlowDocument document = new FlowDocument();
 
             Brush accentBrush = App.Appearance.GetHighlightColorBrush();
-            lastSearchdata = data;
+            lastSearchdata = searchData;
             NrPage = nrPage;
             PageSize = pageSize;
             TotalPages = totalPages;
@@ -67,7 +67,7 @@ namespace UbStudyHelp.Pages
             document.Blocks.Add(paragraphTop);
 
 
-            if (data.SearchResults.Count == 0)
+            if (searchData.SearchResults.Count == 0)
             {
                 paragraphTop.Inlines.Add(new Run("No paragraph found"));
                 EventsControl.FireSendMessage("No paragraph found");
@@ -76,10 +76,10 @@ namespace UbStudyHelp.Pages
                 App.Appearance.SetThemeInfo(SearchResultsFlowDocument);
                 return;
             }
-            string message = $"Showing page {nrPage} of {totalPages} ({data.SearchResults.Count} paragraph(s) found)";
+            string message = $"Showing page {nrPage} of {totalPages} ({searchData.SearchResults.Count} paragraph(s) found)";
             EventsControl.FireSendMessage(message);
 
-            Run runTop = new Run($"({data.SearchResults.Count}) paragraph(s) found")
+            Run runTop = new Run($"({searchData.SearchResults.Count}) paragraph(s) found")
             {
                 //FontWeight = FontWeights.Bold,
                 FontSize = StaticObjects.Parameters.FontSize,
@@ -101,32 +101,33 @@ namespace UbStudyHelp.Pages
 
 
             int fistItem = (nrPage - 1) * pageSize;
-            if (fistItem >= data.SearchResults.Count)
+            if (fistItem >= searchData.SearchResults.Count)
             {
                 return;
             }
             int lastItem = (nrPage) * pageSize - 1;
-            if (lastItem >= data.SearchResults.Count)
+            if (lastItem >= searchData.SearchResults.Count)
             {
-                lastItem = data.SearchResults.Count - 1;
+                lastItem = searchData.SearchResults.Count - 1;
             }
 
             for (int i = fistItem; i <= lastItem; i++)
             {
-                SearchResult result = data.SearchResults[i];
-                System.Windows.Documents.Paragraph paragraphSearchResult = new System.Windows.Documents.Paragraph
-                {
-                    Style = App.Appearance.ForegroundStyle,
-                    Tag= result.Entry,
-                    ContextMenu = new UbParagraphContextMenu(SearchResultsFlowDocument, result.Entry, false, false)
-                };
-                document.Blocks.Add(paragraphSearchResult);
+                SearchResult result = searchData.SearchResults[i];
 
-                Hyperlink hyperlink = format.HyperlinkFullParagraph(result.Entry, false, result.Text, data.Words);
-                hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
-                hyperlink.MouseEnter += Hyperlink_MouseEnter;
-                hyperlink.MouseLeave += Hyperlink_MouseLeave;
-                paragraphSearchResult.Inlines.Add(hyperlink);
+                FormatData data = new FormatData()
+                {
+                    FormatType = ParagraphFormatType.Normal,
+                    Entry = result.Entry,
+                    Status = ParagraphStatus.Closed,
+                    Text = result.Entry.Text,
+                };
+                format.FormatParagraph(data);
+                document.Blocks.Add(data.DocParagraph);
+                data.DocParagraph.ContextMenu = new UbParagraphContextMenu(SearchResultsFlowDocument, result.Entry, false, false);
+                data.Link.RequestNavigate += Hyperlink_RequestNavigate;
+                data.Link.MouseEnter += Hyperlink_MouseEnter;
+                data.Link.MouseLeave += Hyperlink_MouseLeave;
             }
 
             SearchResultsFlowDocument.Document = document;
