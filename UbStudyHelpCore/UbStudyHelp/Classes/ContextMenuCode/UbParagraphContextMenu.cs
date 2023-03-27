@@ -41,6 +41,19 @@ namespace UbStudyHelp.Classes
             FlowDocument.ContextMenuOpening += UbParagraphContextMenu_ContextMenuOpening;
         }
 
+        private System.Windows.Documents.Paragraph GetParagraphBehindCursor(FlowDocument document)
+        {
+            TextPointer position = document.ContentStart.GetPositionAtOffset(0);
+            TextPointer start = position.GetPositionAtOffset(0, LogicalDirection.Forward);
+            TextPointer end = position.GetPositionAtOffset(0, LogicalDirection.Backward);
+
+            if (start != null && end != null)
+            {
+                TextRange range = new TextRange(start, end);
+                return start.Paragraph;
+            }
+            return null;
+        }
 
         private void UbParagraphContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -54,13 +67,39 @@ namespace UbStudyHelp.Classes
             try
             {
                 Run r = e.OriginalSource as Run;
-                System.Windows.Documents.Paragraph p = r.Parent as System.Windows.Documents.Paragraph;
-                ParagraphSearchData paragraphSearchData= p.Tag as ParagraphSearchData;
+
+                if (r == null)
+                {
+                    FlowDocument.Tag = null;
+                    return;
+                }
+
+                System.Windows.Documents.Paragraph p = GetParagraphBehindCursor(FlowDocument.Document);
+                if (r.Parent is Hyperlink)
+                {
+                    Hyperlink h= (Hyperlink)r.Parent;
+                    if (h.Parent is System.Windows.Documents.Paragraph)
+                    {
+                        p = h.Parent as System.Windows.Documents.Paragraph;
+                    }
+                }
+                else
+                {
+                    p = r.Parent as System.Windows.Documents.Paragraph;
+                }
+                if (p == null) 
+                {
+                    FlowDocument.Tag = null;
+                    return;
+                }
+
+                ParagraphSearchData paragraphSearchData = p.Tag != null ? p.Tag as ParagraphSearchData : null;
                 if (paragraphSearchData != null)
                 {
-                    FlowDocument.Tag = paragraphSearchData.Entry;
-                    menuItemOpenAnnotations.Tag = paragraphSearchData.Entry;
+                    FlowDocument.Tag = paragraphSearchData;
+                    menuItemOpenAnnotations.Tag = paragraphSearchData;
                 }
+
             }
             catch 
             {
@@ -129,7 +168,8 @@ namespace UbStudyHelp.Classes
 
         protected void ItemOpenInGitHub_Click(object sender, RoutedEventArgs e)
         {
-            ParagraphSearchData data = GetCurrentParagraph();
+            ParagraphSearchData data = ((MenuItem)e.OriginalSource).Tag as ParagraphSearchData; // GetCurrentParagraph();
+            Debug.Write($"{data.Entry}");
             if (data != null && data.IsRightTranslation) 
             {
                 EditText editText = new EditText();
@@ -181,7 +221,11 @@ namespace UbStudyHelp.Classes
             {
                 ParagraphSearchData data = GetCurrentParagraph();
                 if (data != null && data.IsRightTranslation)
-                    Items.Add(CreateMenuItem("Edit", ItemOpenInGitHub_Click));
+                {
+                    MenuItem menuItemEdit = CreateMenuItem("Edit", ItemOpenInGitHub_Click);
+                    menuItemEdit.Tag = data;
+                    Items.Add(menuItemEdit);
+                }
             }
 
             if (ShowSearch)

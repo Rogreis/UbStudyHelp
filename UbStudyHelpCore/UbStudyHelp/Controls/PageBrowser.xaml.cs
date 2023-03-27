@@ -129,6 +129,7 @@ namespace UbStudyHelp.Controls
             data.DocParagraph.Tag = cell.Tag;
             cell.Blocks.Add(data.DocParagraph);
             SetHyperlink(data);
+            ((ParagraphSearchData)cell.Tag).DocParagraph = data.DocParagraph;
         }
 
         private void FormatIdent(TableCell cell, FormatData data)
@@ -138,6 +139,7 @@ namespace UbStudyHelp.Controls
             data.DocParagraph.Tag = cell.Tag;
             cell.Blocks.Add(data.DocParagraph);
             SetHyperlink(data);
+            ((ParagraphSearchData)cell.Tag).DocParagraph = data.DocParagraph;
         }
 
         private void FormatCenter(TableCell cell, FormatData data)
@@ -147,6 +149,7 @@ namespace UbStudyHelp.Controls
             SetHyperlink(data);
             data.DocParagraph.Tag = cell.Tag;
             cell.Blocks.Add(data.DocParagraph);
+            ((ParagraphSearchData)cell.Tag).DocParagraph = data.DocParagraph;
         }
 
         private void FormatTitle(TableCell cell, FormatData data)
@@ -156,6 +159,7 @@ namespace UbStudyHelp.Controls
             SetHyperlink(data);
             cell.Blocks.Add(data.DocParagraph);
             data.DocParagraph.Tag = cell.Tag;
+            ((ParagraphSearchData)cell.Tag).DocParagraph= data.DocParagraph;
         }
 
         private TableRow HtmlSingleBilingualLine(TableRowGroup tableRowGroup, TOC_Entry entryLeft, TOC_Entry entryRight,
@@ -296,6 +300,8 @@ namespace UbStudyHelp.Controls
                 Status = searchData.EditedParagraph.Status,
                 Highlighted = searchData.Highlighted,
                 Text = searchData.EditedParagraph.Text,
+                IsEditing= true,
+                DocParagraph= searchData.DocParagraph
             };
             format.FormatParagraph(data);
         }

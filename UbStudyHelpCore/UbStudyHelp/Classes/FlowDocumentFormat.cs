@@ -15,7 +15,7 @@ namespace UbStudyHelp.Classes
         public bool IsRightTranslation { get; set; } = false;
         public string QueryString = "";
         public TOC_Entry Entry { get; set; }
-        public System.Windows.Documents.Paragraph docParagraph;
+        public System.Windows.Documents.Paragraph DocParagraph;
         public ParagraphMarkDown EditedParagraph = null;
         public bool Highlighted { get; set; } = false;
         public List<string> Words = null;
@@ -55,38 +55,42 @@ namespace UbStudyHelp.Classes
 
         private Brush TextBrush(FormatData data)
         {
-
-            if (data.IsEditing && data.Status == ParagraphStatus.Doubt)
+            if (data.IsEditing)
             {
-                return Brushes.White;
-            } 
-            else if (data.IsEditing)
-            {
-                return Brushes.Black;
+                switch (data.Status)
+                {
+                    case ParagraphStatus.Started:
+                        return Brushes.Black;
+                    case ParagraphStatus.Working:
+                        return Brushes.Black;
+                    case ParagraphStatus.Ok:
+                        return Brushes.Black;
+                }
             }
-            else 
-            {
-                return Brushes.White;
-            }
+            return Brushes.White;
         }
 
-        private void SetColors(System.Windows.Documents.Paragraph paragraph, ParagraphStatus status)
+        private void SetColors(FormatData data)
         {
-            switch (status)
+            switch (data.Status)
             {
                 case ParagraphStatus.Started:
-                    paragraph.Background = Brushes.FloralWhite;
+                    data.DocParagraph.Background = Brushes.FloralWhite;
                     break;
                 case ParagraphStatus.Working:
-                    paragraph.Background = Brushes.LemonChiffon;
+                    data.DocParagraph.Background = Brushes.LemonChiffon;
                     break;
                 case ParagraphStatus.Doubt:
-                    paragraph.Background = Brushes.Firebrick;
+                    data.DocParagraph.Background = Brushes.Firebrick;
                     break;
                 case ParagraphStatus.Ok:
-                    paragraph.Background = Brushes.Aquamarine;
+                    data.DocParagraph.Background = Brushes.Aquamarine;
+                    break;
+                case ParagraphStatus.Closed:
+                    data.DocParagraph.Background = App.Appearance.GetBackgroundColorBrush();
                     break;
             }
+            data.DocParagraph.Foreground = TextBrush(data);
         }
 
    
@@ -161,8 +165,6 @@ namespace UbStudyHelp.Classes
             System.Windows.Documents.Paragraph paragraph = new System.Windows.Documents.Paragraph()
             {
                 Padding = new Thickness(5),
-                //ContextMenu = new UbParagraphContextMenu(TextFlowDocument, entry, true, true),
-                Tag = entry,
             };
 
             if (highlighted)
@@ -175,7 +177,6 @@ namespace UbStudyHelp.Classes
             paragraph.Margin = new Thickness(20, 10, 10, 0);
             paragraph.LineHeight = 26;
             paragraph.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
-            SetColors(paragraph, status);
             return paragraph;
         }
 
@@ -228,6 +229,7 @@ namespace UbStudyHelp.Classes
                     data.DocParagraph.Foreground = TextBrush(data);
                     break;
             }
+            SetColors(data);
         }
 
     }

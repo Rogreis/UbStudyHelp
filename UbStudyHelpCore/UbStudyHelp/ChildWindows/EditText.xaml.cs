@@ -103,6 +103,7 @@ namespace UbStudyHelp.ChildWindows
                 Status = searchData.EditedParagraph.Status,
                 Highlighted = searchData.Highlighted,
                 Text = searchData.EditedParagraph.Text,
+                IsEditing= true
             };
             format.FormatParagraph(data);
 
@@ -175,6 +176,7 @@ namespace UbStudyHelp.ChildWindows
                 Note note = Notes.GetNote(paper.NotesList, paragraphSearchData.EditedParagraph);
                 note.Status = (short)status;
                 Notes.SaveNotes(paper.NotesList, paragraphSearchData.EditedParagraph, note);
+                paper.NotesList = Notes.GetNotes(paper.PaperNo);
 
                 List<string> relativeFilesList = new List<string>();
                 relativeFilesList.Add(ParagraphMarkDown.RelativeFilePathWindows(paragraphSearchData.EditedParagraph));
